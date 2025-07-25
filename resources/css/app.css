@@ -1,0 +1,8 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+/* Import main.css dari public/assets/css/main.css */
+/* Karena file ini sudah ada di public, kita akan load via HTML head */
+
+/* Custom styles to complement the template */
