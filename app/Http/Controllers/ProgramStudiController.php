@@ -17,7 +17,7 @@ class ProgramStudiController extends Controller
         return Inertia::render('ProgramStudi/Index', [
             'programStudis' => ProgramStudi::active()
                 ->with(['features' => function ($query) {
-                    $query->active()->ordered()->take(3);
+                    $query->where('is_active', true)->orderBy('order_index', 'asc')->take(3);
                 }])
                 ->get()
                 ->groupBy('degree_level')
@@ -26,39 +26,58 @@ class ProgramStudiController extends Controller
 
     public function show(ProgramStudi $programStudi): Response
     {
+
+        // dd($programStudi);
+        // Load relationships
         $programStudi->load([
             'kurikulums' => function ($query) {
-                $query->active()->latest();
+                $query->where('is_active', true)->orderBy('academic_year', 'desc');
             },
             'features' => function ($query) {
-                $query->active()->ordered();
+                $query->where('is_active', true)->orderBy('order_index', 'asc');
             },
             'teams' => function ($query) {
-                $query->active()->with('position')->ordered();
+                $query->where('is_active', true)
+                    ->with('position')
+                    ->orderBy('order_index', 'asc');
             },
             'testimonials' => function ($query) {
-                $query->active()->take(6);
+                $query->where('is_active', true)->take(6);
             },
             'penjaminanMutus' => function ($query) {
                 $query->where('status', 'active');
             }
         ]);
 
-        // Get current curriculum with subjects
+        // Get current curriculum with subjects (jika ada tabel mata kuliah)
         $currentKurikulum = $programStudi->kurikulums()
-            ->active()
-            ->with(['mataKuliahs' => function ($query) {
-                $query->active()->orderBy('semester')->orderBy('category');
-            }])
-            ->latest()
+            ->where('is_active', true)
+            ->orderBy('academic_year', 'desc')
             ->first();
+
+        // Get subjects by semester (jika ada relationship ke mata kuliah)
+        $subjectsBySemester = collect();
+        if ($currentKurikulum && method_exists($currentKurikulum, 'mataKuliahs')) {
+            $subjectsBySemester = $currentKurikulum->mataKuliahs()
+                ->where('is_active', true)
+                ->orderBy('semester')
+                ->orderBy('category')
+                ->get()
+                ->groupBy('semester');
+        }
+
+        // Get related programs (all programs)
+        $relatedPrograms = ProgramStudi::active()
+            ->select(['id', 'name', 'code', 'degree_level'])
+            ->orderBy('name')
+            ->orderBy('degree_level')
+            ->get();
 
         return Inertia::render('ProgramStudi/Show', [
             'programStudi' => $programStudi,
             'currentKurikulum' => $currentKurikulum,
-            'subjectsBySemester' => $currentKurikulum
-                ? $currentKurikulum->mataKuliahs->groupBy('semester')
-                : collect()
+            'subjectsBySemester' => $subjectsBySemester,
+            'relatedPrograms' => $relatedPrograms
         ]);
     }
 }

@@ -1,16 +1,21 @@
 <template>
     <AppLayout>
-        <!-- Hero Section -->
-        <section class="py-20 bg-gradient-to-r from-blue-600 to-blue-800">
-            <div class="container mx-auto px-4 text-center text-white">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">
-                    Berita & Informasi
-                </h1>
-                <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
-                    Ikuti perkembangan terbaru dari fakultas kami
-                </p>
+        <div
+            class="page-title dark-background"
+            data-aos="fade"
+            style="background-image: url(storage/assets/img/imgBg3.png)"
+        >
+            <div class="container position-relative">
+                <h1>Berita & Informasi</h1>
+                <p>Ikuti perkembangan terbaru dari fakultas kami</p>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="/">Home</a></li>
+                        <li class="current">Berita & Informasi</li>
+                    </ol>
+                </nav>
             </div>
-        </section>
+        </div>
 
         <!-- Featured News -->
         <section v-if="featuredNews.length" class="py-16 bg-gray-50">

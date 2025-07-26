@@ -32,31 +32,28 @@
                             ></Link>
                             <ul>
                                 <li>
-                                    <Link
-                                        href="/program-studi/teknik-perminyakan"
+                                    <Link href="/program-studi/TPR"
                                         >S1 Teknik Perminyakan</Link
                                     >
                                 </li>
                                 <li>
-                                    <Link
-                                        href="/program-studi/teknik-pertambangan"
+                                    <Link href="/program-studi/TPT"
                                         >S1 Teknik Pertambangan</Link
                                     >
                                 </li>
                                 <li>
-                                    <Link href="/program-studi/teknik-geologi"
+                                    <Link href="/program-studi/TG"
                                         >S1 Teknik Geologi</Link
                                     >
                                 </li>
                                 <li>
-                                    <Link
-                                        href="/program-studi/d3-teknik-pertambangan"
+                                    <Link href="/program-studi/DTPT"
                                         >D3 Teknik Pertambangan</Link
                                     >
                                 </li>
                             </ul>
                         </li>
-                        <li><Link href="#portfolio">News</Link></li>
+                        <li><Link href="/news">News</Link></li>
                         <li><Link href="#team">GPM</Link></li>
                         <li><Link href="#contact">Penelitian</Link></li>
                         <li><Link href="#contact">Kemahasiswaan</Link></li>
