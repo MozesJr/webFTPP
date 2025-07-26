@@ -39,4 +39,10 @@ class NewsCategory extends Model
     {
         return 'slug';
     }
+
+    // Accessor untuk color dengan default
+    public function getColorAttribute($value)
+    {
+        return $value ?: '#3b82f6';
+    }
 }

@@ -1,16 +1,24 @@
 <template>
     <AppLayout>
         <!-- Hero Section -->
-        <section class="py-20 bg-gradient-to-r from-blue-600 to-blue-800">
-            <div class="container mx-auto px-4 text-center text-white">
-                <h1 class="text-4xl md:text-5xl font-bold mb-6">
-                    Program Studi
-                </h1>
-                <p class="text-xl md:text-2xl opacity-90 max-w-3xl mx-auto">
+        <div
+            class="page-title dark-background"
+            data-aos="fade"
+            style="background-image: url(storage/assets/img/imgBg3.png)"
+        >
+            <div class="container position-relative">
+                <h1>Program Studi</h1>
+                <p>
                     Pilih program studi yang sesuai dengan minat dan bakat Anda
                 </p>
+                <nav class="breadcrumbs">
+                    <ol>
+                        <li><a href="/">Home</a></li>
+                        <li class="current">Profil Fakultas</li>
+                    </ol>
+                </nav>
             </div>
-        </section>
+        </div>
 
         <!-- Program List by Degree Level -->
         <section class="py-16">
@@ -39,22 +47,6 @@
                         />
                     </div>
                 </div>
-            </div>
-        </section>
-
-        <!-- CTA Section -->
-        <section class="py-16 bg-blue-50">
-            <div class="container mx-auto px-4 text-center">
-                <h2 class="text-3xl font-bold text-gray-900 mb-4">
-                    Butuh Informasi Lebih Lanjut?
-                </h2>
-                <p class="text-lg text-gray-600 mb-8">
-                    Hubungi kami untuk konsultasi mengenai program studi yang
-                    tepat
-                </p>
-                <Link href="/contact" class="btn btn-primary btn-lg">
-                    Hubungi Kami
-                </Link>
             </div>
         </section>
     </AppLayout>

@@ -27,39 +27,80 @@ class NewsController extends Controller
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%' . $request->search . '%')
-                    ->orWhere('excerpt', 'like', '%' . $request->search . '%');
+                    ->orWhere('excerpt', 'like', '%' . $request->search . '%')
+                    ->orWhere('content', 'like', '%' . $request->search . '%');
             });
         }
 
         $news = $query->paginate(12);
 
-        return Inertia::render('News/Index', [
+        // Ensure featured news has proper relationships loaded
+        $featuredNews = News::published()
+            ->featured()
+            ->with(['category', 'author'])
+            ->take(3)
+            ->get();
+
+        $data = [
             'news' => $news,
-            'categories' => NewsCategory::active()->get(),
-            'featuredNews' => News::published()->featured()->take(3)->get(),
+            'categories' => NewsCategory::where('is_active', true)->get(),
+            'featuredNews' => $featuredNews,
             'filters' => $request->only(['category', 'search'])
-        ]);
+        ];
+
+        return Inertia::render('News/Index', $data);
     }
 
     public function show(News $news): Response
     {
-        // Increment views
-        $news->incrementViews();
+        // Increment views dengan session check untuk mencegah spam
+        $this->incrementViews($news);
 
-        $news->load(['category', 'author.position']);
+        // Load relationships
+        $news->load([
+            'category',
+            'author' => function ($query) {
+                $query->with('position');
+            }
+        ]);
+
+        // Get related news (same category)
+        $relatedNews = News::published()
+            ->where('id', '!=', $news->id)
+            ->where('category_id', $news->category_id)
+            ->with(['category', 'author'])
+            ->latest('published_at')
+            ->take(4)
+            ->get();
+
+        // Get latest news for sidebar
+        $latestNews = News::published()
+            ->where('id', '!=', $news->id)
+            ->with(['category'])
+            ->latest('published_at')
+            ->take(5)
+            ->get();
 
         return Inertia::render('News/Show', [
             'news' => $news,
-            'relatedNews' => News::published()
-                ->where('id', '!=', $news->id)
-                ->where('category_id', $news->category_id)
-                ->take(4)
-                ->get(),
-            'latestNews' => News::published()
-                ->where('id', '!=', $news->id)
-                ->latest('published_at')
-                ->take(5)
-                ->get()
+            'relatedNews' => $relatedNews,
+            'latestNews' => $latestNews
         ]);
+    }
+
+    /**
+     * Increment views count dengan session check
+     */
+    private function incrementViews(News $news)
+    {
+        $sessionKey = 'news_viewed_' . $news->id;
+
+        if (!session()->has($sessionKey)) {
+            $news->increment('views_count');
+            session()->put($sessionKey, true);
+
+            // Set session expire after 1 hour
+            session()->put($sessionKey . '_time', now()->addHour());
+        }
     }
 }

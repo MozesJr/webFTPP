@@ -12,7 +12,7 @@
                 </p>
                 <nav class="breadcrumbs">
                     <ol>
-                        <li><a href="index.html#about">Home</a></li>
+                        <li><a href="/">Home</a></li>
                         <li class="current">Profil Fakultas</li>
                     </ol>
                 </nav>
@@ -123,33 +123,10 @@
 
             <div class="container" data-aos="fade-up">
                 <div class="row">
-                    <div class="col-lg-12">
+                    <div v-if="props.sejarah" class="col-lg-12">
                         <h3>Sejarah Singkat</h3>
                         <p>
-                            Fakultas Teknik Pertambangan dan Perminyakan
-                            didirikan pada tahun 1985 sebagai respons terhadap
-                            kebutuhan tenaga ahli di bidang pertambangan dan
-                            energi di Indonesia. Pada awalnya, fakultas ini
-                            hanya memiliki satu program studi yaitu Teknik
-                            Pertambangan.
-                        </p>
-
-                        <p>
-                            Seiring dengan perkembangan industri energi dan
-                            kebutuhan akan diversifikasi keahlian, pada tahun
-                            1992 dibuka program studi Teknik Perminyakan.
-                            Kemudian pada tahun 2005, fakultas ini menambahkan
-                            program studi Teknik Geologi untuk memperkuat basis
-                            keilmuan dalam eksplorasi sumber daya mineral dan
-                            energi.
-                        </p>
-
-                        <p>
-                            Pada tahun 2010, fakultas ini memperoleh akreditasi
-                            A dari BAN-PT dan terus mempertahankan standar
-                            kualitas tinggi hingga saat ini. Berbagai pencapaian
-                            telah diraih, termasuk pengakuan internasional dan
-                            kemitraan dengan universitas terkemuka di dunia.
+                            {{ props.sejarah }}
                         </p>
 
                         <h3>Milestone Penting</h3>
@@ -206,73 +183,34 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>Teknik Pertambangan</td>
-                                        <td>S1</td>
-                                        <td>A</td>
-                                        <td>2023-2028</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Teknik Perminyakan</td>
-                                        <td>S1</td>
-                                        <td>A</td>
-                                        <td>2023-2028</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Teknik Geologi</td>
-                                        <td>S1</td>
-                                        <td>B</td>
-                                        <td>2022-2027</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Teknik Pertambangan</td>
-                                        <td>S2</td>
-                                        <td>B</td>
-                                        <td>2021-2026</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Teknik Pertambangan</td>
-                                        <td>S3</td>
-                                        <td>B</td>
-                                        <td>2022-2027</td>
+                                    <tr
+                                        v-for="prodi in programStudi"
+                                        :key="prodi.id"
+                                    >
+                                        <td>{{ prodi.name }}</td>
+                                        <td>{{ prodi.degree_level }}</td>
+                                        <td>{{ prodi.accreditation }}</td>
+                                        <td>
+                                            {{
+                                                prodi.accreditation_date &&
+                                                prodi.accreditation_expire
+                                                    ? `${new Date(
+                                                          prodi.accreditation_date
+                                                      ).getFullYear()}-${new Date(
+                                                          prodi.accreditation_expire
+                                                      ).getFullYear()}`
+                                                    : "-"
+                                            }}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-
-                        <h3>Sertifikasi Internasional</h3>
-                        <p>
-                            Fakultas Teknik Pertambangan dan Perminyakan telah
-                            memperoleh berbagai sertifikasi internasional yang
-                            menjamin kualitas pendidikan sesuai standar global:
-                        </p>
-                        <ul>
-                            <li>
-                                ABET (Accreditation Board for Engineering and
-                                Technology) - untuk Program Studi Teknik
-                                Pertambangan
-                            </li>
-                            <li>
-                                ASIIN (Accreditation Agency for Study Programmes
-                                in Engineering, Informatics, Natural Sciences
-                                and Mathematics) - untuk Program Studi Teknik
-                                Perminyakan
-                            </li>
-                            <li>
-                                Anggota The International Association of Mining
-                                Schools and Institutions (IAMSI)
-                            </li>
-                            <li>
-                                Kemitraan dengan Society of Petroleum Engineers
-                                (SPE)
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Program Studi Section -->
         <section id="program-studi" class="starter-section section">
             <div class="container section-title" data-aos="fade-up">
                 <h2>Program Studi</h2>
@@ -281,58 +219,88 @@
 
             <div class="container" data-aos="fade-up">
                 <div class="row">
-                    <div class="col-lg-4 col-md-6 mb-4">
+                    <div
+                        v-for="(prodi, index) in programStudiCards"
+                        :key="prodi.code || index"
+                        class="col-lg-3 col-md-6 mb-4"
+                    >
                         <div class="card h-100">
+                            <img
+                                v-if="prodi.image_url"
+                                :src="prodi.image_url"
+                                class="card-img-top"
+                                :alt="prodi.name"
+                                style="height: 200px; object-fit: cover"
+                            />
                             <div class="card-body">
-                                <h5 class="card-title">Teknik Pertambangan</h5>
+                                <h5 class="card-title">{{ prodi.name }}</h5>
                                 <p class="card-text">
-                                    Program studi yang mempelajari teknik
-                                    ekstraksi mineral dan batubara, perencanaan
-                                    tambang, dan teknologi pertambangan
-                                    berkelanjutan.
+                                    {{
+                                        prodi.description ||
+                                        prodi.overview ||
+                                        "Deskripsi program studi belum tersedia."
+                                    }}
                                 </p>
-                                <p><strong>Akreditasi:</strong> A</p>
-                                <p><strong>Jenjang:</strong> S1, S2, S3</p>
+                                <p>
+                                    <strong>Akreditasi:</strong>
+                                    {{ prodi.accreditation }}
+                                </p>
+                                <p>
+                                    <strong>Jenjang:</strong>
+                                    {{ prodi.degree_level }}
+                                </p>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Teknik Perminyakan</h5>
-                                <p class="card-text">
-                                    Program studi yang fokus pada eksplorasi,
-                                    produksi, dan pengolahan minyak dan gas bumi
-                                    serta energi terbarukan.
-                                </p>
-                                <p><strong>Akreditasi:</strong> A</p>
-                                <p><strong>Jenjang:</strong> S1</p>
-                            </div>
+
+                    <!-- Fallback cards jika data kosong -->
+                    <template
+                        v-if="
+                            !programStudiCards || programStudiCards.length === 0
+                        "
+                    >
+                        <!-- Default cards sama seperti di React -->
+                    </template>
+                </div>
+            </div>
+        </section>
+
+        <section id="stats" class="stats section light-background">
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+                    <div class="stat-item">
+                        <div class="stat-number">
+                            {{ formatNumber(stats.total_students) }}
                         </div>
+                        <div class="stat-label">Mahasiswa</div>
                     </div>
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">Teknik Geologi</h5>
-                                <p class="card-text">
-                                    Program studi yang mempelajari struktur
-                                    bumi, mineral, dan proses geologi untuk
-                                    eksplorasi sumber daya alam.
-                                </p>
-                                <p><strong>Akreditasi:</strong> B</p>
-                                <p><strong>Jenjang:</strong> S1</p>
-                            </div>
+                    <div class="stat-item">
+                        <div class="stat-number">
+                            {{ formatNumber(stats.total_lecturers) }}
                         </div>
+                        <div class="stat-label">Dosen</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">
+                            {{ formatNumber(stats.total_alumni) }}
+                        </div>
+                        <div class="stat-label">Alumni</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">
+                            {{ formatNumber(stats.total_partnerships) }}
+                        </div>
+                        <div class="stat-label">Mitra Kerja</div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Stats Section -->
-        <StatsSection v-if="stats" :stats="stats" class="py-16" />
-
         <!-- Leadership Team -->
-        <section v-if="Object.keys(leadership).length" class="py-16 bg-gray-50">
+        <section
+            v-if="Object.keys(leadership).length"
+            class="starter-section section"
+        >
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">
@@ -367,7 +335,10 @@
         </section>
 
         <!-- Faculty Members -->
-        <section v-if="Object.keys(faculty).length" class="py-16">
+        <section
+            v-if="Object.keys(faculty).length"
+            class="starter-section section"
+        >
             <div class="container mx-auto px-4">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">
@@ -412,11 +383,25 @@ import AboutSection from "@/Components/Public/AboutSection.vue";
 import StatsSection from "@/Components/Public/StatsSection.vue";
 import TeamCard from "@/Components/Public/TeamCard.vue";
 
-defineProps({
+function formatNumber(num) {
+    return new Intl.NumberFormat("id-ID").format(num);
+}
+
+// defineProps({
+//     about: Object,
+//     stats: Object,
+//     leadership: Object,
+//     faculty: Object,
+// });
+
+const props = defineProps({
+    sejarah: String,
     about: Object,
     stats: Object,
     leadership: Object,
     faculty: Object,
+    programStudi: Array,
+    programStudiCards: Array,
 });
 const showVideo = ref(false);
 </script>

@@ -1,5 +1,6 @@
 <?php
 
+// app/Models/News.php (dengan debugging dan safety attributes)
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,7 +35,7 @@ class News extends Model
         'tags' => 'array'
     ];
 
-    // Relationships
+    // Relationships dengan default values untuk safety
     public function category(): BelongsTo
     {
         return $this->belongsTo(NewsCategory::class, 'category_id');
@@ -62,6 +63,13 @@ class News extends Model
         return $query->orderBy('published_at', 'desc')->limit($limit);
     }
 
+    public function scopeByCategory($query, $categorySlug)
+    {
+        return $query->whereHas('category', function ($q) use ($categorySlug) {
+            $q->where('slug', $categorySlug);
+        });
+    }
+
     // Helper methods
     public function incrementViews()
     {
@@ -74,9 +82,85 @@ class News extends Model
         return 'slug';
     }
 
-    // Accessors
+    // Accessors dengan safety checks
     public function getFeaturedImageAttribute($value)
     {
-        return $value ? asset('storage/' . $value) : asset('images/default-news.jpg');
+        if (!$value) {
+            return asset('storage/assets/img/news-default.jpg');
+        }
+
+        // Jika sudah full URL, return as is
+        if (str_starts_with($value, 'http')) {
+            return $value;
+        }
+
+        // Jika path relatif, tambahkan storage path
+        return asset('storage/' . $value);
+    }
+
+    public function getExcerptAttribute($value)
+    {
+        if ($value) {
+            return $value;
+        }
+
+        // Auto generate excerpt from content if not set
+        $content = $this->attributes['content'] ?? '';
+        if (empty($content)) {
+            return 'Deskripsi berita tidak tersedia...';
+        }
+
+        return substr(strip_tags($content), 0, 200) . '...';
+    }
+
+    public function getTitleAttribute($value)
+    {
+        return $value ?: 'Judul Berita';
+    }
+
+    public function getReadingTimeAttribute()
+    {
+        $content = $this->attributes['content'] ?? '';
+        if (empty($content)) {
+            return '1 menit baca';
+        }
+
+        $wordCount = str_word_count(strip_tags($content));
+        $readingTime = ceil($wordCount / 200); // Assuming 200 words per minute
+        return $readingTime . ' menit baca';
+    }
+
+    // Tambahkan method untuk debugging
+    public function toArray()
+    {
+        $array = parent::toArray();
+
+        // Ensure category is loaded or provide default
+        if (!isset($array['category']) && $this->relationLoaded('category')) {
+            $array['category'] = $this->category ? $this->category->toArray() : [
+                'id' => null,
+                'name' => 'Umum',
+                'slug' => 'umum'
+            ];
+        }
+
+        // Ensure author is loaded or provide default
+        if (!isset($array['author']) && $this->relationLoaded('author')) {
+            $array['author'] = $this->author ? $this->author->toArray() : [
+                'id' => null,
+                'name' => 'Admin',
+                'email' => null
+            ];
+        }
+
+        return $array;
+    }
+
+    // Static method untuk search
+    public static function search($query)
+    {
+        return static::where('title', 'like', '%' . $query . '%')
+            ->orWhere('excerpt', 'like', '%' . $query . '%')
+            ->orWhere('content', 'like', '%' . $query . '%');
     }
 }
