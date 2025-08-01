@@ -23,11 +23,23 @@
                 <h2 class="text-3xl font-bold text-gray-900 mb-8 text-center">
                     Berita Utama
                 </h2>
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2">
+                <div
+                    class="grid grid-cols-1 lg:grid-cols-3 gap-8"
+                    data-aos="fade-up"
+                    data-aos-delay="100"
+                >
+                    <div
+                        class="lg:col-span-2"
+                        data-aos="fade-up"
+                        data-aos-delay="200"
+                    >
                         <FeaturedNewsCard :news="featuredNews[0]" />
                     </div>
-                    <div class="space-y-6">
+                    <div
+                        class="space-y-6"
+                        data-aos="fade-up"
+                        data-aos-delay="200"
+                    >
                         <NewsCard
                             v-for="news in featuredNews.slice(1)"
                             :key="news.id"
@@ -92,7 +104,11 @@
 
         <!-- News Grid -->
         <section class="py-16">
-            <div class="container mx-auto px-4">
+            <div
+                class="container mx-auto px-4"
+                data-aos="fade-up"
+                data-aos-delay="300"
+            >
                 <div
                     class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
                 >

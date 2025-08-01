@@ -63,8 +63,6 @@
                         @click="toggleMobileNav"
                     ></i>
                 </nav>
-
-                <Link class="cta-btn" href="/#about">Get Started</Link>
             </div>
         </header>
 
