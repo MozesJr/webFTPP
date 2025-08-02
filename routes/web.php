@@ -64,6 +64,19 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    //About
+    Route::get('/about', [App\Http\Controllers\Admin\AboutController::class, 'index'])->name('about.index');
+    Route::get('/about/create', [App\Http\Controllers\Admin\AboutController::class, 'create'])->name('about.create');
+    Route::post('/about', [App\Http\Controllers\Admin\AboutController::class, 'store'])->name('about.store');
+    Route::get('/about/edit', [App\Http\Controllers\Admin\AboutController::class, 'edit'])->name('about.edit');
+    Route::post('/about/update', [App\Http\Controllers\Admin\AboutController::class, 'update'])->name('about.update');
+    Route::delete('/about/delete', [App\Http\Controllers\Admin\AboutController::class, 'destroy'])->name('about.destroy');
+    Route::post('/about/toggle-status', [App\Http\Controllers\Admin\AboutController::class, 'toggleStatus'])->name('about.toggle-status');
+
+    // Jika Anda ingin show route (optional)
+    Route::get('/about/show', [App\Http\Controllers\Admin\AboutController::class, 'show'])->name('about.show');
+
+
 
 
     // Program Studi Management
