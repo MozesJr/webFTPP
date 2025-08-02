@@ -63,6 +63,14 @@
                     </span>
                 </div>
 
+                <SidebarItem
+                    href="/admin/about"
+                    :active="$page.url === '/admin/about'"
+                    icon="HomeIcon"
+                >
+                    About
+                </SidebarItem>
+
                 <!-- Program Studi -->
                 <SidebarDropdown
                     title="Program Studi"
