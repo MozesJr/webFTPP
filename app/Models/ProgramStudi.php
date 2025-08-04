@@ -32,6 +32,11 @@ class ProgramStudi extends Model
         'established_year' => 'integer'
     ];
 
+    public function getRouteKeyName(): string
+    {
+        return 'id';
+    }
+
     // Relationships
     public function kurikulums(): HasMany
     {

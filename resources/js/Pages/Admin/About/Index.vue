@@ -220,7 +220,7 @@
                                         Gambar Utama
                                     </label>
                                     <img
-                                        :src="`${about.image_url}`"
+                                        :src="`/${about.image_url}`"
                                         :alt="about.title"
                                         class="w-full h-48 object-cover rounded-lg shadow-sm"
                                     />
@@ -232,7 +232,7 @@
                                         Gambar Kedua
                                     </label>
                                     <img
-                                        :src="`${about.secondary_image_url}`"
+                                        :src="`/${about.secondary_image_url}`"
                                         :alt="about.title"
                                         class="w-full h-48 object-cover rounded-lg shadow-sm"
                                     />
@@ -283,7 +283,7 @@
                                     Edit About
                                 </Link>
                                 <button
-                                    @click="confirmDelete"
+                                    @click="confirmDeleteAbout"
                                     class="w-full inline-flex justify-center items-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700 focus:bg-red-700 active:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition ease-in-out duration-150"
                                 >
                                     <TrashIcon class="w-4 h-4 mr-2" />
@@ -321,24 +321,17 @@
             </div>
         </div>
 
-        <!-- Delete Confirmation Modal -->
-        <ConfirmationModal
-            :show="showDeleteConfirmation"
-            @close="showDeleteConfirmation = false"
-            @confirm="deleteAbout"
-            title="Hapus Data About"
-            message="Apakah Anda yakin ingin menghapus data about? Tindakan ini tidak dapat dibatalkan."
-            confirmText="Hapus"
-            confirmColor="danger"
-        />
+        <!-- Delete Confirmation Modal - SweetAlert2 will handle this -->
+        <!-- Remove ConfirmationModal and ToastNotification -->
     </AdminLayout>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, watch } from "vue";
 import { Link, router, usePage } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
 import ConfirmationModal from "@/Components/ConfirmationModal.vue";
+import { useSwal } from "@/Composables/useSwal";
 import {
     PlusIcon,
     PencilIcon,
@@ -346,14 +339,20 @@ import {
     DocumentTextIcon,
 } from "@heroicons/vue/24/outline";
 
+// Props
 defineProps({
     about: Object,
 });
 
+// Composables
 const { props } = usePage();
+const { success, error, warning, info, confirmDelete } = useSwal();
+
+// State
 const showDeleteConfirmation = ref(false);
 
-function formatDate(date) {
+// Methods
+const formatDate = (date) => {
     return new Date(date).toLocaleDateString("id-ID", {
         year: "numeric",
         month: "long",
@@ -361,9 +360,9 @@ function formatDate(date) {
         hour: "2-digit",
         minute: "2-digit",
     });
-}
+};
 
-function toggleStatus() {
+const toggleStatus = () => {
     router.post(
         "/admin/about/toggle-status",
         {},
@@ -371,17 +370,54 @@ function toggleStatus() {
             preserveScroll: true,
         }
     );
-}
+};
 
-function confirmDelete() {
-    showDeleteConfirmation.value = true;
-}
+const confirmDeleteAbout = async () => {
+    const result = await confirmDelete(
+        "Hapus Data About?",
+        "Data about yang dihapus tidak dapat dikembalikan!"
+    );
 
-function deleteAbout() {
-    router.delete("/admin/about/delete", {
-        onSuccess: () => {
-            showDeleteConfirmation.value = false;
-        },
-    });
-}
+    if (result.isConfirmed) {
+        deleteAbout();
+    }
+};
+
+const deleteAbout = () => {
+    router.delete("/admin/about/delete");
+};
+
+const handleFlashMessages = () => {
+    const flashProps = props.flash || {};
+
+    if (flashProps.message) {
+        success("Berhasil!", flashProps.message);
+    }
+
+    if (flashProps.error) {
+        error("Error!", flashProps.error);
+    }
+
+    if (flashProps.warning) {
+        warning("Peringatan!", flashProps.warning);
+    }
+
+    if (flashProps.info) {
+        info("Informasi", flashProps.info);
+    }
+};
+
+// Watchers
+watch(
+    () => props.flash,
+    () => {
+        handleFlashMessages();
+    },
+    { deep: true }
+);
+
+// Lifecycle
+onMounted(() => {
+    handleFlashMessages();
+});
 </script>

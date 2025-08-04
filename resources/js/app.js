@@ -5,8 +5,6 @@ import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 
-// Import Bootstrap dan Icons dari CDN akan dihandle di HTML
-
 const appName = import.meta.env.VITE_APP_NAME || "Laravel";
 
 createInertiaApp({
@@ -26,9 +24,19 @@ createInertiaApp({
     },
 });
 
-// Initialize vendor scripts after DOM is loaded
+// Hanya load script frontend jika bukan halaman admin
 document.addEventListener("DOMContentLoaded", function () {
-    // Load vendor scripts dynamically
+    // Cek apakah ini halaman admin
+    const isAdminPage = window.location.pathname.startsWith("/admin");
+
+    // Jika bukan admin, baru load script frontend
+    if (!isAdminPage) {
+        loadFrontendScripts();
+    }
+});
+
+function loadFrontendScripts() {
+    // Load vendor scripts untuk frontend saja
     const scripts = [
         "/storage/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
         "/storage/assets/vendor/aos/aos.js",
@@ -45,18 +53,24 @@ document.addEventListener("DOMContentLoaded", function () {
         const script = document.createElement("script");
         script.src = src;
         script.async = true;
+        script.onerror = () => {
+            console.warn(`Failed to load script: ${src}`);
+            loadedScripts++;
+            if (loadedScripts === scripts.length) {
+                initializeFrontendComponents();
+            }
+        };
         script.onload = () => {
             loadedScripts++;
             if (loadedScripts === scripts.length) {
-                // All scripts loaded, initialize components
-                initializeComponents();
+                initializeFrontendComponents();
             }
         };
         document.head.appendChild(script);
     });
-});
+}
 
-function initializeComponents() {
+function initializeFrontendComponents() {
     // Initialize AOS (Animate On Scroll)
     if (typeof AOS !== "undefined") {
         AOS.init({
@@ -132,9 +146,10 @@ function initializeComponents() {
     const mobileNavToggle = document.querySelector(".mobile-nav-toggle");
     if (mobileNavToggle) {
         mobileNavToggle.addEventListener("click", function () {
-            document
-                .querySelector("#navmenu")
-                .classList.toggle("mobile-nav-active");
+            const navmenu = document.querySelector("#navmenu");
+            if (navmenu) {
+                navmenu.classList.toggle("mobile-nav-active");
+            }
             this.classList.toggle("bi-list");
             this.classList.toggle("bi-x");
         });
@@ -183,8 +198,8 @@ function initializeComponents() {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute("href"));
             if (target) {
-                const headerHeight =
-                    document.querySelector("#header").offsetHeight;
+                const header = document.querySelector("#header");
+                const headerHeight = header ? header.offsetHeight : 0;
                 const targetPosition = target.offsetTop - headerHeight;
                 window.scrollTo({
                     top: targetPosition,
@@ -195,10 +210,14 @@ function initializeComponents() {
     });
 
     // Initialize Bootstrap tabs
-    const tabTriggerList = document.querySelectorAll('[data-bs-toggle="tab"]');
-    tabTriggerList.forEach((tabTrigger) => {
-        new bootstrap.Tab(tabTrigger);
-    });
+    if (typeof bootstrap !== "undefined") {
+        const tabTriggerList = document.querySelectorAll(
+            '[data-bs-toggle="tab"]'
+        );
+        tabTriggerList.forEach((tabTrigger) => {
+            new bootstrap.Tab(tabTrigger);
+        });
+    }
 
     // Remove preloader
     const preloader = document.querySelector("#preloader");

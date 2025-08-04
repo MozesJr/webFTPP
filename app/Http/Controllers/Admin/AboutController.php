@@ -127,6 +127,9 @@ class AboutController extends Controller
                 $this->deleteImage($about->image_url);
             }
             $validated['image_url'] = $this->uploadImage($request->file('image_url'), 'main');
+        } else {
+            // Keep existing image
+            unset($validated['image_url']);
         }
 
         // Handle secondary image upload
@@ -136,6 +139,9 @@ class AboutController extends Controller
                 $this->deleteImage($about->secondary_image_url);
             }
             $validated['secondary_image_url'] = $this->uploadImage($request->file('secondary_image_url'), 'secondary');
+        } else {
+            // Keep existing secondary image
+            unset($validated['secondary_image_url']);
         }
 
         $validated['is_active'] = $request->boolean('is_active', true);

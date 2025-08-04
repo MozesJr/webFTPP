@@ -72,38 +72,23 @@
                 </SidebarItem>
 
                 <!-- Program Studi -->
-                <SidebarDropdown
-                    title="Program Studi"
-                    icon="AcademicCapIcon"
+                <SidebarItem
+                    href="/admin/program-studi"
                     :active="$page.url.startsWith('/admin/program-studi')"
+                    icon="AcademicCapIcon"
                 >
-                    <SidebarSubItem href="/admin/program-studi">
-                        Semua Program Studi
-                    </SidebarSubItem>
-                    <SidebarSubItem href="/admin/program-studi/create">
-                        Tambah Program Studi
-                    </SidebarSubItem>
-                    <SidebarSubItem href="/admin/kurikulum">
-                        Kurikulum
-                    </SidebarSubItem>
-                </SidebarDropdown>
+                    Program Studi
+                </SidebarItem>
 
                 <!-- News -->
-                <SidebarDropdown
-                    title="Berita"
-                    icon="NewspaperIcon"
+
+                <SidebarItem
+                    href="/admin/news"
                     :active="$page.url.startsWith('/admin/news')"
+                    icon="NewspaperIcon"
                 >
-                    <SidebarSubItem href="/admin/news">
-                        Semua Berita
-                    </SidebarSubItem>
-                    <SidebarSubItem href="/admin/news/create">
-                        Tambah Berita
-                    </SidebarSubItem>
-                    <SidebarSubItem href="/admin/news-categories">
-                        Kategori Berita
-                    </SidebarSubItem>
-                </SidebarDropdown>
+                    News
+                </SidebarItem>
 
                 <!-- Team -->
                 <SidebarDropdown

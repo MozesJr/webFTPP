@@ -83,6 +83,9 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::resource('program-studi', AdminProgramStudiController::class)->parameters([
         'program-studi' => 'programStudi'
     ]);
+    // Program Studi routes
+    // Route::resource('program-studi', App\Http\Controllers\Admin\ProgramStudiController::class);
+
 
     // News Management
     Route::resource('news', AdminNewsController::class);
