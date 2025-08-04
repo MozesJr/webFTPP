@@ -131,6 +131,7 @@
             }
         });
     </script>
+    <script src="{{ mix('resources/js/app.js') }}" defer></script>
 </body>
 
 </html>

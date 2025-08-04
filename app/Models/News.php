@@ -35,6 +35,7 @@ class News extends Model
         'tags' => 'array'
     ];
 
+
     // Relationships dengan default values untuk safety
     public function category(): BelongsTo
     {
@@ -79,7 +80,7 @@ class News extends Model
     // Route key name for URL binding
     public function getRouteKeyName()
     {
-        return 'slug';
+        return 'id';
     }
 
     // Accessors dengan safety checks

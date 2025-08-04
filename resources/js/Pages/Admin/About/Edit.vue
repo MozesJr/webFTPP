@@ -504,9 +504,10 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { Link, useForm } from "@inertiajs/vue3";
+import { ref, computed, onMounted, watch } from "vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
 import AdminLayout from "@/Layouts/AdminLayout.vue";
+import ToastNotification from "@/Components/ToastNotification.vue";
 import { ArrowLeftIcon, CheckIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 const props = defineProps({
@@ -514,6 +515,50 @@ const props = defineProps({
         type: Object,
         default: () => ({}),
     },
+});
+
+const { props: pageProps } = usePage();
+
+// Toast notification state
+const showToast = ref(false);
+const toastType = ref("success");
+const toastTitle = ref("");
+const toastMessage = ref("");
+
+// Handle flash messages
+const handleFlashMessages = () => {
+    const flashProps = pageProps.flash || {};
+
+    if (flashProps.message) {
+        showToastNotification("success", "Berhasil!", flashProps.message);
+    }
+
+    if (flashProps.error) {
+        showToastNotification("error", "Error!", flashProps.error);
+    }
+};
+
+const showToastNotification = (type, title, message) => {
+    toastType.value = type;
+    toastTitle.value = title;
+    toastMessage.value = message;
+    showToast.value = true;
+};
+
+const closeToast = () => {
+    showToast.value = false;
+};
+
+watch(
+    () => pageProps.flash,
+    () => {
+        handleFlashMessages();
+    },
+    { deep: true }
+);
+
+onMounted(() => {
+    handleFlashMessages();
 });
 
 const form = useForm({

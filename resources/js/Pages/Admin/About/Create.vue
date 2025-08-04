@@ -29,16 +29,189 @@
                 <!-- Main Form -->
                 <div class="lg:col-span-2 space-y-6">
                     <!-- Basic Information -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div
+                        class="bg-white rounded-lg shadow-sm border border-gray-200"
+                    >
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h2 class="text-lg font-medium text-gray-900">
+                                Informasi Dasar
+                            </h2>
+                            <p class="text-sm text-gray-600">
+                                Informasi dasar tentang fakultas
+                            </p>
+                        </div>
+                        <div class="p-6 space-y-6">
+                            <!-- Title -->
+                            <div>
+                                <label
+                                    for="title"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
+                                    Judul <span class="text-red-500">*</span>
+                                </label>
+                                <input
+                                    id="title"
+                                    v-model="form.title"
+                                    type="text"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    :class="{
+                                        'border-red-300': form.errors.title,
+                                    }"
+                                    placeholder="Masukkan judul about"
+                                />
+                                <div
+                                    v-if="form.errors.title"
+                                    class="mt-1 text-sm text-red-600"
+                                >
+                                    {{ form.errors.title }}
+                                </div>
+                            </div>
+
+                            <!-- Subtitle -->
+                            <div>
+                                <label
+                                    for="subtitle"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
+                                    Subtitle
+                                </label>
+                                <input
+                                    id="subtitle"
+                                    v-model="form.subtitle"
+                                    type="text"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    :class="{
+                                        'border-red-300': form.errors.subtitle,
+                                    }"
+                                    placeholder="Masukkan subtitle (opsional)"
+                                />
+                                <div
+                                    v-if="form.errors.subtitle"
+                                    class="mt-1 text-sm text-red-600"
+                                >
+                                    {{ form.errors.subtitle }}
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div>
+                                <label
+                                    for="description"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
+                                    Deskripsi
+                                    <span class="text-red-500">*</span>
+                                </label>
+                                <textarea
+                                    id="description"
+                                    v-model="form.description"
+                                    rows="6"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    :class="{
+                                        'border-red-300':
+                                            form.errors.description,
+                                    }"
+                                    placeholder="Masukkan deskripsi lengkap tentang fakultas"
+                                ></textarea>
+                                <div
+                                    v-if="form.errors.description"
+                                    class="mt-1 text-sm text-red-600"
+                                >
+                                    {{ form.errors.description }}
+                                </div>
+                                <p class="mt-1 text-sm text-gray-500">
+                                    Anda dapat menggunakan HTML untuk formatting
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vision & Mission -->
+                    <div
+                        class="bg-white rounded-lg shadow-sm border border-gray-200"
+                    >
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h2 class="text-lg font-medium text-gray-900">
+                                Visi & Misi
+                            </h2>
+                            <p class="text-sm text-gray-600">
+                                Visi dan misi fakultas
+                            </p>
+                        </div>
+                        <div class="p-6 space-y-6">
+                            <!-- Vision -->
+                            <div>
+                                <label
+                                    for="vision"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
+                                    Visi
+                                </label>
+                                <textarea
+                                    id="vision"
+                                    v-model="form.vision"
+                                    rows="4"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    :class="{
+                                        'border-red-300': form.errors.vision,
+                                    }"
+                                    placeholder="Masukkan visi fakultas"
+                                ></textarea>
+                                <div
+                                    v-if="form.errors.vision"
+                                    class="mt-1 text-sm text-red-600"
+                                >
+                                    {{ form.errors.vision }}
+                                </div>
+                            </div>
+
+                            <!-- Mission -->
+                            <div>
+                                <label
+                                    for="mission"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
+                                    Misi
+                                </label>
+                                <textarea
+                                    id="mission"
+                                    v-model="form.mission"
+                                    rows="4"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                    :class="{
+                                        'border-red-300': form.errors.mission,
+                                    }"
+                                    placeholder="Masukkan misi fakultas"
+                                ></textarea>
+                                <div
+                                    v-if="form.errors.mission"
+                                    class="mt-1 text-sm text-red-600"
+                                >
+                                    {{ form.errors.mission }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Video Information -->
+                    <div
+                        class="bg-white rounded-lg shadow-sm border border-gray-200"
+                    >
+                        <div class="px-6 py-4 border-b border-gray-200">
+                            <h2 class="text-lg font-medium text-gray-900">
+                                Video
+                            </h2>
+                            <p class="text-sm text-gray-600">
                                 Video tentang fakultas (opsional)
                             </p>
                         </div>
                         <div class="p-6 space-y-6">
                             <!-- Video URL -->
                             <div>
-                                <label for="video_url" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label
+                                    for="video_url"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
                                     URL Video
                                 </label>
                                 <input
@@ -46,20 +219,29 @@
                                     v-model="form.video_url"
                                     type="url"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                    :class="{ 'border-red-300': form.errors.video_url }"
+                                    :class="{
+                                        'border-red-300': form.errors.video_url,
+                                    }"
                                     placeholder="https://www.youtube.com/watch?v=..."
                                 />
-                                <div v-if="form.errors.video_url" class="mt-1 text-sm text-red-600">
+                                <div
+                                    v-if="form.errors.video_url"
+                                    class="mt-1 text-sm text-red-600"
+                                >
                                     {{ form.errors.video_url }}
                                 </div>
                                 <p class="mt-1 text-sm text-gray-500">
-                                    Masukkan URL video YouTube, Vimeo, atau platform lainnya
+                                    Masukkan URL video YouTube, Vimeo, atau
+                                    platform lainnya
                                 </p>
                             </div>
 
                             <!-- Video Title -->
                             <div>
-                                <label for="video_title" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label
+                                    for="video_title"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
                                     Judul Video
                                 </label>
                                 <input
@@ -67,17 +249,26 @@
                                     v-model="form.video_title"
                                     type="text"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                    :class="{ 'border-red-300': form.errors.video_title }"
+                                    :class="{
+                                        'border-red-300':
+                                            form.errors.video_title,
+                                    }"
                                     placeholder="Masukkan judul video"
                                 />
-                                <div v-if="form.errors.video_title" class="mt-1 text-sm text-red-600">
+                                <div
+                                    v-if="form.errors.video_title"
+                                    class="mt-1 text-sm text-red-600"
+                                >
                                     {{ form.errors.video_title }}
                                 </div>
                             </div>
 
                             <!-- Video Description -->
                             <div>
-                                <label for="video_description" class="block text-sm font-medium text-gray-700 mb-1">
+                                <label
+                                    for="video_description"
+                                    class="block text-sm font-medium text-gray-700 mb-1"
+                                >
                                     Deskripsi Video
                                 </label>
                                 <textarea
@@ -85,10 +276,16 @@
                                     v-model="form.video_description"
                                     rows="3"
                                     class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                    :class="{ 'border-red-300': form.errors.video_description }"
+                                    :class="{
+                                        'border-red-300':
+                                            form.errors.video_description,
+                                    }"
                                     placeholder="Masukkan deskripsi video"
                                 ></textarea>
-                                <div v-if="form.errors.video_description" class="mt-1 text-sm text-red-600">
+                                <div
+                                    v-if="form.errors.video_description"
+                                    class="mt-1 text-sm text-red-600"
+                                >
                                     {{ form.errors.video_description }}
                                 </div>
                             </div>
@@ -99,7 +296,9 @@
                 <!-- Sidebar -->
                 <div class="space-y-6">
                     <!-- Status & Actions -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div
+                        class="bg-white rounded-lg shadow-sm border border-gray-200"
+                    >
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h2 class="text-lg font-medium text-gray-900">
                                 Status & Aksi
@@ -114,12 +313,16 @@
                                     type="checkbox"
                                     class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                                 />
-                                <label for="is_active" class="ml-2 block text-sm text-gray-900">
+                                <label
+                                    for="is_active"
+                                    class="ml-2 block text-sm text-gray-900"
+                                >
                                     Aktifkan halaman about
                                 </label>
                             </div>
                             <p class="text-sm text-gray-500">
-                                Jika diaktifkan, halaman about akan ditampilkan di website
+                                Jika diaktifkan, halaman about akan ditampilkan
+                                di website
                             </p>
 
                             <!-- Action Buttons -->
@@ -130,9 +333,25 @@
                                     class="w-full inline-flex justify-center items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:opacity-50"
                                 >
                                     <span v-if="form.processing">
-                                        <svg class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        <svg
+                                            class="animate-spin -ml-1 mr-3 h-4 w-4 text-white"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                class="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                stroke-width="4"
+                                            ></circle>
+                                            <path
+                                                class="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
                                         </svg>
                                         Processing...
                                     </span>
@@ -154,7 +373,9 @@
                     </div>
 
                     <!-- Images -->
-                    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+                    <div
+                        class="bg-white rounded-lg shadow-sm border border-gray-200"
+                    >
                         <div class="px-6 py-4 border-b border-gray-200">
                             <h2 class="text-lg font-medium text-gray-900">
                                 Gambar
@@ -166,7 +387,10 @@
                         <div class="p-6 space-y-6">
                             <!-- Main Image -->
                             <div>
-                                <label for="image_url" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label
+                                    for="image_url"
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
                                     Gambar Utama
                                 </label>
 
@@ -179,7 +403,10 @@
                                     @change="handleImageChange"
                                     class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                 />
-                                <div v-if="form.errors.image_url" class="mt-1 text-sm text-red-600">
+                                <div
+                                    v-if="form.errors.image_url"
+                                    class="mt-1 text-sm text-red-600"
+                                >
                                     {{ form.errors.image_url }}
                                 </div>
 
@@ -190,7 +417,9 @@
                                         alt="Preview"
                                         class="w-full h-32 object-cover rounded-lg"
                                     />
-                                    <p class="text-xs text-gray-500 mt-1">Preview gambar</p>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        Preview gambar
+                                    </p>
                                 </div>
 
                                 <p class="mt-1 text-sm text-gray-500">
@@ -200,7 +429,10 @@
 
                             <!-- Secondary Image -->
                             <div>
-                                <label for="secondary_image_url" class="block text-sm font-medium text-gray-700 mb-2">
+                                <label
+                                    for="secondary_image_url"
+                                    class="block text-sm font-medium text-gray-700 mb-2"
+                                >
                                     Gambar Kedua
                                 </label>
 
@@ -213,7 +445,10 @@
                                     @change="handleSecondaryImageChange"
                                     class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
                                 />
-                                <div v-if="form.errors.secondary_image_url" class="mt-1 text-sm text-red-600">
+                                <div
+                                    v-if="form.errors.secondary_image_url"
+                                    class="mt-1 text-sm text-red-600"
+                                >
                                     {{ form.errors.secondary_image_url }}
                                 </div>
 
@@ -224,7 +459,9 @@
                                         alt="Secondary Preview"
                                         class="w-full h-32 object-cover rounded-lg"
                                     />
-                                    <p class="text-xs text-gray-500 mt-1">Preview gambar kedua</p>
+                                    <p class="text-xs text-gray-500 mt-1">
+                                        Preview gambar kedua
+                                    </p>
                                 </div>
 
                                 <p class="mt-1 text-sm text-gray-500">
@@ -240,27 +477,24 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { Link, useForm } from '@inertiajs/vue3';
-import AdminLayout from '@/Layouts/AdminLayout.vue';
-import {
-    ArrowLeftIcon,
-    CheckIcon,
-    XMarkIcon
-} from '@heroicons/vue/24/outline';
+import { ref, onMounted, watch } from "vue";
+import { Link, useForm, usePage } from "@inertiajs/vue3";
+import AdminLayout from "@/Layouts/AdminLayout.vue";
+import ToastNotification from "@/Components/ToastNotification.vue";
+import { ArrowLeftIcon, CheckIcon, XMarkIcon } from "@heroicons/vue/24/outline";
 
 const form = useForm({
-    title: '',
-    subtitle: '',
-    description: '',
-    vision: '',
-    mission: '',
+    title: "",
+    subtitle: "",
+    description: "",
+    vision: "",
+    mission: "",
     image_url: null,
-    video_url: '',
-    video_title: '',
-    video_description: '',
+    video_url: "",
+    video_title: "",
+    video_description: "",
     secondary_image_url: null,
-    is_active: true
+    is_active: true,
 });
 
 const imageInput = ref(null);
@@ -295,9 +529,36 @@ function handleSecondaryImageChange(event) {
 }
 
 function submit() {
-    form.post('/admin/about', {
+    form.post("/admin/about", {
         forceFormData: true,
-        preserveScroll: true
+        preserveScroll: true,
     });
 }
+
+const { props: pageProps } = usePage();
+const { success, error, warning, info } = useSwal();
+
+const handleFlashMessages = () => {
+    const flashProps = pageProps.flash || {};
+
+    if (flashProps.message) {
+        success("Berhasil!", flashProps.message);
+    }
+
+    if (flashProps.error) {
+        error("Error!", flashProps.error);
+    }
+};
+
+watch(
+    () => pageProps.flash,
+    () => {
+        handleFlashMessages();
+    },
+    { deep: true }
+);
+
+onMounted(() => {
+    handleFlashMessages();
+});
 </script>
