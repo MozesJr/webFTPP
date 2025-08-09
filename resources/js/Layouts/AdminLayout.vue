@@ -8,7 +8,7 @@
             <div class="pre-loader-box text-center">
                 <div class="loader-logo mb-4">
                     <img
-                        src="/storage/assets/img/logo.png"
+                        src="/storage/assets/img/Logo_Universitas_Papua.png"
                         alt="FTPP Logo"
                         class="w-16 h-16 mx-auto"
                     />

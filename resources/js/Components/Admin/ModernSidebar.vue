@@ -10,7 +10,7 @@
         >
             <div class="flex items-center">
                 <img
-                    src="/storage/assets/img/logo.png"
+                    src="/storage/assets/img/Logo_Universitas_Papua.png"
                     alt="FTPP"
                     class="w-8 h-8"
                 />
@@ -24,21 +24,6 @@
             >
                 <XMarkIcon class="w-6 h-6" />
             </button>
-        </div>
-
-        <!-- Search -->
-        <div class="p-4 border-b border-gray-200">
-            <div class="relative">
-                <MagnifyingGlassIcon
-                    class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
-                />
-                <input
-                    type="text"
-                    placeholder="Search menu..."
-                    class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    v-model="searchQuery"
-                />
-            </div>
         </div>
 
         <!-- Navigation -->
@@ -90,19 +75,60 @@
                     News
                 </SidebarItem>
 
+                <SidebarDropdown
+                    title="Akademik"
+                    icon="UsersIcon"
+                    :active="
+                        $page.url.startsWith('/admin/kurikulum') ||
+                        $page.url.startsWith('/admin/mata-kuliah') ||
+                        $page.url.startsWith('/admin/rps') ||
+                        $page.url.startsWith('/admin/jadwal-kuliah') ||
+                        $page.url.startsWith('/admin/dosen-mata-kuliah')
+                    "
+                >
+                    <SidebarSubItem href="/admin/kurikulum">
+                        Kurikulum
+                    </SidebarSubItem>
+                    <SidebarSubItem href="/admin/mata-kuliah">
+                        Mata Kuliah
+                    </SidebarSubItem>
+                    <SidebarSubItem href="/admin/rps"> RPS </SidebarSubItem>
+                    <SidebarSubItem href="/admin/jadwal-kuliah">
+                        Jadwal Kuliah
+                    </SidebarSubItem>
+                    <SidebarSubItem href="/admin/dosen-mata-kuliah">
+                        Dosen Mata Kuliah
+                    </SidebarSubItem>
+                </SidebarDropdown>
+
+                <SidebarItem
+                    href="/admin/penjaminan-mutu"
+                    :active="$page.url.startsWith('/admin/penjaminan-mutu')"
+                    icon="NewspaperIcon"
+                >
+                    Penjaminan Mutu
+                </SidebarItem>
+                <SidebarItem
+                    href="/admin/stats"
+                    :active="$page.url.startsWith('/admin/stats')"
+                    icon="NewspaperIcon"
+                >
+                    Stats
+                </SidebarItem>
+
                 <!-- Team -->
                 <SidebarDropdown
                     title="Tim & Dosen"
                     icon="UsersIcon"
-                    :active="$page.url.startsWith('/admin/teams')"
+                    :active="
+                        $page.url.startsWith('/admin/team') ||
+                        $page.url.startsWith('/admin/team-position')
+                    "
                 >
-                    <SidebarSubItem href="/admin/teams">
+                    <SidebarSubItem href="/admin/team">
                         Semua Tim
                     </SidebarSubItem>
-                    <SidebarSubItem href="/admin/teams/create">
-                        Tambah Anggota
-                    </SidebarSubItem>
-                    <SidebarSubItem href="/admin/team-positions">
+                    <SidebarSubItem href="/admin/team-position">
                         Posisi/Jabatan
                     </SidebarSubItem>
                 </SidebarDropdown>
@@ -154,14 +180,12 @@
                         System
                     </span>
                 </div>
-
-                <!-- Settings -->
                 <SidebarItem
-                    href="/admin/settings"
-                    :active="$page.url.startsWith('/admin/settings')"
+                    href="/admin/site-settings"
+                    :active="$page.url.startsWith('/admin/site-settings')"
                     icon="CogIcon"
                 >
-                    Pengaturan
+                    Site Setting
                 </SidebarItem>
 
                 <!-- File Manager -->
@@ -174,21 +198,6 @@
                 </SidebarItem>
             </div>
         </nav>
-
-        <!-- User Info at Bottom -->
-        <div class="border-t border-gray-200 p-4">
-            <div class="flex items-center">
-                <img
-                    src="/storage/assets/img/team/default-avatar.jpg"
-                    alt="User"
-                    class="w-10 h-10 rounded-full"
-                />
-                <div class="ml-3">
-                    <p class="text-sm font-medium text-gray-900">Admin User</p>
-                    <p class="text-xs text-gray-500">Administrator</p>
-                </div>
-            </div>
-        </div>
     </div>
 </template>
 
