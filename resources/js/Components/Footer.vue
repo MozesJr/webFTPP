@@ -95,7 +95,9 @@ const siteDescription = computed(
         page.props.siteSettings?.site_description || "Official Faculty Website"
 );
 const logo = computed(
-    () => page.props.siteSettings?.site_logo || "/images/logo.png"
+    () =>
+        page.props.siteSettings?.site_logo ||
+        "/images/Logo_Universitas_Papua.png"
 );
 
 const socialLinks = computed(() => ({

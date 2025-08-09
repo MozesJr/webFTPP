@@ -13,7 +13,7 @@ class SiteSettingSeeder extends Seeder
             // General Settings
             ['key_name' => 'site_title', 'value' => 'Fakultas Teknologi Informasi', 'type' => 'text', 'group' => 'general'],
             ['key_name' => 'site_description', 'value' => 'Fakultas Teknologi Informasi - Universitas Terdepan dalam Pendidikan IT', 'type' => 'text', 'group' => 'general'],
-            ['key_name' => 'site_logo', 'value' => '/images/logo.png', 'type' => 'file', 'group' => 'general'],
+            ['key_name' => 'site_logo', 'value' => '/images/Logo_Universitas_Papua.png', 'type' => 'file', 'group' => 'general'],
             ['key_name' => 'favicon', 'value' => '/images/favicon.ico', 'type' => 'file', 'group' => 'general'],
 
             // Contact Information

@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\ProgramStudiController as AdminProgramStudiContro
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ContactMessageController;
+use App\Http\Controllers\Admin\TeamController;
+use App\Http\Controllers\Admin\TeamPositionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -101,12 +103,69 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::put('/', [SettingController::class, 'update'])->name('update');
     });
 
-    // Additional admin resources (add as needed)
-    // Route::resource('teams', TeamController::class);
-    // Route::resource('testimonials', TestimonialController::class);
-    // Route::resource('clients', ClientController::class);
-    // Route::resource('galleries', GalleryController::class);
-    // Route::resource('events', EventController::class);
+    // Academic Management
+    Route::resource('kurikulum', App\Http\Controllers\Admin\KurikulumController::class);
+    Route::resource('mata-kuliah', App\Http\Controllers\Admin\MataKuliahController::class);
+    Route::resource('rps', App\Http\Controllers\Admin\RpsController::class);
+    Route::resource('jadwal-kuliah', App\Http\Controllers\Admin\JadwalKuliahController::class);
+    Route::resource('dosen-mata-kuliah', App\Http\Controllers\Admin\DosenMataKuliahController::class);
+
+    // Penjaminan Mutu Routes
+    Route::prefix('penjaminan-mutu')->name('penjaminan-mutu.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\PenjaminanMutuController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\PenjaminanMutuController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\Admin\PenjaminanMutuController::class, 'store'])->name('store');
+        Route::get('/{penjaminanMutu}', [App\Http\Controllers\Admin\PenjaminanMutuController::class, 'show'])->name('show');
+        Route::get('/{penjaminanMutu}/edit', [App\Http\Controllers\Admin\PenjaminanMutuController::class, 'edit'])->name('edit');
+        Route::put('/{penjaminanMutu}', [App\Http\Controllers\Admin\PenjaminanMutuController::class, 'update'])->name('update');
+        Route::delete('/{penjaminanMutu}', [App\Http\Controllers\Admin\PenjaminanMutuController::class, 'destroy'])->name('destroy');
+        Route::get('/{penjaminanMutu}/download', [App\Http\Controllers\Admin\PenjaminanMutuController::class, 'download'])->name('download');
+    });
+
+    Route::prefix('site-settings')->name('site-settings.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\SiteSettingsController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\SiteSettingsController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\Admin\SiteSettingsController::class, 'store'])->name('store');
+        Route::get('/{siteSetting}', [App\Http\Controllers\Admin\SiteSettingsController::class, 'show'])->name('show');
+        Route::get('/{siteSetting}/edit', [App\Http\Controllers\Admin\SiteSettingsController::class, 'edit'])->name('edit');
+        Route::put('/{siteSetting}', [App\Http\Controllers\Admin\SiteSettingsController::class, 'update'])->name('update');
+        Route::delete('/{siteSetting}', [App\Http\Controllers\Admin\SiteSettingsController::class, 'destroy'])->name('destroy');
+
+        // Bulk update route
+        Route::post('/bulk-update', [App\Http\Controllers\Admin\SiteSettingsController::class, 'bulkUpdate'])->name('bulk-update');
+    });
+
+    // Stats Routes
+    Route::prefix('stats')->name('stats.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\StatsController::class, 'index'])->name('index');
+        Route::get('/create', [App\Http\Controllers\Admin\StatsController::class, 'create'])->name('create');
+        Route::post('/', [App\Http\Controllers\Admin\StatsController::class, 'store'])->name('store');
+        Route::get('/{stat}', [App\Http\Controllers\Admin\StatsController::class, 'show'])->name('show');
+        Route::get('/{stat}/edit', [App\Http\Controllers\Admin\StatsController::class, 'edit'])->name('edit');
+        Route::put('/{stat}', [App\Http\Controllers\Admin\StatsController::class, 'update'])->name('update');
+        Route::delete('/{stat}', [App\Http\Controllers\Admin\StatsController::class, 'destroy'])->name('destroy');
+
+        // Special actions
+        Route::patch('/{stat}/set-current', [App\Http\Controllers\Admin\StatsController::class, 'setCurrent'])->name('set-current');
+    });
+
+    // API routes for charts and public data
+    Route::prefix('api/stats')->name('api.stats.')->group(function () {
+        Route::get('/chart-data', [App\Http\Controllers\Admin\StatsController::class, 'getChartApi'])->name('chart-data');
+        Route::get('/current', [App\Http\Controllers\Admin\StatsController::class, 'getCurrentStats'])->name('current');
+    });
+
+    // Team Position routes
+    Route::resource('team-position', TeamPositionController::class)->parameters([
+        'team-position' => 'teamPosition'
+    ]);
+
+    // Team routes
+    Route::resource('team', TeamController::class);
+
+    // Additional team routes
+    Route::post('team/update-order', [TeamController::class, 'updateOrder'])
+        ->name('team.update-order');
 });
 
 // API Routes for AJAX requests
@@ -122,4 +181,7 @@ Route::prefix('api')->middleware('web')->group(function () {
     Route::get('/events/upcoming', function () {
         return \App\Models\Event::upcoming()->take(5)->get();
     });
+
+    Route::get('/chart-data', [App\Http\Controllers\Admin\StatsController::class, 'getChartApi'])->name('chart-data');
+    Route::get('/current', [App\Http\Controllers\Admin\StatsController::class, 'getCurrentStats'])->name('current');
 });
