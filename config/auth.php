@@ -40,6 +40,12 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        // Add parent guard
+        'parent' => [
+            'driver' => 'session',
+            'provider' => 'parents',
+        ],
     ],
 
     /*
@@ -63,6 +69,12 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => env('AUTH_MODEL', App\Models\User::class),
+        ],
+
+        // Add parent provider
+        'parents' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\ParentModel::class,
         ],
 
         // 'users' => [
@@ -97,6 +109,16 @@ return [
             'expire' => 60,
             'throttle' => 60,
         ],
+
+        // Add parent password resets
+        'parents' => [
+            'provider' => 'parents',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'password_timeout' => 10800,
     ],
 
     /*

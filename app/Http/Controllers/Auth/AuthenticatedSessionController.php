@@ -27,20 +27,40 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
+    // public function store(LoginRequest $request): RedirectResponse
+    // {
+    //     $request->authenticate();
+
+    //     $request->session()->regenerate();
+
+    //     // CUSTOM REDIRECT LOGIC - ADD THIS
+    //     $user = Auth::user();
+
+    //     if ($user->hasRole(['admin', 'editor'])) {
+    //         return redirect()->intended(route('admin.dashboard'));
+    //     }
+
+    //     return redirect()->intended(route('home'));
+    // }
+
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
 
-        $request->session()->regenerate();
-
-        // CUSTOM REDIRECT LOGIC - ADD THIS
         $user = Auth::user();
 
-        if ($user->hasRole(['admin', 'editor'])) {
-            return redirect()->intended(route('admin.dashboard'));
+        // Check if user is active
+        if (!$user->is_active) {
+            Auth::logout();
+            return back()->withErrors([
+                'email' => 'Akun Anda telah dinonaktifkan. Silakan hubungi administrator.',
+            ]);
         }
 
-        return redirect()->intended(route('home'));
+        $request->session()->regenerate();
+
+        // Redirect berdasarkan role
+        return redirect()->intended($user->getDashboardRoute());
     }
 
     /**

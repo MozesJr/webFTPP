@@ -6,6 +6,10 @@ use Illuminate\Support\Facades\Vite;
 use Illuminate\Support\ServiceProvider;
 use App\Helpers\SiteSettingsHelper;
 use App\Helpers\StatsHelper;
+use App\Services\GoogleDriveService;
+use App\Services\KhsManagementService;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +18,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Register Google Drive Service as Singleton
+        $this->app->singleton(GoogleDriveService::class, function ($app) {
+            return new GoogleDriveService();
+        });
+
+        // Register KHS Management Service
+        $this->app->bind(KhsManagementService::class, function ($app) {
+            return new KhsManagementService(
+                $app->make(GoogleDriveService::class)
+            );
+        });
     }
 
     /**
@@ -33,5 +47,14 @@ class AppServiceProvider extends ServiceProvider
         // StatsHelper::deleted(function ($stat) {
         //     \App\Helpers\StatsHelper::clearCache();
         // });
+
+        Route::bind('khsFile', function ($id) {
+            if (Auth::guard('parent')->check()) {
+                $parent = Auth::guard('parent')->user();
+                return $parent->student->khsFiles()->where('id', $id)->ready()->firstOrFail();
+            }
+
+            return \App\Models\KhsFile::findOrFail($id);
+        });
     }
 }
