@@ -49,24 +49,58 @@ class User extends Authenticatable
     }
 
     // Helper methods
-    public function isAdmin()
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole('super_admin');
+    }
+
+    public function isAdmin(): bool
     {
         return $this->hasRole('admin');
     }
 
-    public function isEditor()
+    public function isPetugas(): bool
     {
-        return $this->hasRole('editor');
+        return $this->hasRole('petugas_umum');
     }
 
-    public function canManageContent()
+    public function isParent(): bool
     {
-        return $this->hasAnyRole(['admin', 'editor']);
+        return $this->hasRole('orang_tua');
     }
 
-    public function scopeByDegreeLevel($query, $level)
+    public function getDashboardRoute(): string
     {
-        return $query->where('degree_level', $level);
+        if ($this->isSuperAdmin()) {
+            return route('super-admin.dashboard');
+        }
+
+        if ($this->isAdmin()) {
+            return route('admin.dashboard');
+        }
+
+        if ($this->isPetugas()) {
+            return route('petugas.dashboard');
+        }
+
+        if ($this->isParent()) {
+            return route('parent.dashboard');
+        }
+
+        return route('admin.dashboard');
+    }
+
+    public function getRoleDisplayName(): string
+    {
+        $roleNames = [
+            'super_admin' => 'Super Administrator',
+            'admin' => 'Administrator',
+            'petugas_umum' => 'Petugas Umum',
+            'orang_tua' => 'Orang Tua',
+        ];
+
+        $role = $this->getRoleNames()->first();
+        return $roleNames[$role] ?? 'User';
     }
 
     // Accessors

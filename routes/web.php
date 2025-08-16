@@ -1,5 +1,5 @@
 <?php
-// routes/web.php
+// routes/web.php - Complete fixed version
 
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
@@ -15,8 +15,20 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\TeamPositionController;
+
+
+// Super Admin Controllers
+use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
+use App\Http\Controllers\SuperAdmin\UserController;
+use App\Http\Controllers\SuperAdmin\RoleController;
+use App\Http\Controllers\SuperAdmin\PermissionController;
+use App\Http\Controllers\SuperAdmin\ParentController;
+use App\Http\Controllers\SuperAdmin\GoogleDriveAuthController;
+use App\Http\Controllers\SuperAdmin\KhsController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 /*
@@ -56,17 +68,121 @@ Route::prefix('contact')->name('contact.')->group(function () {
     Route::post('/', [ContactController::class, 'store'])->name('store');
 });
 
+// Unauthorized route
+Route::get('/unauthorized', function () {
+    return view('errors.unauthorized');
+})->name('unauthorized');
+
+
 // Authentication Routes (from Breeze)
 require __DIR__ . '/auth.php';
+require __DIR__ . '/parent.php';
 
-// Admin Routes (Protected)
-Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+// ==============================================
+// SUPER ADMIN Routes - Full Access
+// ==============================================
+Route::middleware(['auth', 'verified', 'check.role:super_admin'])->prefix('super-admin')->name('super-admin.')->group(function () {
+    Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
+
+    // User Management
+    Route::resource('users', UserController::class);
+    Route::post('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+
+    // Role Management Routes
+    Route::resource('roles', RoleController::class);
+
+    // Permission Management Routes
+    Route::resource('permissions', PermissionController::class);
+
+    // System Settings (future)
+    Route::get('/system-settings', function () {
+        return Inertia::render('SuperAdmin/SystemSettings', [
+            'message' => 'System settings will be implemented here'
+        ]);
+    })->name('system-settings');
+
+    Route::get('/debug-auth', function () {
+        $user = auth()->user();
+        return response()->json([
+            'user' => $user,
+            'roles' => $user->getRoleNames(),
+            'is_super_admin' => $user->hasRole('super_admin'),
+            'middleware_data' => [
+                'roles' => $user->getRoleNames()->toArray(),
+                'is_super_admin' => $user->hasRole('super_admin'),
+                'is_admin' => $user->hasRole('admin'),
+            ]
+        ]);
+    })->middleware('auth');
+
+    Route::get('/debug-inertia', function () {
+        return \Inertia\Inertia::render('DebugPage', [
+            'testMessage' => 'Debug Inertia Props',
+        ]);
+    })->middleware('auth');
+
+    // Parent Import Routes (HARUS DI ATAS resource routes)
+    Route::get('parents/import', [ParentController::class, 'showImport'])->name('parents.import');
+    Route::post('parents/import', [ParentController::class, 'import'])->name('parents.import.store');
+    Route::get('parents/download-template', [ParentController::class, 'downloadTemplate'])->name('parents.download-template');
+
+    // Parent Management Routes
+    Route::resource('parents', ParentController::class);
+
+    // Additional Parent Routes
+    Route::post('parents/{parent}/reset-password', [ParentController::class, 'resetPassword'])->name('parents.reset-password');
+    Route::post('parents/{parent}/toggle-status', [ParentController::class, 'toggleStatus'])->name('parents.toggle-status');
+
+    // User additional routes (if needed)
+    Route::post('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
+
+    Route::prefix('khs')->name('khs.')->group(function () {
+
+        // Main KHS management
+        Route::get('/', [KhsController::class, 'index'])->name('index');
+        Route::get('/{khsFile}', [KhsController::class, 'show'])->name('show');
+        Route::delete('/{khsFile}', [KhsController::class, 'destroy'])->name('destroy');
+        Route::post('/{khsFile}/retry', [KhsController::class, 'retry'])->name('retry');
+
+        // Academic Period Management
+        Route::get('/periods/manage', [KhsController::class, 'periods'])->name('periods');
+        Route::get('/periods/create', [KhsController::class, 'createPeriod'])->name('periods.create');
+        Route::post('/periods', [KhsController::class, 'storePeriod'])->name('periods.store');
+        Route::post('/periods/{period}/activate', [KhsController::class, 'activatePeriod'])->name('periods.activate');
+
+        // Single Upload
+        Route::get('/upload/single', [KhsController::class, 'upload'])->name('upload');
+        Route::post('/upload/single', [KhsController::class, 'storeUpload'])->name('store-upload');
+
+        // Bulk Upload
+        Route::get('/upload/bulk', [KhsController::class, 'bulkUpload'])->name('bulk-upload');
+        Route::post('/upload/bulk', [KhsController::class, 'storeBulkUpload'])->name('store-bulk-upload');
+
+        // Utilities
+        Route::get('/template/download', [KhsController::class, 'downloadTemplate'])->name('download-template');
+        Route::get('/report/{period}', [KhsController::class, 'generateReport'])->name('report');
+
+        // API Endpoints for Frontend
+        Route::get('/api/students-by-period', [KhsController::class, 'getStudentsByPeriod'])->name('api.students-by-period');
+        Route::get('/api/period-stats/{period}', [KhsController::class, 'getPeriodStats'])->name('api.period-stats');
+        Route::get('/api/search-students', [KhsController::class, 'searchStudents'])->name('api.search-students');
+    });
+
+
+
+    Route::get('/google/drive/connect', [GoogleDriveAuthController::class, 'connect'])->name('gdrive.connect');
+    Route::get('/google/drive/callback', [GoogleDriveAuthController::class, 'callback'])->name('gdrive.callback');
+});
+
+// ==============================================
+// ADMIN Routes - Faculty Management (Admin + Super Admin)
+// ==============================================
+Route::middleware(['auth', 'verified', 'check.role:admin,super_admin'])->prefix('admin')->name('admin.')->group(function () {
 
     // Dashboard
-
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    //About
+    // About Management
     Route::get('/about', [App\Http\Controllers\Admin\AboutController::class, 'index'])->name('about.index');
     Route::get('/about/create', [App\Http\Controllers\Admin\AboutController::class, 'create'])->name('about.create');
     Route::post('/about', [App\Http\Controllers\Admin\AboutController::class, 'store'])->name('about.store');
@@ -74,20 +190,12 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::post('/about/update', [App\Http\Controllers\Admin\AboutController::class, 'update'])->name('about.update');
     Route::delete('/about/delete', [App\Http\Controllers\Admin\AboutController::class, 'destroy'])->name('about.destroy');
     Route::post('/about/toggle-status', [App\Http\Controllers\Admin\AboutController::class, 'toggleStatus'])->name('about.toggle-status');
-
-    // Jika Anda ingin show route (optional)
     Route::get('/about/show', [App\Http\Controllers\Admin\AboutController::class, 'show'])->name('about.show');
-
-
-
 
     // Program Studi Management
     Route::resource('program-studi', AdminProgramStudiController::class)->parameters([
         'program-studi' => 'programStudi'
     ]);
-    // Program Studi routes
-    // Route::resource('program-studi', App\Http\Controllers\Admin\ProgramStudiController::class);
-
 
     // News Management
     Route::resource('news', AdminNewsController::class);
@@ -130,8 +238,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/{siteSetting}/edit', [App\Http\Controllers\Admin\SiteSettingsController::class, 'edit'])->name('edit');
         Route::put('/{siteSetting}', [App\Http\Controllers\Admin\SiteSettingsController::class, 'update'])->name('update');
         Route::delete('/{siteSetting}', [App\Http\Controllers\Admin\SiteSettingsController::class, 'destroy'])->name('destroy');
-
-        // Bulk update route
         Route::post('/bulk-update', [App\Http\Controllers\Admin\SiteSettingsController::class, 'bulkUpdate'])->name('bulk-update');
     });
 
@@ -144,8 +250,6 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
         Route::get('/{stat}/edit', [App\Http\Controllers\Admin\StatsController::class, 'edit'])->name('edit');
         Route::put('/{stat}', [App\Http\Controllers\Admin\StatsController::class, 'update'])->name('update');
         Route::delete('/{stat}', [App\Http\Controllers\Admin\StatsController::class, 'destroy'])->name('destroy');
-
-        // Special actions
         Route::patch('/{stat}/set-current', [App\Http\Controllers\Admin\StatsController::class, 'setCurrent'])->name('set-current');
     });
 
@@ -162,13 +266,116 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 
     // Team routes
     Route::resource('team', TeamController::class);
-
-    // Additional team routes
-    Route::post('team/update-order', [TeamController::class, 'updateOrder'])
-        ->name('team.update-order');
+    Route::post('team/update-order', [TeamController::class, 'updateOrder'])->name('team.update-order');
 });
 
+// ==============================================
+// PETUGAS UMUM Routes - Support Staff (Petugas + Admin + Super Admin)
+// ==============================================
+Route::middleware(['auth', 'verified', 'check.role:petugas_umum,admin,super_admin'])->prefix('petugas')->name('petugas.')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Petugas/Dashboard', [
+            'role' => auth()->user()->getRoleNames()->first(),
+            'user' => auth()->user(),
+            'message' => 'Selamat datang di panel Petugas Umum',
+            'capabilities' => [
+                'Kelola berita dan pengumuman',
+                'Balas pesan dari masyarakat',
+                'Update jadwal kuliah',
+                'Akses data fakultas (read-only)'
+            ]
+        ]);
+    })->name('dashboard');
+
+    // News management (create, edit allowed)
+    Route::resource('news', AdminNewsController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update']);
+
+    // Contact messages (can reply)
+    Route::resource('contact-messages', ContactMessageController::class)
+        ->parameters(['contact-messages' => 'contactMessage'])
+        ->only(['index', 'show', 'update']);
+
+    // Jadwal kuliah (can edit for operational changes)
+    Route::get('/jadwal-kuliah', [App\Http\Controllers\Admin\JadwalKuliahController::class, 'index'])->name('jadwal-kuliah.index');
+    Route::get('/jadwal-kuliah/{jadwalKuliah}', [App\Http\Controllers\Admin\JadwalKuliahController::class, 'show'])->name('jadwal-kuliah.show');
+    Route::get('/jadwal-kuliah/{jadwalKuliah}/edit', [App\Http\Controllers\Admin\JadwalKuliahController::class, 'edit'])->name('jadwal-kuliah.edit');
+    Route::put('/jadwal-kuliah/{jadwalKuliah}', [App\Http\Controllers\Admin\JadwalKuliahController::class, 'update'])->name('jadwal-kuliah.update');
+});
+
+// ==============================================
+// PARENT Routes - Parent Portal (Parent + Super Admin)
+// ==============================================
+Route::middleware(['auth', 'verified', 'check.role:orang_tua,super_admin'])->prefix('parent')->name('parent.')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Parent/Dashboard', [
+            'user' => auth()->user(),
+            'message' => 'Portal Orang Tua sedang dalam pengembangan',
+            'status' => 'under_development',
+            'planned_features' => [
+                [
+                    'title' => 'Lihat KHS Anak',
+                    'description' => 'Akses kartu hasil studi per semester',
+                    'status' => 'planned'
+                ],
+                [
+                    'title' => 'Monitoring Nilai',
+                    'description' => 'Pantau perkembangan akademik anak',
+                    'status' => 'planned'
+                ],
+                [
+                    'title' => 'Pengumuman Khusus',
+                    'description' => 'Terima pengumuman penting dari fakultas',
+                    'status' => 'planned'
+                ],
+                [
+                    'title' => 'Jadwal Kuliah Anak',
+                    'description' => 'Lihat jadwal kuliah anak real-time',
+                    'status' => 'planned'
+                ]
+            ]
+        ]);
+    })->name('dashboard');
+
+    // Future KHS routes (placeholder)
+    /*
+    Route::get('/khs', [ParentController::class, 'viewKHS'])->name('khs');
+    Route::get('/child/info', [ParentController::class, 'childInfo'])->name('child.info');
+    Route::get('/child/grades', [ParentController::class, 'childGrades'])->name('child.grades');
+    Route::get('/announcements', [ParentController::class, 'announcements'])->name('announcements');
+    */
+});
+
+// ==============================================
+// Shared Routes (All authenticated users)
+// ==============================================
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Profile routes for all users
+    Route::get('/profile', function () {
+        return Inertia::render('Profile/Edit', [
+            'user' => auth()->user(),
+            'role' => auth()->user()->getRoleNames()->first()
+        ]);
+    })->name('profile.edit');
+
+    // User can update their own profile
+    Route::patch('/profile', function (Request $request) {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . auth()->id(),
+        ]);
+
+        auth()->user()->update($request->only('name', 'email'));
+
+        return redirect()->route('profile.edit')->with('flash', [
+            'type' => 'success',
+            'message' => 'Profile updated successfully.'
+        ]);
+    })->name('profile.update');
+});
+
+// ==============================================
 // API Routes for AJAX requests
+// ==============================================
 Route::prefix('api')->middleware('web')->group(function () {
     Route::get('/program-studi', function () {
         return \App\Models\ProgramStudi::active()->get();
@@ -184,4 +391,17 @@ Route::prefix('api')->middleware('web')->group(function () {
 
     Route::get('/chart-data', [App\Http\Controllers\Admin\StatsController::class, 'getChartApi'])->name('chart-data');
     Route::get('/current', [App\Http\Controllers\Admin\StatsController::class, 'getCurrentStats'])->name('current');
+
+    // User role check API (for dynamic UI)
+    Route::middleware('auth')->get('/user/role', function () {
+        return response()->json([
+            'user' => auth()->user(),
+            'roles' => auth()->user()->getRoleNames(),
+            'permissions' => auth()->user()->getAllPermissions()->pluck('name'),
+            'is_super_admin' => auth()->user()->hasRole('super_admin'),
+            'is_admin' => auth()->user()->hasRole('admin'),
+            'is_petugas' => auth()->user()->hasRole('petugas_umum'),
+            'is_parent' => auth()->user()->hasRole('orang_tua'),
+        ]);
+    });
 });

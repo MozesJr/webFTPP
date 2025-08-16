@@ -20,9 +20,25 @@ class HomeController extends Controller
 {
     public function index(): Response
     {
+
         try {
             // Fetch data with fallbacks
-            $hero = HeroSection::where('is_active', true)->first();
+            function defaultHero()
+            {
+                return (object)[
+                    'background_video_url' => '/storage/assets/video/backVideo.mp4',
+                    'title' => 'Fakultas Teknik Pertambangan dan Perminyakan',
+                    'subtitle' => 'Website Resmi Fakultas Teknik Pertambangan dan Per...',
+                    'youtube_url' => 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                    'image_url' => 'https://images.unsplash.com/photo-1523050854058-8d...',
+                ];
+            }
+
+            $hero = HeroSection::where('is_active', true)->first() ?? defaultHero();
+
+            // dd($hero);
+
+
             $about = About::where('is_active', true)->first();
             $stats = Stats::where('is_current', true)->first();
 
@@ -33,6 +49,8 @@ class HomeController extends Controller
                 }])
                 ->take(6)
                 ->get();
+
+
 
             // Clients dengan fallback
             $clients = Client::where('is_active', true)
@@ -54,6 +72,8 @@ class HomeController extends Controller
                 ->take(4)
                 ->get();
 
+
+
             // Upcoming Events dengan fallback
             $upcomingEvents = Event::where('status', 'upcoming')
                 ->where('event_date', '>=', now())
@@ -67,18 +87,22 @@ class HomeController extends Controller
                 ->take(8)
                 ->get();
 
+
+
             // Site Settings dengan fallback
             $siteSettings = [
-                'site_title' => SiteSetting::get('site_title', 'Fakultas Website'),
-                'site_description' => SiteSetting::get('site_description', 'Official Faculty Website'),
-                'contact_email' => SiteSetting::get('contact_email', 'info@fakultas.ac.id'),
-                'contact_phone' => SiteSetting::get('contact_phone', '+62 21 1234567'),
-                'facebook_url' => SiteSetting::get('facebook_url', ''),
-                'instagram_url' => SiteSetting::get('instagram_url', ''),
-                'youtube_url' => SiteSetting::get('youtube_url', ''),
-                // 'testimoni_back' => SiteSetting::get('testimoni_back', ''),
-                'testimoni_back' => '/storage/assets/img/imgBg1.jpg',
+                'site_title'      => SiteSetting::getValue('site_title', 'Fakultas Website'),
+                'site_description' => SiteSetting::getValue('site_description', 'Official Faculty Website'),
+                'contact_email'   => SiteSetting::getValue('contact_email', 'info@fakultas.ac.id'),
+                'contact_phone'   => SiteSetting::getValue('contact_phone', '+62 21 1234567'),
+                'facebook_url'    => SiteSetting::getValue('facebook_url', ''),
+                'instagram_url'   => SiteSetting::getValue('instagram_url', ''),
+                'youtube_url'     => SiteSetting::getValue('youtube_url', ''),
+                'testimoni_back'  => SiteSetting::getValue('testimoni_back', ''),
             ];
+
+
+
             $data = [
                 'hero' => $hero,
                 'about' => $about,
@@ -93,6 +117,8 @@ class HomeController extends Controller
             ];
 
             // dd($data);
+
+
             return Inertia::render('Home', $data);
         } catch (\Exception $e) {
             // Fallback jika ada error
