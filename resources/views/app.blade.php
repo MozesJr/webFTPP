@@ -33,9 +33,11 @@
     <!-- Main CSS File from template -->
     <link href="{{ asset('/storage/assets/css/main.css') }}" rel="stylesheet">
 
-    <link rel="stylesheet" type="text/css" href="{{ asset('/storage/assets/vendors/styles/core.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/storage/assets/vendors/styles/icon-font.min.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ asset('/storage/assets/vendors/styles/style.css') }}">
+    @if (url()->current() == url('login'))
+        <link rel="stylesheet" type="text/css" href="{{ asset('storage/assets/vendors/styles/core.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('storage/assets/vendors/styles/icon-font.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('storage/assets/vendors/styles/style.css') }}">
+    @endif
 
     <!-- Scripts -->
     @routes
@@ -52,10 +54,13 @@
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 
-    <script src="{{ asset('/storage/assets/vendors/scripts/core.js') }}"></script>
-    <script src="{{ asset('/storage/assets/vendors/scripts/script.min.js') }}"></script>
-    <script src="{{ asset('/storage/assets/vendors/scripts/process.js') }}"></script>
-    <script src="{{ asset('/storage/assets/vendors/scripts/layout-settings.js') }}"></script>
+    @if (url()->current() == url('login'))
+        <script src="{{ asset('/storage/assets/vendors/scripts/core.js') }}"></script>
+        <script src="{{ asset('/storage/assets/vendors/scripts/script.min.js') }}"></script>
+        <script src="{{ asset('/storage/assets/vendors/scripts/process.js') }}"></script>
+        <script src="{{ asset('/storage/assets/vendors/scripts/layout-settings.js') }}"></script>
+    @endif
+
 
     <!-- Main JS File from template (commented out for now to avoid errors) -->
     <!-- <script src="{{ asset('/storage/assets/js/main.js') }}"></script> -->
