@@ -3,7 +3,7 @@
         <!-- Header -->
         <header id="header" class="header d-flex align-items-center fixed-top">
             <div
-                class="container-fluid container-xl position-relative d-flex align-items-center"
+                class="container-fluid container-xxl position-relative d-flex align-items-center"
             >
                 <Link href="/" class="logo d-flex align-items-center me-auto">
                     <img
@@ -63,6 +63,10 @@
                         @click="toggleMobileNav"
                     ></i>
                 </nav>
+
+                <Link href="/login" class="cta-btn">
+                    <h1 class="sitename">Masuk</h1>
+                </Link>
             </div>
         </header>
 
