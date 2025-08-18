@@ -1,15 +1,11 @@
 <?php
 // routes/parent.php
-// Include this in routes/web.php with: require __DIR__.'/parent.php';
 
 use App\Http\Controllers\Parent\AuthController;
 use App\Http\Controllers\Parent\DashboardController;
 use Illuminate\Support\Facades\Route;
 
-// ========================================
-// PARENT AUTHENTICATION ROUTES
-// ========================================
-
+// Parent routes with web middleware (already applied in bootstrap/app.php)
 Route::prefix('parent')->name('parent.')->group(function () {
 
     // Guest routes (unauthenticated)
@@ -23,15 +19,11 @@ Route::prefix('parent')->name('parent.')->group(function () {
     // Authenticated routes
     Route::middleware(['auth:parent', 'parent.active'])->group(function () {
 
-        // ========================================
-        // DASHBOARD & MAIN ROUTES
-        // ========================================
+        // Dashboard
         Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('dashboard', [DashboardController::class, 'index'])->name('home');
 
-        // ========================================
-        // KHS MANAGEMENT ROUTES
-        // ========================================
+        // KHS Management
         Route::prefix('khs')->name('khs.')->group(function () {
             Route::get('/', [DashboardController::class, 'khsList'])->name('index');
             Route::get('{khsFile}', [DashboardController::class, 'khsDetail'])->name('detail');
@@ -40,22 +32,16 @@ Route::prefix('parent')->name('parent.')->group(function () {
             Route::get('search', [DashboardController::class, 'searchKhs'])->name('search');
         });
 
-        // ========================================
-        // QUICK ACTIONS
-        // ========================================
+        // Quick Actions
         Route::get('download-latest', [DashboardController::class, 'quickDownloadLatest'])->name('download-latest');
 
-        // ========================================
-        // API ROUTES (for AJAX calls)
-        // ========================================
+        // API Routes
         Route::prefix('api')->name('api.')->group(function () {
             Route::get('khs/year/{year}', [DashboardController::class, 'getKhsByYear'])->name('khs.by-year');
             Route::get('access-stats', [DashboardController::class, 'getAccessStats'])->name('access-stats');
         });
 
-        // ========================================
-        // PROFILE & ACCOUNT MANAGEMENT
-        // ========================================
+        // Profile & Account Management
         Route::get('profile', [DashboardController::class, 'profile'])->name('profile');
         Route::get('access-history', [DashboardController::class, 'accessHistory'])->name('access-history');
 
@@ -63,18 +49,7 @@ Route::prefix('parent')->name('parent.')->group(function () {
         Route::get('change-password', [AuthController::class, 'showChangePassword'])->name('change-password');
         Route::put('change-password', [AuthController::class, 'changePassword'])->name('password.update');
 
-        // ========================================
-        // LOGOUT
-        // ========================================
+        // Logout
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     });
 });
-
-// ========================================
-// MIDDLEWARE DEFINITIONS
-// ========================================
-
-// Add this to app/Http/Kernel.php in $routeMiddleware array:
-/*
-'parent.active' => \App\Http\Middleware\EnsureParentIsActive::class,
-*/

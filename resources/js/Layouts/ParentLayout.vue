@@ -1,205 +1,257 @@
-<!-- resources/js/Layouts/ParentLayout.vue -->
+<!-- resources/js/Layouts/ParentLayout.vue (Breeze Compatible) -->
 <template>
-    <div class="min-h-screen bg-gray-50">
-        <!-- Navigation -->
-        <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="min-h-screen bg-gray-100">
+        <nav class="bg-white border-b border-gray-100">
+            <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex justify-between h-16">
-                    <!-- Logo & Title -->
-                    <div class="flex items-center">
-                        <div class="flex-shrink-0">
+                    <div class="flex">
+                        <!-- Logo -->
+                        <div class="shrink-0 flex items-center">
                             <AcademicCapIcon class="h-8 w-8 text-indigo-600" />
+                            <div class="ml-3">
+                                <h1 class="text-lg font-semibold text-gray-900">
+                                    Portal Orang Tua
+                                </h1>
+                            </div>
                         </div>
-                        <div class="ml-3">
-                            <h1 class="text-lg font-semibold text-gray-900">
-                                Portal Orang Tua
-                            </h1>
-                            <p class="text-xs text-gray-500">
-                                Sistem Informasi KHS
-                            </p>
+
+                        <!-- Navigation Links -->
+                        <div
+                            class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex"
+                        >
+                            <NavLink
+                                :href="route('parent.dashboard')"
+                                :active="route().current('parent.dashboard')"
+                            >
+                                Dashboard
+                            </NavLink>
+                            <NavLink
+                                :href="route('parent.khs.index')"
+                                :active="route().current('parent.khs.*')"
+                            >
+                                Daftar KHS
+                            </NavLink>
                         </div>
                     </div>
 
-                    <!-- User Menu -->
-                    <div class="flex items-center space-x-4">
-                        <!-- Student Info -->
-                        <div
-                            class="hidden md:flex items-center text-sm text-gray-700"
-                        >
-                            <UserIcon class="h-4 w-4 mr-2 text-gray-400" />
-                            <span class="font-medium">{{ student?.name }}</span>
-                            <span class="mx-2 text-gray-400">•</span>
-                            <span class="text-gray-500">{{
-                                student?.nim
-                            }}</span>
-                        </div>
+                    <!-- Student Info (Desktop) -->
+                    <div
+                        class="hidden md:flex items-center text-sm text-gray-700"
+                    >
+                        <UserIcon class="h-4 w-4 mr-2 text-gray-400" />
+                        <span class="font-medium">{{
+                            $page.props.auth.student?.name
+                        }}</span>
+                        <span class="mx-2 text-gray-400">•</span>
+                        <span class="text-gray-500">{{
+                            $page.props.auth.student?.nim
+                        }}</span>
+                    </div>
 
-                        <!-- User Dropdown -->
-                        <div class="relative" v-click-outside="closeUserMenu">
-                            <button
-                                @click="showUserMenu = !showUserMenu"
-                                class="flex items-center p-2 text-sm text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            >
-                                <div
-                                    class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center"
-                                >
-                                    <span
-                                        class="text-sm font-medium text-indigo-600"
-                                    >
-                                        {{ parentName.charAt(0).toUpperCase() }}
-                                    </span>
-                                </div>
-                                <ChevronDownIcon class="ml-2 h-4 w-4" />
-                            </button>
-
-                            <!-- Dropdown Menu -->
-                            <Transition
-                                enter-active-class="transition ease-out duration-100"
-                                enter-from-class="transform opacity-0 scale-95"
-                                enter-to-class="transform opacity-100 scale-100"
-                                leave-active-class="transition ease-in duration-75"
-                                leave-from-class="transform opacity-100 scale-100"
-                                leave-to-class="transform opacity-0 scale-95"
-                            >
-                                <div
-                                    v-show="showUserMenu"
-                                    class="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-50"
-                                >
-                                    <div
-                                        class="px-4 py-3 border-b border-gray-100"
-                                    >
-                                        <p
-                                            class="text-sm font-medium text-gray-900"
+                    <div class="hidden sm:flex sm:items-center sm:ms-6">
+                        <!-- Settings Dropdown -->
+                        <div class="ms-3 relative">
+                            <Dropdown align="right" width="48">
+                                <template #trigger>
+                                    <span class="inline-flex rounded-md">
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                         >
-                                            {{ parentName }}
-                                        </p>
-                                        <p class="text-sm text-gray-500">
-                                            {{ parentRelation }}
-                                        </p>
-                                    </div>
-                                    <div class="py-1">
-                                        <Link
-                                            :href="route('parent.profile')"
-                                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        >
-                                            <UserIcon class="mr-3 h-4 w-4" />
-                                            Profil Mahasiswa
-                                        </Link>
-                                        <Link
-                                            :href="
-                                                route('parent.access-history')
-                                            "
-                                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        >
-                                            <ClockIcon class="mr-3 h-4 w-4" />
-                                            Riwayat Akses
-                                        </Link>
-                                        <Link
-                                            :href="
-                                                route('parent.change-password')
-                                            "
-                                            class="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                        >
-                                            <KeyIcon class="mr-3 h-4 w-4" />
-                                            Ubah Password
-                                        </Link>
-                                        <div
-                                            class="border-t border-gray-100 mt-1"
-                                        >
-                                            <button
-                                                @click="logout"
-                                                class="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                                            {{ $page.props.auth.parent?.name }}
+                                            <svg
+                                                class="ms-2 -me-0.5 h-4 w-4"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20"
+                                                fill="currentColor"
                                             >
-                                                <ArrowLeftOnRectangleIcon
-                                                    class="mr-3 h-4 w-4"
+                                                <path
+                                                    fill-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd"
                                                 />
-                                                Keluar
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </Transition>
+                                            </svg>
+                                        </button>
+                                    </span>
+                                </template>
+
+                                <template #content>
+                                    <DropdownLink
+                                        :href="route('parent.profile')"
+                                        >Profil</DropdownLink
+                                    >
+                                    <DropdownLink
+                                        :href="route('parent.access-history')"
+                                        >Riwayat Akses</DropdownLink
+                                    >
+                                    <DropdownLink
+                                        :href="route('parent.change-password')"
+                                        >Ubah Password</DropdownLink
+                                    >
+                                    <DropdownLink
+                                        :href="route('parent.logout')"
+                                        method="post"
+                                        as="button"
+                                    >
+                                        Keluar
+                                    </DropdownLink>
+                                </template>
+                            </Dropdown>
                         </div>
+                    </div>
+
+                    <!-- Hamburger -->
+                    <div class="-me-2 flex items-center sm:hidden">
+                        <button
+                            @click="
+                                showingNavigationDropdown =
+                                    !showingNavigationDropdown
+                            "
+                            class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                stroke="currentColor"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    :class="{
+                                        hidden: showingNavigationDropdown,
+                                        'inline-flex':
+                                            !showingNavigationDropdown,
+                                    }"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M4 6h16M4 12h16M4 18h16"
+                                />
+                                <path
+                                    :class="{
+                                        hidden: !showingNavigationDropdown,
+                                        'inline-flex':
+                                            showingNavigationDropdown,
+                                    }"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"
+                                />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Responsive Navigation Menu -->
+            <div
+                :class="{
+                    block: showingNavigationDropdown,
+                    hidden: !showingNavigationDropdown,
+                }"
+                class="sm:hidden"
+            >
+                <div class="pt-2 pb-3 space-y-1">
+                    <ResponsiveNavLink
+                        :href="route('parent.dashboard')"
+                        :active="route().current('parent.dashboard')"
+                    >
+                        Dashboard
+                    </ResponsiveNavLink>
+                    <ResponsiveNavLink
+                        :href="route('parent.khs.index')"
+                        :active="route().current('parent.khs.*')"
+                    >
+                        Daftar KHS
+                    </ResponsiveNavLink>
+                </div>
+
+                <!-- Student Info Mobile -->
+                <div class="pt-2 pb-3 border-t border-gray-200">
+                    <div class="px-4">
+                        <div class="font-medium text-base text-gray-800">
+                            {{ $page.props.auth.student?.name }}
+                        </div>
+                        <div class="font-medium text-sm text-gray-500">
+                            {{ $page.props.auth.student?.nim }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Responsive Settings Options -->
+                <div class="pt-4 pb-1 border-t border-gray-200">
+                    <div class="px-4">
+                        <div class="font-medium text-base text-gray-800">
+                            {{ $page.props.auth.parent?.name }}
+                        </div>
+                        <div class="font-medium text-sm text-gray-500">
+                            {{ $page.props.auth.parent?.relation_label }}
+                        </div>
+                    </div>
+
+                    <div class="mt-3 space-y-1">
+                        <ResponsiveNavLink :href="route('parent.profile')"
+                            >Profil</ResponsiveNavLink
+                        >
+                        <ResponsiveNavLink
+                            :href="route('parent.access-history')"
+                            >Riwayat Akses</ResponsiveNavLink
+                        >
+                        <ResponsiveNavLink
+                            :href="route('parent.change-password')"
+                            >Ubah Password</ResponsiveNavLink
+                        >
+                        <ResponsiveNavLink
+                            :href="route('parent.logout')"
+                            method="post"
+                            as="button"
+                        >
+                            Keluar
+                        </ResponsiveNavLink>
                     </div>
                 </div>
             </div>
         </nav>
 
-        <!-- Mobile Student Info -->
-        <div
-            class="md:hidden bg-indigo-50 border-b border-indigo-100 px-4 py-3"
-        >
-            <div class="flex items-center text-sm">
-                <UserIcon class="h-4 w-4 mr-2 text-indigo-600" />
-                <span class="font-medium text-indigo-900">{{
-                    student?.name
-                }}</span>
-                <span class="mx-2 text-indigo-400">•</span>
-                <span class="text-indigo-600">{{ student?.nim }}</span>
+        <!-- Page Heading -->
+        <header class="bg-white shadow" v-if="$slots.header">
+            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                <slot name="header" />
             </div>
-        </div>
-
-        <!-- Navigation Menu -->
-        <div class="bg-white border-b border-gray-200">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <nav class="flex space-x-8">
-                    <Link
-                        :href="route('parent.dashboard')"
-                        :class="[
-                            'inline-flex items-center px-1 pt-1 pb-4 border-b-2 text-sm font-medium',
-                            route().current('parent.dashboard') ||
-                            route().current('parent.home')
-                                ? 'border-indigo-500 text-indigo-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                        ]"
-                    >
-                        <HomeIcon class="mr-2 h-4 w-4" />
-                        Dashboard
-                    </Link>
-                    <Link
-                        :href="route('parent.khs.index')"
-                        :class="[
-                            'inline-flex items-center px-1 pt-1 pb-4 border-b-2 text-sm font-medium',
-                            route().current('parent.khs.*')
-                                ? 'border-indigo-500 text-indigo-600'
-                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300',
-                        ]"
-                    >
-                        <DocumentTextIcon class="mr-2 h-4 w-4" />
-                        Daftar KHS
-                    </Link>
-                </nav>
-            </div>
-        </div>
+        </header>
 
         <!-- Page Content -->
-        <main class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <main>
             <!-- Flash Messages -->
-            <div v-if="flash?.message" class="mb-6">
+            <div
+                v-if="$page.props.flash?.message"
+                class="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8"
+            >
                 <div
                     :class="[
                         'rounded-md p-4',
-                        flash.type === 'success' &&
+                        $page.props.flash.type === 'success' &&
                             'bg-green-50 border border-green-200',
-                        flash.type === 'error' &&
+                        $page.props.flash.type === 'error' &&
                             'bg-red-50 border border-red-200',
-                        flash.type === 'warning' &&
+                        $page.props.flash.type === 'warning' &&
                             'bg-yellow-50 border border-yellow-200',
-                        flash.type === 'info' &&
+                        $page.props.flash.type === 'info' &&
                             'bg-blue-50 border border-blue-200',
                     ]"
                 >
                     <div class="flex items-center">
                         <CheckCircleIcon
-                            v-if="flash.type === 'success'"
+                            v-if="$page.props.flash.type === 'success'"
                             class="h-5 w-5 text-green-600 mr-3"
                         />
                         <ExclamationCircleIcon
-                            v-else-if="flash.type === 'error'"
+                            v-else-if="$page.props.flash.type === 'error'"
                             class="h-5 w-5 text-red-600 mr-3"
                         />
                         <ExclamationTriangleIcon
-                            v-else-if="flash.type === 'warning'"
+                            v-else-if="$page.props.flash.type === 'warning'"
                             class="h-5 w-5 text-yellow-600 mr-3"
                         />
                         <InformationCircleIcon
@@ -209,102 +261,45 @@
                         <p
                             :class="[
                                 'text-sm font-medium',
-                                flash.type === 'success' && 'text-green-800',
-                                flash.type === 'error' && 'text-red-800',
-                                flash.type === 'warning' && 'text-yellow-800',
-                                flash.type === 'info' && 'text-blue-800',
+                                $page.props.flash.type === 'success' &&
+                                    'text-green-800',
+                                $page.props.flash.type === 'error' &&
+                                    'text-red-800',
+                                $page.props.flash.type === 'warning' &&
+                                    'text-yellow-800',
+                                $page.props.flash.type === 'info' &&
+                                    'text-blue-800',
                             ]"
                         >
-                            {{ flash.message }}
+                            {{ $page.props.flash.message }}
                         </p>
                     </div>
                 </div>
             </div>
 
-            <slot />
-        </main>
-
-        <!-- Footer -->
-        <footer class="bg-white border-t border-gray-200 mt-12">
-            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                <div class="text-center text-sm text-gray-500">
-                    <p>
-                        &copy; {{ new Date().getFullYear() }} Portal Orang Tua -
-                        Sistem Informasi KHS
-                    </p>
-                    <p class="mt-1">
-                        Butuh bantuan?
-                        <a
-                            href="mailto:admin@faculty.ac.id"
-                            class="text-indigo-600 hover:text-indigo-500"
-                        >
-                            Hubungi Admin
-                        </a>
-                    </p>
+            <div class="py-12">
+                <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                    <slot />
                 </div>
             </div>
-        </footer>
+        </main>
     </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import { Link, router, usePage } from "@inertiajs/vue3";
+import { ref } from "vue";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
+import NavLink from "@/Components/NavLink.vue";
+import ResponsiveNavLink from "@/Components/ResponsiveNavLink.vue";
 import {
     AcademicCapIcon,
     UserIcon,
-    ChevronDownIcon,
-    HomeIcon,
-    DocumentTextIcon,
-    ClockIcon,
-    KeyIcon,
-    ArrowLeftOnRectangleIcon,
     CheckCircleIcon,
     ExclamationCircleIcon,
     ExclamationTriangleIcon,
     InformationCircleIcon,
 } from "@heroicons/vue/24/outline";
 
-// Props
-const props = defineProps({
-    student: Object,
-    parent: Object,
-});
-
-// Page data
-const page = usePage();
-const flash = computed(() => page.props.flash);
-
-// State
-const showUserMenu = ref(false);
-
-// Computed
-const parentName = computed(() => props.parent?.name || "Parent");
-const parentRelation = computed(
-    () => props.parent?.relation_label || "Orang Tua"
-);
-
-// Methods
-const closeUserMenu = () => {
-    showUserMenu.value = false;
-};
-
-const logout = () => {
-    router.post(route("parent.logout"));
-};
-
-// Click outside directive
-const vClickOutside = {
-    beforeMount(el, binding) {
-        el.clickOutsideEvent = function (event) {
-            if (!(el === event.target || el.contains(event.target))) {
-                binding.value();
-            }
-        };
-        document.addEventListener("click", el.clickOutsideEvent);
-    },
-    unmounted(el) {
-        document.removeEventListener("click", el.clickOutsideEvent);
-    },
-};
+const showingNavigationDropdown = ref(false);
 </script>

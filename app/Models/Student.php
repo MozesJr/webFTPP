@@ -5,6 +5,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Student extends Model
 {
@@ -68,9 +69,8 @@ class Student extends Model
             'aktif' => 'bg-green-100 text-green-800',
             'cuti' => 'bg-yellow-100 text-yellow-800',
             'lulus' => 'bg-blue-100 text-blue-800',
-            'DO' => 'bg-red-100 text-red-800',
+            'DO' => 'bg-red-100 text-red-800'
         ];
-
         return $badges[$this->status] ?? 'bg-gray-100 text-gray-800';
     }
 

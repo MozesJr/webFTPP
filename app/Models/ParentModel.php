@@ -63,12 +63,7 @@ class ParentModel extends Authenticatable
     // Accessors & Mutators
     public function getRelationLabelAttribute()
     {
-        $labels = [
-            'ayah' => 'Ayah',
-            'ibu' => 'Ibu',
-            'wali' => 'Wali',
-        ];
-
+        $labels = ['ayah' => 'Ayah', 'ibu' => 'Ibu', 'wali' => 'Wali'];
         return $labels[$this->relation] ?? 'Unknown';
     }
 
@@ -77,9 +72,8 @@ class ParentModel extends Authenticatable
         $badges = [
             'ayah' => 'bg-blue-100 text-blue-800',
             'ibu' => 'bg-pink-100 text-pink-800',
-            'wali' => 'bg-gray-100 text-gray-800',
+            'wali' => 'bg-gray-100 text-gray-800'
         ];
-
         return $badges[$this->relation] ?? 'bg-gray-100 text-gray-800';
     }
 
@@ -101,46 +95,46 @@ class ParentModel extends Authenticatable
         return $password;
     }
 
-    public function getStudentKhsFiles()
-    {
-        return $this->student->khsFiles()->ready()
-            ->with('academicPeriod')
-            ->orderBy('academic_period_id', 'desc');
-    }
+    // public function getStudentKhsFiles()
+    // {
+    //     return $this->student->khsFiles()->ready()
+    //         ->with('academicPeriod')
+    //         ->orderBy('academic_period_id', 'desc');
+    // }
 
     public function canAccessKhs($khsFileId): bool
     {
         return $this->student->khsFiles()->where('id', $khsFileId)->ready()->exists();
     }
 
-    public function getAccessLogs($limit = 50)
-    {
-        return ParentKhsAccessLog::byParent($this->id)
-            ->with(['khsFile.academicPeriod'])
-            ->recent()
-            ->orderBy('accessed_at', 'desc')
-            ->limit($limit)
-            ->get();
-    }
+    // public function getAccessLogs($limit = 50)
+    // {
+    //     return ParentKhsAccessLog::byParent($this->id)
+    //         ->with(['khsFile.academicPeriod'])
+    //         ->recent()
+    //         ->orderBy('accessed_at', 'desc')
+    //         ->limit($limit)
+    //         ->get();
+    // }
 
-    public function getKhsAccessStatistics($days = 30)
-    {
-        $logs = ParentKhsAccessLog::byParent($this->id)->recent($days)->get();
+    // public function getKhsAccessStatistics($days = 30)
+    // {
+    //     $logs = ParentKhsAccessLog::byParent($this->id)->recent($days)->get();
 
-        return [
-            'total_access' => $logs->count(),
-            'downloads' => $logs->where('access_type', 'download')->count(),
-            'views' => $logs->where('access_type', 'view')->count(),
-            'unique_files' => $logs->unique('khs_file_id')->count(),
-            'last_access' => $logs->max('accessed_at'),
-            'most_accessed_period' => $logs->groupBy('khsFile.academic_period_id')
-                ->sortByDesc(function ($group) {
-                    return $group->count();
-                })
-                ->keys()
-                ->first()
-        ];
-    }
+    //     return [
+    //         'total_access' => $logs->count(),
+    //         'downloads' => $logs->where('access_type', 'download')->count(),
+    //         'views' => $logs->where('access_type', 'view')->count(),
+    //         'unique_files' => $logs->unique('khs_file_id')->count(),
+    //         'last_access' => $logs->max('accessed_at'),
+    //         'most_accessed_period' => $logs->groupBy('khsFile.academic_period_id')
+    //             ->sortByDesc(function ($group) {
+    //                 return $group->count();
+    //             })
+    //             ->keys()
+    //             ->first()
+    //     ];
+    // }
 
     // Override auth identifier methods
     public function getAuthIdentifierName()
@@ -171,5 +165,57 @@ class ParentModel extends Authenticatable
     public function getRememberTokenName()
     {
         return 'remember_token';
+    }
+
+    public function getStudentKhsFiles()
+    {
+        if (!$this->student) {
+            return collect();
+        }
+
+        return $this->student->khsFiles()
+            ->where('upload_status', 'ready')
+            ->with('academicPeriod')
+            ->orderBy('academic_period_id', 'desc');
+    }
+
+    public function getAccessLogs($limit = 50)
+    {
+        // Check if ParentKhsAccessLog model exists
+        if (!class_exists(\App\Models\ParentKhsAccessLog::class)) {
+            return collect();
+        }
+
+        return \App\Models\ParentKhsAccessLog::where('parent_id', $this->id)
+            ->with(['khsFile.academicPeriod'])
+            ->orderBy('accessed_at', 'desc')
+            ->limit($limit)
+            ->get();
+    }
+
+    public function getKhsAccessStatistics($days = 30)
+    {
+        // Check if ParentKhsAccessLog model exists
+        if (!class_exists(\App\Models\ParentKhsAccessLog::class)) {
+            return [
+                'total_access' => 0,
+                'downloads' => 0,
+                'views' => 0,
+                'unique_files' => 0,
+                'last_access' => null,
+            ];
+        }
+
+        $logs = \App\Models\ParentKhsAccessLog::where('parent_id', $this->id)
+            ->where('accessed_at', '>=', now()->subDays($days))
+            ->get();
+
+        return [
+            'total_access' => $logs->count(),
+            'downloads' => $logs->where('access_type', 'download')->count(),
+            'views' => $logs->where('access_type', 'view')->count(),
+            'unique_files' => $logs->unique('khs_file_id')->count(),
+            'last_access' => $logs->max('accessed_at'),
+        ];
     }
 }

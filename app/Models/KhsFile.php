@@ -58,7 +58,7 @@ class KhsFile extends Model
 
     public function accessLogs(): HasMany
     {
-        return $this->hasMany(ParentKhsAccessLog::class);
+        return $this->hasMany(KhsAccessLog::class);
     }
 
     // ========================================
@@ -166,7 +166,7 @@ class KhsFile extends Model
 
     public function logAccess($parentId, $accessType = 'view', $ipAddress = null, $userAgent = null)
     {
-        ParentKhsAccessLog::create([
+        KhsAccessLog::create([
             'parent_id' => $parentId,
             'khs_file_id' => $this->id,
             'access_type' => $accessType,

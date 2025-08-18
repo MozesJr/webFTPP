@@ -173,7 +173,11 @@
                                 :key="period.id"
                                 :value="period.id"
                             >
-                                {{ period.display_name }}
+                                {{
+                                    period.display_name ??
+                                    period.name ??
+                                    period.semester + " " + period.academic_year
+                                }}
                             </option>
                         </select>
                     </div>

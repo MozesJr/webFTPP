@@ -1,5 +1,5 @@
 <?php
-// app/Http/Controllers/Parent/DashboardController.php
+// app/Http/Controllers/Parent/DashboardController.php (Updated untuk Breeze)
 
 namespace App\Http\Controllers\Parent;
 
@@ -48,7 +48,6 @@ class DashboardController extends Controller
         $latestKhs = $student->getLatestKhsFile();
 
         return Inertia::render('Parent/Dashboard', [
-            'student' => $student,
             'khsFiles' => $khsFiles->take(5), // Latest 5 for dashboard
             'periodsWithKhs' => $periodsWithKhs,
             'accessStats' => $accessStats,
@@ -96,7 +95,6 @@ class DashboardController extends Controller
         $availableYears = $availablePeriods->pluck('year')->unique()->sort()->reverse();
 
         return Inertia::render('Parent/Khs/Index', [
-            'student' => $student,
             'khsFiles' => $khsFiles,
             'availablePeriods' => $availablePeriods,
             'availableYears' => $availableYears->values(),
@@ -124,8 +122,7 @@ class DashboardController extends Controller
         $this->khsService->logParentAccess($parent, $khsFile, 'view');
 
         return Inertia::render('Parent/Khs/Detail', [
-            'khsFile' => $khsFile,
-            'student' => $parent->student
+            'khsFile' => $khsFile
         ]);
     }
 
@@ -195,8 +192,6 @@ class DashboardController extends Controller
         $recentAccess = $parent->getAccessLogs(10);
 
         return Inertia::render('Parent/Profile', [
-            'student' => $student,
-            'parent' => $parent,
             'khsSummary' => $khsSummary,
             'recentAccess' => $recentAccess
         ]);
@@ -220,9 +215,28 @@ class DashboardController extends Controller
 
         return Inertia::render('Parent/AccessHistory', [
             'accessLogs' => $accessLogs,
-            'groupedLogs' => $groupedLogs,
-            'student' => $parent->student
+            'groupedLogs' => $groupedLogs
         ]);
+    }
+
+    // ========================================
+    // QUICK ACTIONS
+    // ========================================
+
+    public function quickDownloadLatest()
+    {
+        $parent = Auth::guard('parent')->user();
+        $latestKhs = $parent->student->getLatestKhsFile();
+
+        if (!$latestKhs) {
+            return redirect()->route('parent.khs.index')
+                ->with('flash', [
+                    'type' => 'error',
+                    'message' => 'Tidak ada file KHS yang tersedia.'
+                ]);
+        }
+
+        return $this->downloadKhs($latestKhs);
     }
 
     // ========================================
@@ -252,26 +266,6 @@ class DashboardController extends Controller
         $stats = $parent->getKhsAccessStatistics(30);
 
         return response()->json($stats);
-    }
-
-    // ========================================
-    // QUICK ACTIONS
-    // ========================================
-
-    public function quickDownloadLatest()
-    {
-        $parent = Auth::guard('parent')->user();
-        $latestKhs = $parent->student->getLatestKhsFile();
-
-        if (!$latestKhs) {
-            return redirect()->route('parent.khs.index')
-                ->with('flash', [
-                    'type' => 'error',
-                    'message' => 'Tidak ada file KHS yang tersedia.'
-                ]);
-        }
-
-        return $this->downloadKhs($latestKhs);
     }
 
     public function searchKhs(Request $request)

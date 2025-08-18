@@ -124,8 +124,8 @@ return [
     ],
 
     'aliases' => [
-        // ... existing aliases
         'KhsManager' => App\Facades\KhsManager::class,
     ],
+
 
 ];

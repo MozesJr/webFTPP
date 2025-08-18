@@ -26,10 +26,17 @@ use App\Http\Controllers\SuperAdmin\ParentController;
 use App\Http\Controllers\SuperAdmin\GoogleDriveAuthController;
 use App\Http\Controllers\SuperAdmin\KhsController;
 
+
+use Illuminate\Support\Facades\Storage;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+
+use App\Models\Student;
+use App\Models\AcademicPeriod;
+use App\Services\KhsManagementService;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,10 +80,91 @@ Route::get('/unauthorized', function () {
     return view('errors.unauthorized');
 })->name('unauthorized');
 
+Route::get('/test-google', function () {
+    try {
+        // test tulis dan list
+        $ok = Storage::disk('google')->put('hello.txt', 'OK from Laravel');
+        $files = Storage::disk('google')->files(); // harusnya array, tanpa error Masbug
+        return response()->json(['put' => $ok, 'files' => $files]);
+    } catch (\Throwable $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
+});
+
+Route::get('/debug-google-api', function () {
+    try {
+        $client = new \Google\Client();
+        $client->setClientId(config('filesystems.disks.google.clientId'));
+        $client->setClientSecret(config('filesystems.disks.google.clientSecret'));
+        $client->setAccessType('offline');
+        // pakai scope penuh Drive biar bisa tulis
+        $client->setScopes([\Google\Service\Drive::DRIVE]);
+
+        // set token awal (boleh kosong), lalu refresh pakai refresh_token
+        $client->setAccessToken(['access_token' => config('filesystems.disks.google.accessToken')]);
+        $client->refreshToken(config('filesystems.disks.google.refreshToken'));
+
+        $service = new \Google\Service\Drive($client);
+
+        // list 5 file teratas
+        $resp = $service->files->listFiles([
+            'pageSize' => 5,
+            'fields'   => 'files(id, name)',
+        ]);
+
+        // coba upload kecil (text/plain)
+        $file = new \Google\Service\Drive\DriveFile([
+            'name' => 'ping_via_api_' . date('Ymd_His') . '.txt',
+            // kalau kamu ingin ke folder tertentu, set parents => [folderId]
+            // 'parents' => [env('GOOGLE_DRIVE_FOLDER')],
+        ]);
+        $created = $service->files->create($file, [
+            'data' => 'hello from direct api',
+            'mimeType' => 'text/plain',
+            'uploadType' => 'multipart',
+            'fields' => 'id, name',
+        ]);
+
+        return response()->json([
+            'list'    => $resp->getFiles(),
+            'created' => $created,
+        ]);
+    } catch (\Throwable $e) {
+        return response()->json([
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+});
+
+
+Route::get('/test-khs-upload', function (KhsManagementService $svc) {
+    $student = Student::firstOrFail();
+    $period  = AcademicPeriod::firstOrFail();
+
+    // siapkan dummy.pdf
+    $path = storage_path('app/dummy.pdf');
+    if (!file_exists($path)) {
+        file_put_contents($path, '%PDF-1.4
+% Dummy PDF
+1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj
+2 0 obj<</Type/Pages/Count 0/Kids[]>>endobj
+trailer<</Root 1 0 R>>
+%%EOF');
+    }
+
+    $uploaded = $svc->uploadKhsForStudent(
+        new \Illuminate\Http\UploadedFile($path, 'dummy.pdf', 'application/pdf', null, true),
+        $student,
+        $period,
+        auth()->id() ?? 1
+    );
+
+    return response()->json($uploaded);
+});
 
 // Authentication Routes (from Breeze)
 require __DIR__ . '/auth.php';
-require __DIR__ . '/parent.php';
+// require __DIR__ . '/parent.php';
 
 // ==============================================
 // SUPER ADMIN Routes - Full Access
@@ -166,6 +254,11 @@ Route::middleware(['auth', 'verified', 'check.role:super_admin'])->prefix('super
         Route::get('/api/students-by-period', [KhsController::class, 'getStudentsByPeriod'])->name('api.students-by-period');
         Route::get('/api/period-stats/{period}', [KhsController::class, 'getPeriodStats'])->name('api.period-stats');
         Route::get('/api/search-students', [KhsController::class, 'searchStudents'])->name('api.search-students');
+
+        // Academic Period Management - Tambahan routes
+        Route::get('/periods/{period}/edit', [KhsController::class, 'editPeriod'])->name('periods.edit');
+        Route::put('/periods/{period}', [KhsController::class, 'updatePeriod'])->name('periods.update');
+        Route::delete('/periods/{period}', [KhsController::class, 'destroyPeriod'])->name('periods.destroy');
     });
 
 

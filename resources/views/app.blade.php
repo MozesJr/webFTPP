@@ -19,6 +19,10 @@
         href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
     <!-- Vendor CSS Files -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
@@ -28,6 +32,10 @@
 
     <!-- Main CSS File from template -->
     <link href="{{ asset('/storage/assets/css/main.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" type="text/css" href="{{ asset('/storage/assets/vendors/styles/core.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/storage/assets/vendors/styles/icon-font.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('/storage/assets/vendors/styles/style.css') }}">
 
     <!-- Scripts -->
     @routes
@@ -43,6 +51,11 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+
+    <script src="{{ asset('/storage/assets/vendors/scripts/core.js') }}"></script>
+    <script src="{{ asset('/storage/assets/vendors/scripts/script.min.js') }}"></script>
+    <script src="{{ asset('/storage/assets/vendors/scripts/process.js') }}"></script>
+    <script src="{{ asset('/storage/assets/vendors/scripts/layout-settings.js') }}"></script>
 
     <!-- Main JS File from template (commented out for now to avoid errors) -->
     <!-- <script src="{{ asset('/storage/assets/js/main.js') }}"></script> -->

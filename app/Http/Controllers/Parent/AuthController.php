@@ -13,54 +13,71 @@ use Inertia\Inertia;
 
 class AuthController extends Controller
 {
-    // ========================================
-    // SHOW LOGIN FORM
-    // ========================================
-
     public function showLogin()
     {
         return Inertia::render('Parent/Auth/Login');
     }
 
-    // ========================================
-    // HANDLE LOGIN
-    // ========================================
+    // public function login(Request $request)
+    // {
+    //     $request->validate([
+    //         'username' => 'required|string',
+    //         'password' => 'required|string',
+    //     ]);
+
+    //     // Find parent by username
+    //     $parent = ParentModel::where('username', $request->username)
+    //         ->where('is_active', true)
+    //         ->first();
+
+    //     // Check credentials
+    //     if (!$parent || !Hash::check($request->password, $parent->password)) {
+    //         throw ValidationException::withMessages([
+    //             'username' => ['Username atau password salah.'],
+    //         ]);
+    //     }
+
+    //     // Update last login
+    //     $parent->update([
+    //         'last_login_at' => now()
+    //     ]);
+
+    //     // Login using parent guard
+    //     Auth::guard('parent')->login($parent, $request->boolean('remember'));
+
+    //     $request->session()->regenerate();
+
+    //     return redirect()->intended(route('parent.dashboard'));
+    // }
 
     public function login(Request $request)
     {
         $request->validate([
-            'username' => 'required|string',
+            'nim' => 'required|string',
             'password' => 'required|string',
         ]);
 
-        // Find parent by username
-        $parent = ParentModel::where('username', $request->username)
+        $parent = ParentModel::where('username', $request->nim)
             ->where('is_active', true)
             ->first();
 
-        // Check credentials
+        // Lanjutkan dengan logika login yang sama
         if (!$parent || !Hash::check($request->password, $parent->password)) {
-            throw ValidationException::withMessages([
-                'username' => ['Username atau password salah.'],
-            ]);
+            return back()->withErrors([
+                'nim' => 'NIM atau password salah.', // Ubah pesan error
+            ])->onlyInput('nim');
         }
 
-        // Update last login
         $parent->update([
             'last_login_at' => now()
         ]);
 
-        // Login using parent guard
         Auth::guard('parent')->login($parent, $request->boolean('remember'));
-
         $request->session()->regenerate();
 
         return redirect()->intended(route('parent.dashboard'));
     }
 
-    // ========================================
-    // HANDLE LOGOUT
-    // ========================================
 
     public function logout(Request $request)
     {
@@ -69,21 +86,16 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('parent.login');
+        return redirect()->route('login');
     }
-
-    // ========================================
-    // SHOW CHANGE PASSWORD FORM
-    // ========================================
 
     public function showChangePassword()
     {
-        return Inertia::render('Parent/Auth/ChangePassword');
+        return Inertia::render('Parent/Auth/ChangePassword', [
+            'student' => Auth::guard('parent')->user()->student,
+            'parent' => Auth::guard('parent')->user(),
+        ]);
     }
-
-    // ========================================
-    // HANDLE CHANGE PASSWORD
-    // ========================================
 
     public function changePassword(Request $request)
     {
@@ -113,10 +125,6 @@ class AuthController extends Controller
             ]);
     }
 
-    // ========================================
-    // FORGOT PASSWORD (Optional)
-    // ========================================
-
     public function showForgotPassword()
     {
         return Inertia::render('Parent/Auth/ForgotPassword');
@@ -138,9 +146,8 @@ class AuthController extends Controller
             ]);
         }
 
-        // In real implementation, you would send an email
-        // For now, we'll just show the default password
-        $defaultPassword = $parent->student->nim . '123';
+        // Generate default password info
+        $defaultPassword = $parent->student->nim . '01012000'; // Default format
 
         return back()->with('flash', [
             'type' => 'info',
