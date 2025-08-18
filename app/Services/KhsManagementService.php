@@ -11,6 +11,12 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
+use Google\Client as GoogleClient;
+use Google\Service\Drive as GoogleDrive;
+use Google\Service\Drive\DriveFile;
+use Google\Service\Drive\Permission;
+use Illuminate\Support\Str;
 
 class KhsManagementService
 {
@@ -25,80 +31,94 @@ class KhsManagementService
     // SINGLE FILE OPERATIONS
     // ========================================
 
+
+
+
+
     public function uploadKhsForStudent(
         UploadedFile $file,
         Student $student,
         AcademicPeriod $period,
-        $uploadedBy
-    ) {
-        DB::beginTransaction();
+        int $uploaderId
+    ): KhsFile {
+        // 1) Nama file yang rapi untuk Drive
+        $semesterLabel = Str::of($period->semester ?? '')->upper(); // GENAP/GANJIL
+        $tahunLabel    = $period->academic_year ?? $period->year;
+        $finalName     = sprintf('%s_KHS_%s_%s.pdf', $student->nim, $semesterLabel, $tahunLabel);
 
+        // 2) Siapkan Google Client (pakai kredensial dari filesystems.php)
+        $client = new GoogleClient();
+        $client->setClientId(config('filesystems.disks.google.clientId'));
+        $client->setClientSecret(config('filesystems.disks.google.clientSecret'));
+        $client->setAccessType('offline');
+        $client->setScopes([GoogleDrive::DRIVE]);
+        $client->refreshToken(config('filesystems.disks.google.refreshToken'));
+
+        $service  = new GoogleDrive($client);
+        $folderId = config('filesystems.disks.google.folder') ?: null;
+
+        // 3) Upload ke Drive
+        $driveFile = new DriveFile([
+            'name'    => $finalName,
+            'parents' => $folderId ? [$folderId] : null,
+        ]);
+
+        $created = $service->files->create($driveFile, [
+            'data'       => file_get_contents($file->getRealPath()),
+            'mimeType'   => 'application/pdf',
+            'uploadType' => 'multipart',
+            'fields'     => 'id,name,webViewLink,webContentLink',
+            // 'supportsAllDrives' => true, // aktifkan jika folder di Shared Drive
+        ]);
+
+        $fileId       = $created->id;
+        $viewUrl      = $created->webViewLink  ?: "https://drive.google.com/file/d/{$fileId}/view";
+        $downloadUrl  = $created->webContentLink ?: "https://drive.google.com/uc?id={$fileId}&export=download";
+
+        // 4) (opsional) bikin publik read-only supaya orang tua bisa akses link
         try {
-            // Check if KHS already exists
-            $existingKhs = KhsFile::where('student_id', $student->id)
-                ->where('academic_period_id', $period->id)
-                ->first();
-
-            if ($existingKhs) {
-                // Delete old file from Google Drive
-                if ($existingKhs->gdrive_file_id) {
-                    $this->gdriveService->deleteFile($existingKhs->gdrive_file_id);
-                }
-                $existingKhs->delete();
-            }
-
-            // Create initial record with uploading status
-            $khsFile = KhsFile::create([
-                'student_id' => $student->id,
-                'academic_period_id' => $period->id,
-                'original_filename' => $file->getClientOriginalName(),
-                'file_size' => $file->getSize(),
-                'mime_type' => $file->getMimeType(),
-                'upload_status' => 'uploading',
-                'uploaded_by' => $uploadedBy,
-                'upload_date' => now(),
-                'semester_name' => $period->name,
-                'student_nim' => $student->nim,
-                'student_name' => $student->name
+            $perm = new Permission(['type' => 'anyone', 'role' => 'reader']);
+            $service->permissions->create($fileId, $perm, [
+                'fields' => 'id',
+                // 'supportsAllDrives' => true, // jika Shared Drive
             ]);
-
-            // Upload to Google Drive
-            $gdriveResult = $this->gdriveService->uploadKhsFile($file, $student, $period);
-
-            // Update with Google Drive information
-            $khsFile->update([
-                'gdrive_file_id' => $gdriveResult['file_id'],
-                'gdrive_folder_id' => $gdriveResult['folder_id'],
-                'gdrive_url' => $gdriveResult['view_url'],
-                'gdrive_download_url' => $gdriveResult['download_url'],
-                'upload_status' => 'ready'
-            ]);
-
-            DB::commit();
-
-            Log::info('KHS uploaded successfully', [
-                'student_nim' => $student->nim,
-                'period' => $period->name,
-                'file_id' => $khsFile->id
-            ]);
-
-            return $khsFile;
-        } catch (\Exception $e) {
-            DB::rollback();
-
-            // Mark as failed if record was created
-            if (isset($khsFile)) {
-                $khsFile->markAsFailed($e->getMessage());
-            }
-
-            Log::error("KHS Upload failed: " . $e->getMessage(), [
-                'student_nim' => $student->nim ?? null,
-                'period' => $period->name ?? null
-            ]);
-
-            throw $e;
+        } catch (\Throwable $e) {
+            // boleh di-log tapi jangan memblokir
+            // \Log::warning('Set permission gagal: '.$e->getMessage());
         }
+
+        // 5) Simpan metadata ke DB sesuai field model-mu
+        $khs = KhsFile::create([
+            'student_id'         => $student->id,
+            'academic_period_id' => $period->id,
+
+            'original_filename'  => $file->getClientOriginalName() ?: $finalName,
+            'mime_type'          => $file->getClientMimeType(),
+            'file_size'          => $file->getSize(),
+
+            // kolom gdrive_* sesuai model
+            'gdrive_file_id'     => $fileId,
+            'gdrive_folder_id'   => $folderId,
+            'gdrive_url'         => $viewUrl,
+            'gdrive_download_url' => $downloadUrl,
+
+            // status & waktu
+            'upload_status'      => 'ready',
+            'upload_date'        => now(),
+
+            // cache info mahasiswa/semester (buat pencarian cepat)
+            'semester_name'      => $period->name ?? ($semesterLabel . ' ' . $tahunLabel),
+            'student_nim'        => $student->nim,
+            'student_name'       => $student->name,
+
+            'uploaded_by'        => $uploaderId,
+            'access_count'       => 0,
+        ]);
+
+        return $khs;
     }
+
+
 
     // ========================================
     // BULK OPERATIONS

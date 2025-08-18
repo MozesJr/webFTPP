@@ -22,10 +22,6 @@ class KhsController extends Controller
         $this->khsService = $khsService;
     }
 
-    // ========================================
-    // MAIN DASHBOARD
-    // ========================================
-
     public function index(Request $request)
     {
         $query = KhsFile::with(['student', 'academicPeriod', 'uploader']);
@@ -158,10 +154,14 @@ class KhsController extends Controller
             ->orderBy('nim')
             ->get(['id', 'nim', 'name', 'program_studi']);
 
-        return Inertia::render('SuperAdmin/Khs/Upload', [
+        $data = [
             'periods' => $periods,
             'students' => $students
-        ]);
+        ];
+
+        // dd($data);
+
+        return Inertia::render('SuperAdmin/Khs/Upload', $data);
     }
 
     public function storeUpload(Request $request)
@@ -198,6 +198,8 @@ class KhsController extends Controller
                 ->withInput();
         }
     }
+
+
 
     // ========================================
     // BULK UPLOAD
@@ -416,5 +418,297 @@ class KhsController extends Controller
             ->get(['id', 'nim', 'name', 'program_studi']);
 
         return response()->json($students);
+    }
+
+    /**
+     * Update academic period
+     */
+    public function updatePeriod(Request $request, AcademicPeriod $period)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after:start_date',
+            'is_active' => 'boolean'
+        ]);
+
+        $period->update([
+            'name' => $request->name,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'is_active' => $request->is_active ?? false
+        ]);
+
+        if ($request->is_active) {
+            $period->activate();
+        }
+
+        return redirect()->back()
+            ->with('flash', [
+                'type' => 'success',
+                'message' => "Period {$period->name} berhasil diupdate!"
+            ]);
+    }
+
+    /**
+     * Delete academic period
+     */
+    public function destroyPeriod(AcademicPeriod $period)
+    {
+        // Check if period has KHS files
+        if ($period->khsFiles()->count() > 0) {
+            return redirect()->back()
+                ->with('flash', [
+                    'type' => 'error',
+                    'message' => 'Tidak dapat menghapus period yang memiliki file KHS!'
+                ]);
+        }
+
+        $periodName = $period->name;
+        $period->delete();
+
+        return redirect()->back()
+            ->with('flash', [
+                'type' => 'success',
+                'message' => "Period {$periodName} berhasil dihapus!"
+            ]);
+    }
+
+    /**
+     * Get period statistics for API
+     */
+    public function getPeriodStatisticsApi(AcademicPeriod $period)
+    {
+        $stats = $this->khsService->getPeriodStatistics($period);
+        return response()->json($stats);
+    }
+
+    /**
+     * Get students who don't have KHS for specific period
+     */
+    public function getStudentsWithoutKhs(Request $request)
+    {
+        $periodId = $request->period_id;
+
+        if (!$periodId) {
+            return response()->json([]);
+        }
+
+        $students = Student::where('is_active', true)
+            ->whereDoesntHave('khsFiles', function ($query) use ($periodId) {
+                $query->where('academic_period_id', $periodId)
+                    ->where('upload_status', 'ready');
+            })
+            ->orderBy('nim')
+            ->get(['id', 'nim', 'name', 'program_studi']);
+
+        return response()->json($students);
+    }
+
+    /**
+     * Bulk delete KHS files for a period
+     */
+    public function bulkDeleteByPeriod(Request $request)
+    {
+        $request->validate([
+            'period_id' => 'required|exists:academic_periods,id',
+            'confirm' => 'required|boolean|accepted'
+        ]);
+
+        $period = AcademicPeriod::findOrFail($request->period_id);
+        $khsFiles = $period->khsFiles();
+        $count = $khsFiles->count();
+
+        // Delete files from Google Drive
+        foreach ($khsFiles->get() as $khsFile) {
+            if ($khsFile->gdrive_file_id) {
+                try {
+                    app(\App\Services\GoogleDriveService::class)->deleteFile($khsFile->gdrive_file_id);
+                } catch (\Exception $e) {
+                    \Log::warning("Failed to delete Google Drive file: " . $e->getMessage());
+                }
+            }
+        }
+
+        // Delete from database
+        $khsFiles->delete();
+
+        return redirect()->back()
+            ->with('flash', [
+                'type' => 'success',
+                'message' => "Berhasil menghapus {$count} file KHS untuk period {$period->name}!"
+            ]);
+    }
+
+    /**
+     * Export KHS data for a period
+     */
+    public function exportPeriodData(Request $request)
+    {
+        $request->validate([
+            'period_id' => 'required|exists:academic_periods,id',
+            'format' => 'required|in:csv,excel'
+        ]);
+
+        $period = AcademicPeriod::with(['khsFiles.student'])->findOrFail($request->period_id);
+
+        $data = $period->khsFiles->map(function ($khsFile) {
+            return [
+                'NIM' => $khsFile->student_nim,
+                'Nama Mahasiswa' => $khsFile->student_name,
+                'Program Studi' => $khsFile->student->program_studi ?? '',
+                'Filename' => $khsFile->original_filename,
+                'Status Upload' => $khsFile->status_label,
+                'Ukuran File' => $khsFile->file_size_human,
+                'Tanggal Upload' => $khsFile->upload_date?->format('Y-m-d H:i:s'),
+                'Diupload Oleh' => $khsFile->uploader?->name ?? '',
+                'Total Akses' => $khsFile->access_count,
+                'Terakhir Diakses' => $khsFile->last_accessed_at?->format('Y-m-d H:i:s'),
+            ];
+        });
+
+        $filename = "khs_data_{$period->academic_year}_{$period->semester}.csv";
+
+        if ($request->format === 'csv') {
+            $headers = [
+                'Content-Type' => 'text/csv',
+                'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+            ];
+
+            $callback = function () use ($data) {
+                $file = fopen('php://output', 'w');
+
+                // Add headers
+                if ($data->isNotEmpty()) {
+                    fputcsv($file, array_keys($data->first()));
+                }
+
+                // Add data
+                foreach ($data as $row) {
+                    fputcsv($file, $row);
+                }
+
+                fclose($file);
+            };
+
+            return response()->stream($callback, 200, $headers);
+        }
+
+        // For Excel format, you might want to use Laravel Excel package
+        // This is a simplified version
+        return response()->json([
+            'message' => 'Excel export will be available soon',
+            'data' => $data
+        ]);
+    }
+
+    /**
+     * Get KHS access analytics
+     */
+    public function getAccessAnalytics(Request $request)
+    {
+        $request->validate([
+            'period_id' => 'nullable|exists:academic_periods,id',
+            'days' => 'nullable|integer|min:1|max:365'
+        ]);
+
+        $query = \App\Models\KhsAccessLog::with(['khsFile.academicPeriod']);
+
+        if ($request->period_id) {
+            $query->whereHas('khsFile', function ($q) use ($request) {
+                $q->where('academic_period_id', $request->period_id);
+            });
+        }
+
+        if ($request->days) {
+            $query->where('accessed_at', '>=', now()->subDays($request->days));
+        }
+
+        $accessLogs = $query->orderBy('accessed_at', 'desc')->get();
+
+        $analytics = [
+            'total_access' => $accessLogs->count(),
+            'unique_users' => $accessLogs->unique('parent_id')->count(),
+            'unique_files' => $accessLogs->unique('khs_file_id')->count(),
+            'daily_access' => $accessLogs->groupBy(function ($log) {
+                return $log->accessed_at->format('Y-m-d');
+            })->map->count(),
+            'hourly_pattern' => $accessLogs->groupBy(function ($log) {
+                return $log->accessed_at->format('H');
+            })->map->count(),
+            'most_accessed_files' => $accessLogs->groupBy('khs_file_id')
+                ->map(function ($group) {
+                    $first = $group->first();
+                    return [
+                        'file_id' => $first->khs_file_id,
+                        'student_name' => $first->khsFile->student_name,
+                        'student_nim' => $first->khsFile->student_nim,
+                        'access_count' => $group->count()
+                    ];
+                })
+                ->sortByDesc('access_count')
+                ->take(10)
+                ->values()
+        ];
+
+        return response()->json($analytics);
+    }
+
+    /**
+     * Sync KHS files with Google Drive
+     */
+    public function syncWithGoogleDrive(Request $request)
+    {
+        try {
+            $driveService = app(\App\Services\GoogleDriveService::class);
+            $syncedCount = 0;
+            $errorCount = 0;
+
+            $khsFiles = KhsFile::where('upload_status', 'ready')
+                ->whereNotNull('gdrive_file_id')
+                ->get();
+
+            foreach ($khsFiles as $khsFile) {
+                try {
+                    // Check if file still exists in Google Drive
+                    $exists = $driveService->fileExists($khsFile->gdrive_file_id);
+
+                    if (!$exists) {
+                        $khsFile->update([
+                            'upload_status' => 'failed',
+                            'error_message' => 'File not found in Google Drive'
+                        ]);
+                        $errorCount++;
+                    } else {
+                        $syncedCount++;
+                    }
+                } catch (\Exception $e) {
+                    $khsFile->update([
+                        'upload_status' => 'failed',
+                        'error_message' => 'Sync error: ' . $e->getMessage()
+                    ]);
+                    $errorCount++;
+                }
+            }
+
+            return redirect()->back()
+                ->with('flash', [
+                    'type' => $errorCount > 0 ? 'warning' : 'success',
+                    'message' => "Sync selesai! Berhasil: {$syncedCount}, Error: {$errorCount}"
+                ]);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('flash', [
+                    'type' => 'error',
+                    'message' => 'Gagal melakukan sync: ' . $e->getMessage()
+                ]);
+        }
+    }
+
+    public function editPeriod(AcademicPeriod $period)
+    {
+        return Inertia::render('SuperAdmin/Khs/EditPeriod', [
+            'period' => $period
+        ]);
     }
 }
