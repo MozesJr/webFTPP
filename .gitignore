@@ -21,3 +21,12 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Laravel storage (jangan commit file upload/logs/compiled cache)
+storage/*
+!storage/app/.gitignore
+!storage/framework/.gitignore
+!storage/logs/.gitignore
+
+# Laravel public storage (hasil upload / symlink)
+public/storage
