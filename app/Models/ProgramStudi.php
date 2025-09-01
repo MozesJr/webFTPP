@@ -126,6 +126,16 @@ class ProgramStudi extends Model
         return $query->where('is_current', true);
     }
 
+    public function questionnaires(): HasMany
+    {
+        return $this->hasMany(Questionnaire::class, 'prodi_id');
+    }
+
+    public function evaluations()
+    {
+        return $this->hasManyThrough(Evaluation::class, Questionnaire::class, 'prodi_id', 'questionnaire_id');
+    }
+
     // Atau, untuk sementara, kita bisa comment bagian yang error di HomeController
     // dan test step by step
 }

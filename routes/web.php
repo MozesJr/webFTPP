@@ -16,6 +16,11 @@ use App\Http\Controllers\Admin\ContactMessageController;
 use App\Http\Controllers\Admin\TeamController;
 use App\Http\Controllers\Admin\TeamPositionController;
 
+use App\Http\Controllers\Admin\QuestionnaireController;
+use App\Http\Controllers\Admin\EvaluationController;
+use App\Http\Controllers\Admin\EvaluationReportController;
+use App\Http\Controllers\EvaluationFormController;
+
 
 // Super Admin Controllers
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
@@ -160,6 +165,15 @@ trailer<</Root 1 0 R>>
     );
 
     return response()->json($uploaded);
+});
+
+Route::prefix('evaluation')->name('evaluation.')->group(function () {
+    Route::get('/', [EvaluationFormController::class, 'index'])->name('index');
+    Route::get('/success', [EvaluationFormController::class, 'success'])->name('success');
+    Route::post('/check-student', [EvaluationFormController::class, 'checkStudent'])->name('check-student');
+    // Route dengan parameter harus di bawah
+    Route::get('/{questionnaire}/create', [EvaluationFormController::class, 'create'])->name('create');
+    Route::post('/{questionnaire}', [EvaluationFormController::class, 'store'])->name('store');
 });
 
 // Authentication Routes (from Breeze)
@@ -360,6 +374,39 @@ Route::middleware(['auth', 'verified', 'check.role:admin,super_admin'])->prefix(
     // Team routes
     Route::resource('team', TeamController::class);
     Route::post('team/update-order', [TeamController::class, 'updateOrder'])->name('team.update-order');
+
+
+    // EDOM Questionnaire Management
+    Route::prefix('edom')->name('edom.')->group(function () {
+
+        // Questionnaires
+        Route::prefix('questionnaire')->name('questionnaire.')->group(function () {
+            Route::get('/', [QuestionnaireController::class, 'index'])->name('index');
+            Route::get('/create', [QuestionnaireController::class, 'create'])->name('create');
+            Route::post('/', [QuestionnaireController::class, 'store'])->name('store');
+            Route::get('/{questionnaire}', [QuestionnaireController::class, 'show'])->name('show');
+            Route::get('/{questionnaire}/edit', [QuestionnaireController::class, 'edit'])->name('edit');
+            Route::put('/{questionnaire}', [QuestionnaireController::class, 'update'])->name('update');
+            Route::delete('/{questionnaire}', [QuestionnaireController::class, 'destroy'])->name('destroy');
+            Route::patch('/{questionnaire}/toggle-active', [QuestionnaireController::class, 'toggleActive'])->name('toggle-active');
+            Route::post('/{questionnaire}/duplicate', [QuestionnaireController::class, 'duplicate'])->name('duplicate');
+        });
+
+        // Evaluations
+        Route::prefix('evaluation')->name('evaluation.')->group(function () {
+            Route::get('/', [EvaluationController::class, 'index'])->name('index');
+            Route::get('/export', [EvaluationController::class, 'export'])->name('export'); // Harus di atas {evaluation}
+            Route::get('/{evaluation}', [EvaluationController::class, 'show'])->name('show');
+            Route::delete('/{evaluation}', [EvaluationController::class, 'destroy'])->name('destroy');
+        });
+
+        // Reports - gunakan prefix berbeda
+        Route::prefix('reports')->name('reports.')->group(function () {
+            Route::get('/', [EvaluationReportController::class, 'index'])->name('index');
+            Route::get('/lecturer', [EvaluationReportController::class, 'lecturerReport'])->name('lecturer');
+            Route::get('/category', [EvaluationReportController::class, 'categoryReport'])->name('category');
+        });
+    });
 });
 
 // ==============================================

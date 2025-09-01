@@ -256,6 +256,28 @@
                         Portal Upload
                     </SidebarItem>
 
+                    <SidebarDropdown
+                        title="EDOM"
+                        icon="document-text"
+                        :active="
+                            currentUrl.startsWith(
+                                '/admin/edom/questionnaire'
+                            ) ||
+                            currentUrl.startsWith('/admin/edom/evaluation') ||
+                            currentUrl.startsWith('/admin/edom/report')
+                        "
+                    >
+                        <SidebarSubItem href="/admin/edom/questionnaire"
+                            >Kuesioner</SidebarSubItem
+                        >
+                        <SidebarSubItem href="/admin/edom/evaluation"
+                            >Evaluasi</SidebarSubItem
+                        >
+                        <SidebarSubItem href="/admin/edom/reports"
+                            >Laporan</SidebarSubItem
+                        >
+                    </SidebarDropdown>
+
                     <!-- Events -->
                     <SidebarItem
                         href="/admin/events"

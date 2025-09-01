@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('khs_access_logs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('khs_file_id')->constrained()->onDelete('cascade');
-            $table->foreignId('parent_id')->nullable()->constrained('parent_models')->onDelete('set null');
+            $table->foreignId('parent_id')->nullable()->constrained('parents')->onDelete('set null');
 
             $table->string('access_type')->default('view'); // view, download, preview
             $table->timestamp('accessed_at');

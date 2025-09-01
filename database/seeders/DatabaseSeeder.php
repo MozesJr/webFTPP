@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
             TestimonialSeeder::class,
             GallerySeeder::class,
             EventSeeder::class,
+
+            EDOMSeeder::class,
         ]);
     }
 }

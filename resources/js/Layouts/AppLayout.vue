@@ -54,7 +54,7 @@
                             </ul>
                         </li>
                         <li><Link href="/news">News</Link></li>
-                        <li><Link href="#team">GPM</Link></li>
+                        <li><Link href="/evaluation">GPM</Link></li>
                         <li><Link href="#contact">Penelitian</Link></li>
                         <li><Link href="#contact">Kemahasiswaan</Link></li>
                     </ul>

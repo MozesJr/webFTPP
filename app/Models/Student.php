@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Student extends Model
 {
@@ -20,7 +21,8 @@ class Student extends Model
         'birth_date',
         'birth_place',
         'address',
-        'program_studi',
+        'program_studi', // Keep for backward compatibility
+        'prodi_id', // New relation field
         'semester',
         'status',
         'tahun_masuk',
@@ -35,7 +37,7 @@ class Student extends Model
         'tahun_masuk' => 'integer',
     ];
 
-    // Relationship
+    // Relationships
     public function parents()
     {
         return $this->hasMany(ParentModel::class);
@@ -44,6 +46,16 @@ class Student extends Model
     public function parent()
     {
         return $this->hasOne(ParentModel::class);
+    }
+
+    public function programStudi(): BelongsTo
+    {
+        return $this->belongsTo(ProgramStudi::class, 'prodi_id');
+    }
+
+    public function evaluations(): HasMany
+    {
+        return $this->hasMany(Evaluation::class, 'student_nim', 'nim');
     }
 
     // Scopes
@@ -55,6 +67,11 @@ class Student extends Model
     public function scopeByStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    public function scopeByProdi($query, $prodiId)
+    {
+        return $query->where('prodi_id', $prodiId);
     }
 
     // Accessors
@@ -92,5 +109,18 @@ class Student extends Model
     public function getLatestKhsFile()
     {
         return $this->khsFiles()->ready()->latest('upload_date')->first();
+    }
+
+    // Helper methods
+    public function canEvaluateQuestionnaire($questionnaireId): bool
+    {
+        return !$this->evaluations()
+            ->where('questionnaire_id', $questionnaireId)
+            ->exists();
+    }
+
+    public function getEvaluationCount(): int
+    {
+        return $this->evaluations()->count();
     }
 }
