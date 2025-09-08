@@ -191,13 +191,27 @@
                             <li class="nav-item" role="presentation">
                                 <button
                                     class="nav-link"
-                                    id="features-tab"
+                                    id="documents-tab"
                                     data-bs-toggle="tab"
-                                    data-bs-target="#features"
+                                    data-bs-target="#documents"
                                     type="button"
                                     role="tab"
                                 >
-                                    <i class="bi bi-star me-2"></i>Keunggulan
+                                    <i class="bi bi-file-earmark-text me-2"></i
+                                    >Public Dokumen
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link"
+                                    id="jadwal-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#jadwal"
+                                    type="button"
+                                    role="tab"
+                                >
+                                    <i class="bi bi-calendar-week me-2"></i
+                                    >Jadwal Kuliah
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
@@ -211,19 +225,6 @@
                                 >
                                     <i class="bi bi-people me-2"></i>Daftar
                                     Dosen
-                                </button>
-                            </li>
-                            <li class="nav-item" role="presentation">
-                                <button
-                                    class="nav-link"
-                                    id="testimonial-tab"
-                                    data-bs-toggle="tab"
-                                    data-bs-target="#testimonial"
-                                    type="button"
-                                    role="tab"
-                                >
-                                    <i class="bi bi-chat-quote me-2"></i
-                                    >Testimoni
                                 </button>
                             </li>
                         </ul>
@@ -312,7 +313,7 @@
                                             </h5>
                                             <p>
                                                 {{
-                                                    programStudi.visi ||
+                                                    programStudi.vision ||
                                                     "Menjadi program studi yang unggul dalam pendidikan, penelitian, dan pengabdian masyarakat di bidang " +
                                                         programStudi.name.toLowerCase() +
                                                         " pada tahun 2030."
@@ -326,9 +327,11 @@
                                                 <i class="bi bi-target me-2"></i
                                                 >Misi Program Studi
                                             </h5>
-                                            <div v-if="programStudi.misi">
+                                            <div v-if="programStudi.mission">
                                                 <div
-                                                    v-html="programStudi.misi"
+                                                    v-html="
+                                                        programStudi.mission
+                                                    "
                                                 ></div>
                                             </div>
                                             <ul v-else class="mb-0">
@@ -356,12 +359,12 @@
                                             </h5>
                                             <div
                                                 v-if="
-                                                    programStudi.kompetensi_lulusan
+                                                    programStudi.graduate_competencies
                                                 "
                                             >
                                                 <div
                                                     v-html="
-                                                        programStudi.kompetensi_lulusan
+                                                        programStudi.graduate_competencies
                                                     "
                                                 ></div>
                                             </div>
@@ -646,117 +649,264 @@
                                 </div>
                             </div>
 
-                            <!-- Features Tab -->
+                            <!-- Public Documents Tab -->
                             <div
                                 class="tab-pane fade"
-                                id="features"
+                                id="documents"
                                 role="tabpanel"
                             >
-                                <h4>Keunggulan {{ programStudi.name }}</h4>
+                                <h4>Public Dokumen {{ programStudi.name }}</h4>
+                                <p class="text-muted mb-4">
+                                    Download dokumen resmi dan panduan akademik
+                                    program studi.
+                                </p>
 
                                 <div
                                     v-if="
-                                        programStudi.features &&
-                                        programStudi.features.length > 0
+                                        programStudi.documents &&
+                                        programStudi.documents.length > 0
                                     "
                                     class="row"
                                 >
                                     <div
-                                        v-for="feature in programStudi.features"
-                                        :key="feature.id"
-                                        class="col-md-6 mb-4"
+                                        v-for="doc in programStudi.documents"
+                                        :key="doc.id"
+                                        class="col-md-6 col-lg-4 mb-4"
                                     >
-                                        <div class="feature-card">
-                                            <div class="row">
-                                                <div
-                                                    class="col-md-3 text-center"
-                                                >
-                                                    <i
-                                                        :class="
-                                                            feature.icon ||
-                                                            'bi bi-star'
-                                                        "
-                                                        style="
-                                                            font-size: 2rem;
-                                                            color: var(
-                                                                --accent-color
-                                                            );
-                                                        "
-                                                    ></i>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <h5>{{ feature.title }}</h5>
-                                                    <p>
+                                        <div class="document-card">
+                                            <div class="document-icon">
+                                                <i
+                                                    :class="
+                                                        getDocumentIcon(
+                                                            doc.type
+                                                        )
+                                                    "
+                                                    style="
+                                                        font-size: 2.5rem;
+                                                        color: var(
+                                                            --accent-color
+                                                        );
+                                                    "
+                                                ></i>
+                                            </div>
+                                            <div class="document-info">
+                                                <h5>{{ doc.title }}</h5>
+                                                <p class="text-muted">
+                                                    {{ doc.description }}
+                                                </p>
+                                                <div class="document-meta">
+                                                    <small class="text-muted">
+                                                        <i
+                                                            class="bi bi-calendar me-1"
+                                                        ></i>
                                                         {{
-                                                            feature.description
+                                                            formatDate(
+                                                                doc.updated_at
+                                                            )
                                                         }}
-                                                    </p>
+                                                    </small>
+                                                    <small
+                                                        class="text-muted ms-3"
+                                                        v-if="doc.file_size"
+                                                    >
+                                                        <i
+                                                            class="bi bi-file-earmark me-1"
+                                                        ></i>
+                                                        {{
+                                                            formatFileSize(
+                                                                doc.file_size
+                                                            )
+                                                        }}
+                                                    </small>
+                                                </div>
+                                                <div class="mt-3">
+                                                    <a
+                                                        :href="doc.file_url"
+                                                        target="_blank"
+                                                        class="btn btn-primary btn-sm"
+                                                    >
+                                                        <i
+                                                            class="bi bi-download me-1"
+                                                        ></i>
+                                                        Download
+                                                    </a>
+                                                    <a
+                                                        :href="doc.file_url"
+                                                        target="_blank"
+                                                        class="btn btn-outline-secondary btn-sm ms-2"
+                                                    >
+                                                        <i
+                                                            class="bi bi-eye me-1"
+                                                        ></i>
+                                                        Preview
+                                                    </a>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <!-- Fallback features -->
+                                <!-- Default documents if no data -->
                                 <div v-else class="row">
-                                    <div class="col-md-6 mb-4">
-                                        <div class="feature-card">
-                                            <div class="row">
-                                                <div
-                                                    class="col-md-3 text-center"
-                                                >
-                                                    <i
-                                                        class="bi bi-award"
-                                                        style="
-                                                            font-size: 2rem;
-                                                            color: var(
-                                                                --accent-color
-                                                            );
-                                                        "
-                                                    ></i>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <h5>
-                                                        Akreditasi Berkualitas
-                                                    </h5>
-                                                    <p>
-                                                        Program studi
-                                                        terakreditasi dengan
-                                                        standar nasional yang
-                                                        berkualitas.
-                                                    </p>
+                                    <div
+                                        class="col-md-6 col-lg-4 mb-4"
+                                        v-for="docType in defaultDocuments"
+                                        :key="docType.type"
+                                    >
+                                        <div class="document-card">
+                                            <div class="document-icon">
+                                                <i
+                                                    :class="docType.icon"
+                                                    style="
+                                                        font-size: 2.5rem;
+                                                        color: var(
+                                                            --accent-color
+                                                        );
+                                                    "
+                                                ></i>
+                                            </div>
+                                            <div class="document-info">
+                                                <h5>{{ docType.title }}</h5>
+                                                <p class="text-muted">
+                                                    {{ docType.description }}
+                                                </p>
+                                                <div class="mt-3">
+                                                    <span
+                                                        class="badge bg-secondary"
+                                                        >Segera Tersedia</span
+                                                    >
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 mb-4">
-                                        <div class="feature-card">
-                                            <div class="row">
-                                                <div
-                                                    class="col-md-3 text-center"
-                                                >
-                                                    <i
-                                                        class="bi bi-people"
-                                                        style="
-                                                            font-size: 2rem;
-                                                            color: var(
-                                                                --accent-color
-                                                            );
-                                                        "
-                                                    ></i>
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <h5>Dosen Berpengalaman</h5>
-                                                    <p>
-                                                        Didukung oleh
-                                                        dosen-dosen
-                                                        berpengalaman dan
-                                                        berkualifikasi tinggi.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                </div>
+                            </div>
+
+                            <!-- Jadwal Kuliah Tab -->
+                            <div
+                                class="tab-pane fade"
+                                id="jadwal"
+                                role="tabpanel"
+                            >
+                                <h4>Jadwal Kuliah {{ programStudi.name }}</h4>
+
+                                <!-- Semester Filter -->
+                                <div class="row mb-4">
+                                    <div class="col-md-6">
+                                        <select
+                                            class="form-select"
+                                            v-model="selectedSemester"
+                                        >
+                                            <option value="">
+                                                Pilih Semester
+                                            </option>
+                                            <option
+                                                v-for="sem in availableSemesters"
+                                                :key="sem"
+                                                :value="sem"
+                                            >
+                                                Semester {{ sem }}
+                                            </option>
+                                        </select>
                                     </div>
+                                    <div class="col-md-6">
+                                        <select
+                                            class="form-select"
+                                            v-model="selectedAcademicYear"
+                                        >
+                                            <option value="">
+                                                Pilih Tahun Akademik
+                                            </option>
+                                            <option
+                                                v-for="year in academicYears"
+                                                :key="year"
+                                                :value="year"
+                                            >
+                                                {{ year }}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div
+                                    v-if="
+                                        filteredSchedules &&
+                                        filteredSchedules.length > 0
+                                    "
+                                >
+                                    <!-- Schedule Table -->
+                                    <div class="table-responsive">
+                                        <table
+                                            class="table table-striped schedule-table"
+                                        >
+                                            <thead>
+                                                <tr>
+                                                    <th>Kode MK</th>
+                                                    <th>Mata Kuliah</th>
+                                                    <th>SKS</th>
+                                                    <th>Kelas</th>
+                                                    <th>Hari</th>
+                                                    <th>Waktu</th>
+                                                    <th>Ruang</th>
+                                                    <th>Dosen</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr
+                                                    v-for="schedule in filteredSchedules"
+                                                    :key="schedule.id"
+                                                >
+                                                    <td>
+                                                        {{
+                                                            schedule.subject_code
+                                                        }}
+                                                    </td>
+                                                    <td>
+                                                        {{
+                                                            schedule.subject_name
+                                                        }}
+                                                    </td>
+                                                    <td>
+                                                        {{ schedule.credits }}
+                                                    </td>
+                                                    <td>
+                                                        {{
+                                                            schedule.class_name
+                                                        }}
+                                                    </td>
+                                                    <td>{{ schedule.day }}</td>
+                                                    <td>
+                                                        {{
+                                                            schedule.start_time
+                                                        }}
+                                                        -
+                                                        {{ schedule.end_time }}
+                                                    </td>
+                                                    <td>{{ schedule.room }}</td>
+                                                    <td>
+                                                        {{
+                                                            schedule.lecturer_name
+                                                        }}
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <!-- Default schedule if no data -->
+                                <div v-else class="text-center py-5">
+                                    <i
+                                        class="bi bi-calendar-x text-muted"
+                                        style="font-size: 3rem"
+                                    ></i>
+                                    <h5 class="text-muted mt-3">
+                                        Jadwal kuliah belum tersedia
+                                    </h5>
+                                    <p class="text-muted">
+                                        Jadwal kuliah untuk semester ini sedang
+                                        dalam proses penyusunan.
+                                    </p>
                                 </div>
                             </div>
 
@@ -854,98 +1004,6 @@
                                     </p>
                                 </div>
                             </div>
-
-                            <!-- Testimonial Tab -->
-                            <div
-                                class="tab-pane fade"
-                                id="testimonial"
-                                role="tabpanel"
-                            >
-                                <h4>
-                                    Testimoni Alumni {{ programStudi.name }}
-                                </h4>
-
-                                <div
-                                    v-if="
-                                        programStudi.testimonials &&
-                                        programStudi.testimonials.length > 0
-                                    "
-                                    class="row"
-                                >
-                                    <div
-                                        v-for="testimonial in programStudi.testimonials"
-                                        :key="testimonial.id"
-                                        class="col-md-6 mb-4"
-                                    >
-                                        <div class="testimonial-card">
-                                            <div class="row">
-                                                <div class="col-md-3">
-                                                    <img
-                                                        :src="
-                                                            testimonial.photo_url ||
-                                                            '/storage/assets/img/testimonials/testimonials-1.jpg'
-                                                        "
-                                                        class="img-fluid rounded-circle"
-                                                        :alt="testimonial.name"
-                                                    />
-                                                </div>
-                                                <div class="col-md-9">
-                                                    <h5>
-                                                        {{ testimonial.name }}
-                                                    </h5>
-                                                    <p class="text-muted mb-2">
-                                                        {{
-                                                            testimonial.position
-                                                        }}
-                                                        -
-                                                        {{
-                                                            testimonial.company
-                                                        }}
-                                                    </p>
-                                                    <p>
-                                                        "{{
-                                                            testimonial.content
-                                                        }}"
-                                                    </p>
-                                                    <div
-                                                        class="rating"
-                                                        v-if="
-                                                            testimonial.rating
-                                                        "
-                                                    >
-                                                        <i
-                                                            v-for="star in 5"
-                                                            :key="star"
-                                                            :class="
-                                                                star <=
-                                                                testimonial.rating
-                                                                    ? 'bi bi-star-fill'
-                                                                    : 'bi bi-star'
-                                                            "
-                                                            class="text-warning"
-                                                        ></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Fallback if no testimonial data -->
-                                <div v-else class="text-center py-5">
-                                    <i
-                                        class="bi bi-chat-quote text-muted"
-                                        style="font-size: 3rem"
-                                    ></i>
-                                    <h5 class="text-muted mt-3">
-                                        Testimoni belum tersedia
-                                    </h5>
-                                    <p class="text-muted">
-                                        Testimoni alumni untuk program studi ini
-                                        sedang dalam proses pengumpulan.
-                                    </p>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -955,7 +1013,7 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
 
@@ -967,68 +1025,94 @@ const props = defineProps({
         type: Array,
         default: () => [],
     },
+    schedules: {
+        type: Array,
+        default: () => [],
+    },
 });
 
-const page = usePage();
+// Reactive variables for filters
+const selectedSemester = ref("");
+const selectedAcademicYear = ref("");
 
-// Helper function untuk membuat route URL
-function route(name, params = null) {
-    const routes = {
-        "program-studi.show": (code) => `/program-studi/${code}`,
-        "program-studi.index": () => "/program-studi",
-    };
-
-    if (routes[name]) {
-        return routes[name](params);
-    }
-
-    return "#";
-}
+// Default documents configuration
+const defaultDocuments = [
+    {
+        type: "rps",
+        title: "RPS (Rencana Pembelajaran Semester)",
+        description: "Dokumen rencana pembelajaran untuk setiap mata kuliah",
+        icon: "bi bi-file-earmark-text",
+    },
+    {
+        type: "brosur",
+        title: "Brosur Program Studi",
+        description: "Informasi lengkap tentang program studi",
+        icon: "bi bi-file-earmark-image",
+    },
+    {
+        type: "peraturan",
+        title: "Peraturan Akademik",
+        description: "Peraturan dan tata tertib akademik",
+        icon: "bi bi-file-earmark-ruled",
+    },
+    {
+        type: "panduan",
+        title: "Panduan Akademik",
+        description: "Panduan untuk mahasiswa dan akademik",
+        icon: "bi bi-file-earmark-check",
+    },
+    {
+        type: "profil",
+        title: "Profil Lulusan",
+        description: "Profil dan kompetensi lulusan program studi",
+        icon: "bi bi-file-earmark-person",
+    },
+];
 
 // Computed properties
-const groupedSemesters = computed(() => {
-    if (
-        !props.subjectsBySemester ||
-        Object.keys(props.subjectsBySemester).length === 0
-    )
-        return {};
+const availableSemesters = computed(() => {
+    if (!props.schedules || props.schedules.length === 0)
+        return [1, 2, 3, 4, 5, 6, 7, 8];
+    return [...new Set(props.schedules.map((s) => s.semester))].sort();
+});
 
-    const grouped = {};
-    const semesters = Object.keys(props.subjectsBySemester).sort(
-        (a, b) => Number(a) - Number(b)
-    );
+const academicYears = computed(() => {
+    if (!props.schedules || props.schedules.length === 0)
+        return ["2024/2025", "2023/2024"];
+    return [...new Set(props.schedules.map((s) => s.academic_year))]
+        .sort()
+        .reverse();
+});
 
-    for (let i = 0; i < semesters.length; i += 2) {
-        const key = `${semesters[i]}-${semesters[i + 1] || ""}`;
-        grouped[key] = {
-            ...props.subjectsBySemester[semesters[i]],
-            ...(props.subjectsBySemester[semesters[i + 1]] || {}),
-        };
-    }
+const filteredSchedules = computed(() => {
+    if (!props.schedules) return [];
 
-    return grouped;
+    return props.schedules.filter((schedule) => {
+        const semesterMatch =
+            !selectedSemester.value ||
+            schedule.semester == selectedSemester.value;
+        const yearMatch =
+            !selectedAcademicYear.value ||
+            schedule.academic_year === selectedAcademicYear.value;
+        return semesterMatch && yearMatch;
+    });
 });
 
 // Helper methods
 function getAccreditationClass(accreditation) {
     switch (accreditation) {
         case "A":
+        case "Unggul":
             return "bg-success";
         case "B":
-            return "bg-warning";
+        case "Baik Sekali":
+            return "bg-primary";
         case "C":
-            return "bg-secondary";
+        case "Baik":
+            return "bg-warning";
         default:
             return "bg-secondary";
     }
-}
-
-function getSemesterTitle(semesterRange) {
-    const [start, end] = semesterRange.split("-");
-    if (end && end !== "") {
-        return `Semester ${start}-${end}`;
-    }
-    return `Semester ${start}`;
 }
 
 function getPositionClass(position) {
@@ -1045,6 +1129,38 @@ function getPositionClass(position) {
         return "text-info";
     }
     return "text-muted";
+}
+
+function getDocumentIcon(type) {
+    const icons = {
+        rps: "bi bi-file-earmark-text",
+        brosur: "bi bi-file-earmark-image",
+        peraturan: "bi bi-file-earmark-ruled",
+        panduan: "bi bi-file-earmark-check",
+        profil: "bi bi-file-earmark-person",
+        pdf: "bi bi-file-earmark-pdf",
+        doc: "bi bi-file-earmark-word",
+        xlsx: "bi bi-file-earmark-excel",
+    };
+    return icons[type] || "bi bi-file-earmark";
+}
+
+function formatDate(dateString) {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return date.toLocaleDateString("id-ID", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+}
+
+function formatFileSize(bytes) {
+    if (!bytes) return "";
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    if (bytes === 0) return "0 Byte";
+    const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    return Math.round((bytes / Math.pow(1024, i)) * 100) / 100 + " " + sizes[i];
 }
 </script>
 
@@ -1144,20 +1260,36 @@ function getPositionClass(position) {
 }
 
 .lecturer-card,
-.feature-card,
-.testimonial-card {
+.document-card {
     background: #f8f9fa;
     padding: 20px;
     border-radius: 10px;
     border: 1px solid #e9ecef;
     transition: transform 0.3s ease;
+    height: 100%;
 }
 
 .lecturer-card:hover,
-.feature-card:hover,
-.testimonial-card:hover {
+.document-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.document-card {
+    text-align: center;
+}
+
+.document-icon {
+    margin-bottom: 15px;
+}
+
+.document-info h5 {
+    margin-bottom: 10px;
+    color: var(--heading-color);
+}
+
+.document-meta {
+    margin: 10px 0;
 }
 
 .info-card {

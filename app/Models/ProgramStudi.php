@@ -15,6 +15,9 @@ class ProgramStudi extends Model
         'code',
         'degree_level',
         'description',
+        'vision',
+        'mission',
+        'graduate_competencies',
         'overview',
         'image_url',
         'accreditation',
@@ -22,7 +25,8 @@ class ProgramStudi extends Model
         'accreditation_expire',
         'head_of_program',
         'established_year',
-        'is_active'
+        'is_active',
+        'certificate_url',
     ];
 
     protected $casts = [
@@ -134,6 +138,31 @@ class ProgramStudi extends Model
     public function evaluations()
     {
         return $this->hasManyThrough(Evaluation::class, Questionnaire::class, 'prodi_id', 'questionnaire_id');
+    }
+
+    /**
+     * Accessor untuk mendapatkan URL sertifikat lengkap
+     */
+    public function getCertificateUrlAttribute($value)
+    {
+        return $value ? asset('storage/' . $value) : null;
+    }
+
+    /**
+     * Mutator untuk menyimpan path sertifikat tanpa storage/
+     */
+    public function setCertificateUrlAttribute($value)
+    {
+        if ($value && strpos($value, 'storage/') === 0) {
+            $this->attributes['certificate_url'] = str_replace('storage/', '', $value);
+        } else {
+            $this->attributes['certificate_url'] = $value;
+        }
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class, 'program_studi_id');
     }
 
     // Atau, untuk sementara, kita bisa comment bagian yang error di HomeController

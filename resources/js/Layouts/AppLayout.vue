@@ -22,7 +22,43 @@
                                 >Home</Link
                             >
                         </li>
-                        <li><Link href="/about">About</Link></li>
+                        <li class="dropdown">
+                            <Link href="/about"
+                                ><span>Tentang FTPP</span>
+                                <i
+                                    class="bi bi-chevron-down toggle-dropdown"
+                                ></i
+                            ></Link>
+                            <ul>
+                                <li>
+                                    <Link href="/about/profile"
+                                        >Profile Fakultas</Link
+                                    >
+                                </li>
+                                <li>
+                                    <Link href="/about/history">Sejarah</Link>
+                                </li>
+                                <li>
+                                    <Link href="/about/vision-mision"
+                                        >Visi & Misi</Link
+                                    >
+                                </li>
+                                <li>
+                                    <Link href="/about/program-studi"
+                                        >Program Studi</Link
+                                    >
+                                </li>
+                                <li>
+                                    <Link href="/about/accreditation"
+                                        >Akreditasi</Link
+                                    >
+                                </li>
+                                <li>
+                                    <Link href="/about/leadership">STO</Link>
+                                </li>
+                            </ul>
+                        </li>
+
                         <li class="dropdown">
                             <Link href="/program-studi"
                                 ><span>Prodi</span>

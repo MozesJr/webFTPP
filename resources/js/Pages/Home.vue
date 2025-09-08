@@ -3,15 +3,20 @@
         <!-- Hero Section -->
         <section id="hero" class="hero section dark-background">
             <div class="absolute inset-0 z-0">
-                <video
+                <iframe
                     v-if="hero.background_video_url"
-                    autoplay
-                    muted
-                    loop
+                    :src="`${
+                        hero.background_video_url.split('?')[0]
+                    }?autoplay=1&mute=1&loop=1&playlist=${getYouTubeId(
+                        hero.background_video_url
+                    )}&controls=0&showinfo=0&modestbranding=1&rel=0&playsinline=1`"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowfullscreen
                     class="w-full h-full object-cover"
-                >
-                    <source :src="hero.background_video_url" type="video/mp4" />
-                </video>
+                ></iframe>
+
                 <img
                     v-else-if="hero.background_image_url"
                     :src="hero.background_image_url"
@@ -43,6 +48,99 @@
                         <i class="bi bi-play-circle"></i
                         ><span>Watch Video</span>
                     </a>
+                </div>
+            </div>
+        </section>
+        <section id="stats" class="stats section light-background">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>EDOM</h2>
+                <p>Hasil Evaluasi Dosen Oleh Mahasiswa</p>
+            </div>
+            <div class="container" data-aos="fade-up" data-aos-delay="100">
+                <div class="row gy-4">
+                    <div class="col-lg-3 col-md-6">
+                        <div
+                            class="stats-item d-flex align-items-center w-100 h-100"
+                        >
+                            <i
+                                class="bi bi-emoji-smile color-blue flex-shrink-0"
+                            ></i>
+                            <div>
+                                <span
+                                    data-purecounter-start="0"
+                                    :data-purecounter-end="
+                                        stats?.total_students || 500
+                                    "
+                                    data-purecounter-duration="1"
+                                    class="purecounter"
+                                ></span>
+                                <p>S1 Teknik Perminyakan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div
+                            class="stats-item d-flex align-items-center w-100 h-100"
+                        >
+                            <i
+                                class="bi bi-journal-richtext color-orange flex-shrink-0"
+                            ></i>
+                            <div>
+                                <span
+                                    data-purecounter-start="0"
+                                    :data-purecounter-end="
+                                        stats?.total_partnerships || 521
+                                    "
+                                    data-purecounter-duration="1"
+                                    class="purecounter"
+                                ></span>
+                                <p>S1 Teknik Pertambangan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div
+                            class="stats-item d-flex align-items-center w-100 h-100"
+                        >
+                            <i
+                                class="bi bi-headset color-green flex-shrink-0"
+                            ></i>
+                            <div>
+                                <span
+                                    data-purecounter-start="0"
+                                    :data-purecounter-end="
+                                        stats?.total_alumni || 1463
+                                    "
+                                    data-purecounter-duration="1"
+                                    class="purecounter"
+                                ></span>
+                                <p>S1 Teknik Geologi</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6">
+                        <div
+                            class="stats-item d-flex align-items-center w-100 h-100"
+                        >
+                            <i
+                                class="bi bi-people color-pink flex-shrink-0"
+                            ></i>
+                            <div>
+                                <span
+                                    data-purecounter-start="0"
+                                    :data-purecounter-end="
+                                        stats?.total_lecturers || 30
+                                    "
+                                    data-purecounter-duration="1"
+                                    class="purecounter"
+                                ></span>
+                                <p>D3 Teknik Pertambangan</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -803,6 +901,17 @@ defineProps({
     gallery: Array,
     siteSettings: Object,
 });
+
+// Tambahkan fungsi ini
+const getYouTubeId = (url) => {
+    if (!url) {
+        return null;
+    }
+    const match = url.match(
+        /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/
+    );
+    return match && match[1] ? match[1] : null;
+};
 
 onMounted(() => {
     // Initialize AOS (Animate On Scroll)

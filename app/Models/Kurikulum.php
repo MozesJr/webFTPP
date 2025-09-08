@@ -53,4 +53,26 @@ class Kurikulum extends Model
     {
         return $value ? asset('storage/' . $value) : null;
     }
+
+    // Helper methods untuk kredit
+    public function getMandatoryCreditsAttribute()
+    {
+        return $this->mataKuliahs()
+            ->where('category', 'wajib')
+            ->sum('credits');
+    }
+
+    public function getElectiveCreditsAttribute()
+    {
+        return $this->mataKuliahs()
+            ->where('category', 'pilihan')
+            ->sum('credits');
+    }
+
+    public function getThesisCreditsAttribute()
+    {
+        return $this->mataKuliahs()
+            ->whereIn('category', ['skripsi', 'tugas_akhir'])
+            ->sum('credits');
+    }
 }

@@ -71,4 +71,20 @@ class JadwalKuliah extends Model
     {
         return $this->capacity - $this->enrolled_students;
     }
+
+    // Accessor untuk format hari Indonesia
+    public function getDayAttribute($value)
+    {
+        $days = [
+            'senin' => 'Senin',
+            'selasa' => 'Selasa',
+            'rabu' => 'Rabu',
+            'kamis' => 'Kamis',
+            'jumat' => 'Jumat',
+            'sabtu' => 'Sabtu',
+            'minggu' => 'Minggu'
+        ];
+
+        return $days[strtolower($value)] ?? ucfirst($value);
+    }
 }

@@ -51,7 +51,18 @@ use App\Services\KhsManagementService;
 
 // Public Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/about', [AboutController::class, 'index'])->name('about');
+// About Routes
+Route::prefix('about')->name('about.')->group(function () {
+    Route::get('/', [AboutController::class, 'index'])->name('index');
+    Route::get('/profile', [AboutController::class, 'profile'])->name('profile');
+    Route::get('/vision-mission', [AboutController::class, 'visionMission'])->name('vision-mission');
+    Route::get('/history', [AboutController::class, 'history'])->name('history');
+    Route::get('/program-studi', [AboutController::class, 'programStudi'])->name('program-studi');
+    Route::get('/accreditation', [AboutController::class, 'accreditation'])->name('accreditation');
+    Route::get('/leadership', [AboutController::class, 'leadership'])->name('leadership');
+});
+
+Route::get('/about-old', [AboutController::class, 'index'])->name('about-old');
 
 // Program Studi Routes
 Route::prefix('program-studi')->name('program-studi.')->group(function () {
