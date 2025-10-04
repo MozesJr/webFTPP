@@ -51,10 +51,99 @@
                 </div>
             </div>
         </section>
+        <section id="features" class="features section">
+            <div class="container section-title" data-aos="fade-up">
+                <h2>Sambutan</h2>
+                <p>Dekan FTPP UNIPA</p>
+            </div>
+            <div class="container">
+                <div
+                    class="tab-content"
+                    data-aos="fade-up"
+                    data-aos-delay="200"
+                >
+                    <div class="tab-pane fade active show" id="features-tab-1">
+                        <div class="row">
+                            <div class="col-lg-9 order-2 order-lg-1">
+                                <p class="fst-italic">
+                                    Lorem ipsum dolor sit amet consectetur,
+                                    adipisicing elit. Id at quas cumque
+                                    provident esse recusandae inventore amet
+                                    eius ea perferendis, officia placeat saepe.
+                                    Molestias, illum. Voluptas architecto
+                                    repellat illum amet dolor eligendi, ducimus
+                                    dolores tempore. Dolore sequi tenetur atque
+                                    nostrum. Totam dolores, recusandae tenetur
+                                    repellat, obcaecati aperiam incidunt
+                                    provident officia culpa, facilis placeat
+                                    cupiditate perferendis minus. Excepturi sint
+                                    aut voluptatum perferendis quasi sapiente
+                                    quaerat quibusdam numquam. Ut inventore
+                                    ipsum illo quam doloribus enim. Eos, totam
+                                    ex, voluptates quia exercitationem ipsum
+                                    natus in alias fugiat dolorem, distinctio
+                                    numquam odit. Eaque earum placeat, assumenda
+                                    similique sapiente enim quo ut? Nemo quae,
+                                    reprehenderit necessitatibus omnis,
+                                    veritatis a minima, dolor iste recusandae
+                                    sapiente quisquam illo. Cupiditate officia
+                                    harum eum blanditiis accusamus veniam illo
+                                    sunt, nihil libero porro. Voluptatibus,
+                                    praesentium? Possimus itaque distinctio
+                                    magni laudantium similique quidem, velit
+                                    maiores sit ad fugiat culpa eum vero
+                                    assumenda magnam error numquam facere
+                                    praesentium dolore iusto? Expedita rerum ab
+                                    fugiat illo aliquid laudantium iusto, dicta,
+                                    amet numquam inventore libero repudiandae
+                                    corrupti perspiciatis quam nam nobis
+                                    accusamus dolor ullam dolore sint animi
+                                    incidunt beatae tempora. Nobis enim
+                                    praesentium corporis omnis sit. Omnis
+                                    numquam quibusdam eum non est quo tempore
+                                    reprehenderit optio, voluptas quidem impedit
+                                    aperiam alias obcaecati accusantium earum,
+                                    labore corrupti, necessitatibus unde et!
+                                    Minus alias magnam, corrupti molestiae velit
+                                    illo sapiente! Commodi consequatur expedita
+                                    architecto aut blanditiis odit eos
+                                    reprehenderit mollitia rerum autem quibusdam
+                                    modi asperiores repellendus, similique, sed
+                                    nobis? Voluptate porro id optio hic natus
+                                    totam ipsum nihil earum pariatur, neque
+                                    quasi assumenda ut! Enim maiores sequi
+                                    eaque, laboriosam optio minus neque vero
+                                    recusandae hic sapiente inventore. Sunt
+                                    perferendis dolorem harum nobis dolorum,
+                                    quis pariatur? Et maxime similique inventore
+                                    perferendis, sed corporis expedita fuga
+                                    harum quam laudantium saepe corrupti nobis,
+                                    earum mollitia quisquam magni debitis
+                                    repellendus eveniet vitae consectetur!
+                                    Repellendus vero necessitatibus veritatis
+                                    quos a repellat cupiditate.
+                                </p>
+                                <h3>Prof. Dr. Ir. Eko A. Martanto, MP</h3>
+                            </div>
+                            <div
+                                class="col-lg-3 order-1 order-lg-2 text-center"
+                            >
+                                <img
+                                    :src="'/storage/assets/img/team1.png'"
+                                    alt=""
+                                    class="img-fluid"
+                                    width="500px"
+                                />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
         <section id="stats" class="stats section light-background">
             <div class="container section-title" data-aos="fade-up">
-                <h2>EDOM</h2>
-                <p>Hasil Evaluasi Dosen Oleh Mahasiswa</p>
+                <h2>Evaluasi</h2>
+                <p>Hasil Evaluasi</p>
             </div>
             <div class="container" data-aos="fade-up" data-aos-delay="100">
                 <div class="row gy-4">
@@ -74,7 +163,7 @@
                                     data-purecounter-duration="1"
                                     class="purecounter"
                                 ></span>
-                                <p>S1 Teknik Perminyakan</p>
+                                <p>Evaluasi Dosen</p>
                             </div>
                         </div>
                     </div>
@@ -95,7 +184,7 @@
                                     data-purecounter-duration="1"
                                     class="purecounter"
                                 ></span>
-                                <p>S1 Teknik Pertambangan</p>
+                                <p>Evaluasi Fasilitas</p>
                             </div>
                         </div>
                     </div>
@@ -116,7 +205,7 @@
                                     data-purecounter-duration="1"
                                     class="purecounter"
                                 ></span>
-                                <p>S1 Teknik Geologi</p>
+                                <p>Evaluasi Aset</p>
                             </div>
                         </div>
                     </div>
@@ -137,7 +226,7 @@
                                     data-purecounter-duration="1"
                                     class="purecounter"
                                 ></span>
-                                <p>D3 Teknik Pertambangan</p>
+                                <p>Evaluasi ........</p>
                             </div>
                         </div>
                     </div>
@@ -146,7 +235,7 @@
         </section>
 
         <!-- About Section -->
-        <section id="about" class="about section">
+        <!-- <section id="about" class="about section">
             <div class="container section-title" data-aos="fade-up">
                 <h2>About</h2>
                 <p>ABOUT ALL FOR {{ siteSettings.site_title }}</p>
@@ -228,10 +317,10 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!-- Stats Section -->
-        <section id="stats" class="stats section light-background">
+        <!-- <section id="stats" class="stats section light-background">
             <div class="container" data-aos="fade-up" data-aos-delay="100">
                 <div class="row gy-4">
                     <div class="col-lg-3 col-md-6">
@@ -319,13 +408,13 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!-- Services Section -->
         <section id="services" class="services section">
             <div class="container section-title" data-aos="fade-up">
-                <h2>Program Studi</h2>
-                <p>Featured Program Studi<br /></p>
+                <h2>Fasilitas</h2>
+                <p>Fasilitas yang dimiliki FTPP<br /></p>
             </div>
 
             <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -347,20 +436,6 @@
                                     class="img-fluid"
                                     alt=""
                                 />
-                            </div>
-                            <div class="details position-relative">
-                                <div class="icon">
-                                    <i class="bi bi-activity"></i>
-                                </div>
-                                <a href="/program-studi" class="stretched-link">
-                                    <h3>{{ prodi.name }}</h3>
-                                </a>
-                                <p>
-                                    {{
-                                        prodi.description ||
-                                        "Deskripsi program studi akan ditampilkan di sini."
-                                    }}
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -395,7 +470,7 @@
         </section>
 
         <!-- Features Section -->
-        <section id="features" class="features section">
+        <!-- <section id="features" class="features section">
             <div class="container">
                 <ul
                     class="nav nav-tabs row d-flex"
@@ -469,10 +544,10 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!-- Testimonials Section -->
-        <section
+        <!-- <section
             id="testimonials"
             class="testimonials section dark-background"
             v-if="testimonials.length"
@@ -523,7 +598,7 @@
                     <div class="swiper-pagination"></div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
         <!-- Portfolio Section -->
         <section
@@ -623,6 +698,7 @@
                                         src="/storage/assets/img/team1.png"
                                         class="img-fluid"
                                         alt=""
+                                        width="700px"
                                     />
                                 </div>
                                 <div class="member-info">
@@ -650,6 +726,7 @@
                                     src="/storage/assets/img/team2.png"
                                     class="img-fluid"
                                     alt=""
+                                    width="500px"
                                 />
                             </div>
                             <div class="member-info">
@@ -684,6 +761,7 @@
                                     src="/storage/assets/img/team3.png"
                                     class="img-fluid"
                                     alt=""
+                                    width="500px"
                                 />
                             </div>
                             <div class="member-info">
@@ -718,6 +796,7 @@
                                     src="/storage/assets/img/team4.png"
                                     class="img-fluid"
                                     alt=""
+                                    width="500px"
                                 />
                             </div>
                             <div class="member-info">
@@ -748,7 +827,7 @@
         <section id="contact" class="contact section">
             <div class="container section-title" data-aos="fade-up">
                 <h2>Contact</h2>
-                <p>Necessitatibus eius consequatur</p>
+                <p>Contact US</p>
             </div>
 
             <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -979,4 +1058,29 @@ onMounted(() => {
     position: relative;
     z-index: 1;
 }
+
+/* Pastikan elemen .pic memiliki tinggi yang tetap */
+.team .member .pic {
+    overflow: hidden; /* Sembunyikan bagian gambar yang berlebih */
+    position: relative;
+    /* Atur tinggi tetap. Contoh: 300px, atau gunakan aspect-ratio jika browser mendukung */
+    height: 500px;
+    /* Tambahkan aspect-ratio untuk seragamkan dimensi (opsional, tapi lebih modern) */
+    /* aspect-ratio: 1 / 1; */
+}
+
+/* Atur bagaimana gambar di dalam .pic harus ditampilkan */
+.team .member .pic img {
+    /* Pastikan gambar mengisi seluruh area .pic */
+    width: 100%;
+    height: 100%;
+    /* Gunakan object-fit: cover untuk memastikan gambar menutupi area tanpa terdistorsi.
+       Ini mungkin memotong tepi gambar untuk menjaga rasionya. */
+    object-fit: cover;
+    /* Beri transisi jika ada efek hover */
+    transition: 0.3s;
+}
+
+/* Jika ingin gambar berukuran sama untuk rasio 1:1, kamu juga bisa menggunakan ini
+   di .col-lg-3 .member:hover .pic img { ... } untuk efek hover */
 </style>

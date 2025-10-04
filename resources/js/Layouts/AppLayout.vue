@@ -82,11 +82,11 @@
                                         >S1 Teknik Geologi</Link
                                     >
                                 </li>
-                                <li>
+                                <!-- <li>
                                     <Link href="/program-studi/DTPT"
                                         >D3 Teknik Pertambangan</Link
                                     >
-                                </li>
+                                </li> -->
                             </ul>
                         </li>
                         <li><Link href="/news">News</Link></li>
@@ -222,13 +222,13 @@
                                     >S1 Teknik Geologi</Link
                                 >
                             </li>
-                            <li>
+                            <!-- <li>
                                 <i class="bi bi-chevron-right"></i>
                                 <Link
                                     href="/program-studi/d3-teknik-pertambangan"
                                     >D3 Teknik Pertambangan</Link
                                 >
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
 
