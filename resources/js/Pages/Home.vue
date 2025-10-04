@@ -1080,7 +1080,4 @@ onMounted(() => {
     /* Beri transisi jika ada efek hover */
     transition: 0.3s;
 }
-
-/* Jika ingin gambar berukuran sama untuk rasio 1:1, kamu juga bisa menggunakan ini
-   di .col-lg-3 .member:hover .pic img { ... } untuk efek hover */
 </style>
