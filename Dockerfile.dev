@@ -46,7 +46,7 @@ COPY package*.json composer.json composer.lock ./
 #     --no-scripts \
 #     --ignore-platform-reqs \
 #     --optimize-autoloader
-# RUN npm install.
+# RUN npm install
 
 RUN composer install \
     --ignore-platform-reqs \
