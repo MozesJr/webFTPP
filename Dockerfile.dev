@@ -41,9 +41,14 @@ WORKDIR /var/www/html
 COPY package*.json composer.json composer.lock ./
 
 # Install dependencies
+# RUN composer install \
+#     --no-dev \
+#     --no-scripts \
+#     --ignore-platform-reqs \
+#     --optimize-autoloader
+# RUN npm install
+
 RUN composer install \
-    --no-dev \
-    --no-scripts \
     --ignore-platform-reqs \
     --optimize-autoloader
 RUN npm install
