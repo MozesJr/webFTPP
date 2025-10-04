@@ -41,17 +41,13 @@ WORKDIR /var/www/html
 COPY package*.json composer.json composer.lock ./
 
 # Install dependencies
-# RUN composer install \
-#     --no-dev \
-#     --no-scripts \
-#     --ignore-platform-reqs \
-#     --optimize-autoloader
-# RUN npm install
-
 RUN composer install \
+    --no-dev \
+    --no-scripts \
     --ignore-platform-reqs \
     --optimize-autoloader
 RUN npm install
+RUN npm run dev
 
 # Copy application files
 COPY . .
@@ -78,4 +74,4 @@ RUN echo '<VirtualHost *:80>\n\
 </VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
-# CMD ["apache2-foreground"]
+CMD ["apache2-foreground"]

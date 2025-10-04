@@ -19,14 +19,8 @@ services:
       - DB_PASSWORD=L@r@velP@ssw0rd123
       - CACHE_DRIVER=file
       - SESSION_DRIVER=file
-      - CACHE_DRIVER=file
-      - SESSION_DRIVER=file
     volumes:
       - .:/var/www/html
-      # ⬅️ TAMBAHKAN INI: Salin script entrypoint ke dalam container
-      - ./docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
-    # ⬅️ TAMBAHKAN INI: Ganti CMD default Dockerfile
-    command: ["/usr/local/bin/docker-entrypoint.sh"]
     restart: unless-stopped
     networks:
       - app_network
