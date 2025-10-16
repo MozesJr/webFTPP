@@ -62,7 +62,16 @@
                     :active="$page.url.startsWith('/admin/program-studi')"
                     icon="AcademicCapIcon"
                 >
-                    Program Studi
+                    Program Studi..
+                </SidebarItem>
+
+                <!-- Sambutan Dekan -->
+                <SidebarItem
+                    href="/admin/dean-greeting"
+                    :active="$page.url.startsWith('/admin/dean-greeting')"
+                    icon="AcademicCapIcon"
+                >
+                    Sambutan Dekan
                 </SidebarItem>
 
                 <!-- News -->
