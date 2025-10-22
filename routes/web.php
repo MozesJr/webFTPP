@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\EvaluationController;
 use App\Http\Controllers\Admin\EvaluationReportController;
 use App\Http\Controllers\EvaluationFormController;
 use App\Http\Controllers\Admin\DeanGreetingController;
+use App\Http\Controllers\FacilityController;
+
 
 
 
@@ -92,6 +94,9 @@ Route::prefix('contact')->name('contact.')->group(function () {
     Route::get('/', [ContactController::class, 'index'])->name('index');
     Route::post('/', [ContactController::class, 'store'])->name('store');
 });
+
+Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
+Route::get('/facilities/{slug}', [FacilityController::class, 'show'])->name('facilities.show');
 
 // Unauthorized route
 Route::get('/unauthorized', function () {
@@ -401,6 +406,19 @@ Route::middleware(['auth', 'verified', 'check.role:admin,super_admin'])->prefix(
     // Team routes
     Route::resource('team', TeamController::class);
     Route::post('team/update-order', [TeamController::class, 'updateOrder'])->name('team.update-order');
+
+    // Facility Routes
+    Route::controller(FacilityController::class)->prefix('facilities')->name('facilities.')->group(function () {
+        Route::get('/', 'index')->name('index');
+        Route::get('/create', 'create')->name('create');
+        Route::post('/', 'store')->name('store');
+        Route::get('/{facility}', 'show')->name('show');
+        Route::get('/{facility}/edit', 'edit')->name('edit');
+        Route::post('/{facility}', 'update')->name('update');
+        Route::delete('/{facility}', 'destroy')->name('destroy');
+        Route::post('/{facility}/toggle-status', 'toggleStatus')->name('toggle-status');
+        Route::post('/{facility}/toggle-availability', 'toggleAvailability')->name('toggle-availability');
+    });
 
 
     // EDOM Questionnaire Management

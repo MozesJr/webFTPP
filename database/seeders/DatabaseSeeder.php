@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
             EventSeeder::class,
 
             EDOMSeeder::class,
+            FacilitySeeder::class,
         ]);
     }
 }

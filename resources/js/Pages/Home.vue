@@ -51,95 +51,9 @@
                 </div>
             </div>
         </section>
-        <section id="features" class="features section">
-            <div class="container section-title" data-aos="fade-up">
-                <h2>Sambutan</h2>
-                <p>Dekan FTPP UNIPA</p>
-            </div>
-            <div class="container">
-                <div
-                    class="tab-content"
-                    data-aos="fade-up"
-                    data-aos-delay="200"
-                >
-                    <div class="tab-pane fade active show" id="features-tab-1">
-                        <div class="row">
-                            <div class="col-lg-9 order-2 order-lg-1">
-                                <p class="fst-italic">
-                                    Lorem ipsum dolor sit amet consectetur,
-                                    adipisicing elit. Id at quas cumque
-                                    provident esse recusandae inventore amet
-                                    eius ea perferendis, officia placeat saepe.
-                                    Molestias, illum. Voluptas architecto
-                                    repellat illum amet dolor eligendi, ducimus
-                                    dolores tempore. Dolore sequi tenetur atque
-                                    nostrum. Totam dolores, recusandae tenetur
-                                    repellat, obcaecati aperiam incidunt
-                                    provident officia culpa, facilis placeat
-                                    cupiditate perferendis minus. Excepturi sint
-                                    aut voluptatum perferendis quasi sapiente
-                                    quaerat quibusdam numquam. Ut inventore
-                                    ipsum illo quam doloribus enim. Eos, totam
-                                    ex, voluptates quia exercitationem ipsum
-                                    natus in alias fugiat dolorem, distinctio
-                                    numquam odit. Eaque earum placeat, assumenda
-                                    similique sapiente enim quo ut? Nemo quae,
-                                    reprehenderit necessitatibus omnis,
-                                    veritatis a minima, dolor iste recusandae
-                                    sapiente quisquam illo. Cupiditate officia
-                                    harum eum blanditiis accusamus veniam illo
-                                    sunt, nihil libero porro. Voluptatibus,
-                                    praesentium? Possimus itaque distinctio
-                                    magni laudantium similique quidem, velit
-                                    maiores sit ad fugiat culpa eum vero
-                                    assumenda magnam error numquam facere
-                                    praesentium dolore iusto? Expedita rerum ab
-                                    fugiat illo aliquid laudantium iusto, dicta,
-                                    amet numquam inventore libero repudiandae
-                                    corrupti perspiciatis quam nam nobis
-                                    accusamus dolor ullam dolore sint animi
-                                    incidunt beatae tempora. Nobis enim
-                                    praesentium corporis omnis sit. Omnis
-                                    numquam quibusdam eum non est quo tempore
-                                    reprehenderit optio, voluptas quidem impedit
-                                    aperiam alias obcaecati accusantium earum,
-                                    labore corrupti, necessitatibus unde et!
-                                    Minus alias magnam, corrupti molestiae velit
-                                    illo sapiente! Commodi consequatur expedita
-                                    architecto aut blanditiis odit eos
-                                    reprehenderit mollitia rerum autem quibusdam
-                                    modi asperiores repellendus, similique, sed
-                                    nobis? Voluptate porro id optio hic natus
-                                    totam ipsum nihil earum pariatur, neque
-                                    quasi assumenda ut! Enim maiores sequi
-                                    eaque, laboriosam optio minus neque vero
-                                    recusandae hic sapiente inventore. Sunt
-                                    perferendis dolorem harum nobis dolorum,
-                                    quis pariatur? Et maxime similique inventore
-                                    perferendis, sed corporis expedita fuga
-                                    harum quam laudantium saepe corrupti nobis,
-                                    earum mollitia quisquam magni debitis
-                                    repellendus eveniet vitae consectetur!
-                                    Repellendus vero necessitatibus veritatis
-                                    quos a repellat cupiditate.
-                                </p>
-                                <h3>Prof. Dr. Ir. Eko A. Martanto, MP</h3>
-                            </div>
-                            <div
-                                class="col-lg-3 order-1 order-lg-2 text-center"
-                            >
-                                <img
-                                    :src="'/storage/assets/img/team1.png'"
-                                    alt=""
-                                    class="img-fluid"
-                                    width="500px"
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+
+        <DeanGreetingSection :greeting="deanGreeting" />
+
         <section id="stats" class="stats section light-background">
             <div class="container section-title" data-aos="fade-up">
                 <h2>Evaluasi</h2>
@@ -411,37 +325,8 @@
         </section> -->
 
         <!-- Services Section -->
-        <section id="services" class="services section">
-            <div class="container section-title" data-aos="fade-up">
-                <h2>Fasilitas</h2>
-                <p>Fasilitas yang dimiliki FTPP<br /></p>
-            </div>
-
-            <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-5">
-                    <div
-                        v-for="(prodi, index) in programStudis.slice(0, 4)"
-                        :key="prodi.id"
-                        class="col-xl-3 col-md-6"
-                        data-aos="zoom-in"
-                        :data-aos-delay="200 + index * 100"
-                    >
-                        <div class="service-item">
-                            <div class="img">
-                                <img
-                                    :src="
-                                        prodi.image_url ||
-                                        `/assets/img/service${index + 1}.jpg`
-                                    "
-                                    class="img-fluid"
-                                    alt=""
-                                />
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <!-- Facilities Section -->
+        <FacilitiesSection :facilities="facilities" />
 
         <!-- Clients Section -->
         <section
@@ -965,6 +850,8 @@
 
 <script setup>
 import AppLayout from "@/Layouts/AppLayout.vue";
+import DeanGreetingSection from "@/Pages/Home/DeanGreetingSection.vue";
+import FacilitiesSection from "@/Pages/Home/FacilitiesSection.vue";
 import { Link } from "@inertiajs/vue3";
 import { onMounted } from "vue";
 
@@ -979,6 +866,14 @@ defineProps({
     upcomingEvents: Array,
     gallery: Array,
     siteSettings: Object,
+    deanGreeting: {
+        type: Object,
+        default: null,
+    },
+    facilities: {
+        type: Array,
+        default: () => [],
+    },
 });
 
 // Tambahkan fungsi ini

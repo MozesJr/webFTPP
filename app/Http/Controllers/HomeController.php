@@ -15,6 +15,8 @@ use App\Models\Gallery;
 use App\Models\SiteSetting;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Models\DeanGreeting;
+use App\Models\Facility;
 
 class HomeController extends Controller
 {
@@ -36,9 +38,6 @@ class HomeController extends Controller
 
             $hero = HeroSection::where('is_active', true)->first() ?? defaultHero();
 
-            // dd($hero);
-
-
             $about = About::where('is_active', true)->first();
             $stats = Stats::where('is_current', true)->first();
 
@@ -49,8 +48,6 @@ class HomeController extends Controller
                 }])
                 ->take(6)
                 ->get();
-
-
 
             // Clients dengan fallback
             $clients = Client::where('is_active', true)
@@ -72,7 +69,9 @@ class HomeController extends Controller
                 ->take(4)
                 ->get();
 
-
+            $deanGreeting = DeanGreeting::active()
+                ->ordered()
+                ->first();
 
             // Upcoming Events dengan fallback
             $upcomingEvents = Event::where('status', 'upcoming')
@@ -87,6 +86,11 @@ class HomeController extends Controller
                 ->take(8)
                 ->get();
 
+            $facilities = Facility::active()
+                ->available()
+                ->ordered()
+                ->limit(8)
+                ->get();
 
 
             // Site Settings dengan fallback
@@ -101,8 +105,6 @@ class HomeController extends Controller
                 'testimoni_back'  => SiteSetting::getValue('testimoni_back', ''),
             ];
 
-
-
             $data = [
                 'hero' => $hero,
                 'about' => $about,
@@ -113,11 +115,12 @@ class HomeController extends Controller
                 'latestNews' => $latestNews,
                 'upcomingEvents' => $upcomingEvents,
                 'gallery' => $gallery,
-                'siteSettings' => $siteSettings
+                'siteSettings' => $siteSettings,
+                'deanGreeting' => $deanGreeting,
+                'facilities' => $facilities,
             ];
 
             // dd($data);
-
 
             return Inertia::render('Home', $data);
         } catch (\Exception $e) {
