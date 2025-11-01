@@ -44,46 +44,34 @@ services:
     # Jalankan perintah start dev (fix permission, clear caches, start vite + apache)
     command: >
       sh -lc "
-        set -e;
-        cd /var/www/html;
+        set -e
+        cd /var/www/html
 
-        # Pastikan folder penting ada & writeable
-        mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache;
-        chown -R www-data:www-data storage bootstrap/cache || true;
-        chmod -R ug+rwX storage bootstrap/cache || true;
+        # --- Laravel prep (izin & deps) ---
+        mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache
+        chown -R www-data:www-data storage bootstrap/cache || true
+        chmod -R ug+rwX storage bootstrap/cache || true
 
-        # Siapkan .env kalau belum ada
-        if [ ! -f .env ]; then
-          cp .env.example .env || true;
-        fi
+        if [ ! -f .env ]; then cp .env.example .env || true; fi
+        if [ ! -f vendor/autoload.php ]; then composer install --no-interaction; fi
+        if [ ! -d node_modules ] || [ -z \"$(ls -A node_modules 2>/dev/null)\" ]; then npm install; fi
 
-        # Install composer kalau vendor kosong (pertama kali)
-        if [ ! -f vendor/autoload.php ]; then
-          composer install --no-interaction;
-        fi
+        php artisan route:clear || true
+        php artisan config:clear || true
+        php artisan view:clear || true
+        php artisan migrate --force || true
 
-        # Install npm kalau node_modules kosong
-        if [ ! -d node_modules ] || [ -z \"$(ls -A node_modules 2>/dev/null)\" ]; then
-          npm install;
-        fi
+        # --- Vite HMR ---
+        (npm run dev -- --host 0.0.0.0 --port 5173 &)
 
-        # Dev mode: jangan cache route (ada duplicate name)
-        php artisan route:clear || true;
-        php artisan config:clear || true;
-        php artisan view:clear || true;
+        # --- Apache fix: source envvars, siapkan runtime dir, lalu start ---
+        . /etc/apache2/envvars
+        mkdir -p ${APACHE_RUN_DIR} /var/lock/apache2
+        chown -R www-data:www-data ${APACHE_RUN_DIR} /var/lock/apache2
 
-        # Jalankan migrasi (nggak fail hard di dev)
-        php artisan migrate --force || true;
-
-        # Start Vite HMR di background
-        (npm run dev -- --host 0.0.0.0 --port 5173 &) ;
-
-        # FIX: pastikan apache2 kebaca walau PATH dari shell minimal
-        export PATH=\"$PATH:/usr/sbin\";
-
-        # Start Apache foreground
-        exec apache2 -DFOREGROUND
+        exec /usr/sbin/apache2 -DFOREGROUND
       "
+
     restart: unless-stopped
     networks:
       - app_network
