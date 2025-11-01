@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
   webftpp:
     build:
@@ -5,25 +7,41 @@ services:
       dockerfile: Dockerfile.dev
     container_name: webftpp-dev
     ports:
-      - "8001:80"
-      - "5173:5173"
+      - "8001:80"     # Laravel via Apache
+      - "5173:5173"   # Vite HMR
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
       - APP_URL=http://148.230.97.68:8001
+
       - DB_CONNECTION=mysql
       - DB_HOST=shared_mysql
       - DB_PORT=3306
       - DB_DATABASE=webftpp_db
       - DB_USERNAME=laravel_user
       - DB_PASSWORD=L@r@velP@ssw0rd123
+
       - CACHE_DRIVER=file
       - SESSION_DRIVER=file
+
+      # ---- HMR & file watching (penting di Docker) ----
+      - VITE_HMR_HOST=148.230.97.68
+      - VITE_HMR_PORT=5173
+      - VITE_HMR_PROTOCOL=ws
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
     volumes:
       - .:/var/www/html
+      # simpan node_modules & vendor di container agar tidak ketimpa bind mount
+      - webftpp_node_modules:/var/www/html/node_modules
+      - webftpp_vendor:/var/www/html/vendor
     restart: unless-stopped
     networks:
       - app_network
+
+volumes:
+  webftpp_node_modules:
+  webftpp_vendor:
 
 networks:
   app_network:

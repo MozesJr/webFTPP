@@ -1,77 +1,55 @@
 FROM php:8.3-apache
 
-# Install system dependencies termasuk Node.js
+# ---- OS & Node.js ----
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    nano \
-    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    git curl nano libpng-dev libonig-dev libxml2-dev libzip-dev zip unzip \
+ && curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+ && apt-get install -y nodejs \
+ && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install PHP extensions
-RUN docker-php-ext-install \
-    pdo_mysql \
-    mbstring \
-    exif \
-    pcntl \
-    bcmath \
-    gd \
-    zip \
-    dom \
-    xml \
-    fileinfo
+# ---- PHP extensions ----
+RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip dom xml fileinfo
 
-# Get latest Composer
+# ---- Composer ----
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Enable Apache mod_rewrite
+# ---- Apache ----
 RUN a2enmod rewrite
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy package files untuk dependencies caching
-COPY package*.json composer.json composer.lock ./
+# Salin file dependency agar cache efisien
+COPY composer.json composer.lock package.json package-lock.json* ./
 
-# Install dependencies
-RUN composer install \
-    --no-dev \
-    --no-scripts \
-    --ignore-platform-reqs \
-    --optimize-autoloader
-RUN npm install
-RUN npm run dev
+# (Opsional) pre-install supaya layer cache kepakai; akan dipastikan lagi di entrypoint
+RUN composer install --no-interaction --prefer-dist --no-scripts || true
+RUN npm ci || npm install
 
-# Copy application files
+# Salin seluruh aplikasi (setelah deps supaya cache build optimal)
 COPY . .
 
-# Create directories if they don't exist
-RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions storage/framework/views
-RUN mkdir -p bootstrap/cache
+# Pastikan folder runtime
+RUN mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache \
+ && chown -R www-data:www-data /var/www/html \
+ && chmod -R 755 storage bootstrap/cache
 
-# Fix permissions
-RUN chown -R www-data:www-data /var/www/html
-RUN chmod -R 755 /var/www/html/storage
-RUN chmod -R 755 /var/www/html/bootstrap/cache
+# VHost basic
+RUN printf '%s\n' \
+  '<VirtualHost *:80>' \
+  '  DocumentRoot /var/www/html/public' \
+  '  <Directory "/var/www/html/public">' \
+  '    AllowOverride All' \
+  '    Require all granted' \
+  '    DirectoryIndex index.php' \
+  '  </Directory>' \
+  '  ErrorLog ${APACHE_LOG_DIR}/error.log' \
+  '  CustomLog ${APACHE_LOG_DIR}/access.log combined' \
+  '</VirtualHost>' \
+  > /etc/apache2/sites-available/000-default.conf
 
-# Apache configuration
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory "/var/www/html/public">\n\
-        AllowOverride All\n\
-        Require all granted\n\
-        DirectoryIndex index.php\n\
-    </Directory>\n\
-    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
-    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
+# ---- Entry script: start Vite (background) + Apache (foreground) ----
+COPY docker-entrypoint.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
-EXPOSE 80
-CMD ["apache2-foreground"]
+EXPOSE 80 5173
+CMD ["/usr/local/bin/start.sh"]
