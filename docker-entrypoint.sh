@@ -1,40 +1,32 @@
-#!/usr/bin/env bash
+#!/bin/sh
 set -e
 
 cd /var/www/html
 
-# Pastikan dependency ada (bind mount bisa menimpa layer build)
-echo ">> Ensuring PHP dependencies..."
-composer install --no-interaction --prefer-dist || true
+# --- Ensure runtime dirs & permissions ---
+export COMPOSER_ALLOW_SUPERUSER=1
+mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache /var/log/apache2
+chown -R www-data:www-data storage bootstrap/cache public /var/log/apache2 || true
+chmod -R ug+rwX storage bootstrap/cache || true
 
-echo ">> Ensuring Node dependencies..."
-if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock-exists ]; then
-  # tandai supaya next start bisa cepat
-  npm ci || npm install
-  mkdir -p node_modules
-  touch node_modules/.package-lock-exists || true
-fi
+# --- Env & dependencies (dev only) ---
+[ -f .env ] || cp .env.example .env || true
+[ -f vendor/autoload.php ] || composer install --no-interaction --prefer-dist || true
+[ -d node_modules ] && [ -n "$(ls -A node_modules 2>/dev/null)" ] || npm install
 
-# Laravel caches (aman untuk dev)
-php artisan key:generate --force || true
+# --- Laravel artisan (no cache in dev) ---
+php artisan route:clear  || true
 php artisan config:clear || true
-php artisan route:clear || true
-php artisan view:clear || true
+php artisan view:clear   || true
 php artisan migrate --force || true
 
-# Jalankan Vite dev server (HMR) di background
-: "${VITE_HMR_HOST:=0.0.0.0}"
-: "${VITE_HMR_PORT:=5173}"
-: "${VITE_HMR_PROTOCOL:=ws}"
-: "${CHOKIDAR_USEPOLLING:=true}"
-: "${WATCHPACK_POLLING:=true}"
+# --- Start Vite HMR as www-data (background) ---
+su -s /bin/sh -c 'npm run dev -- --host 0.0.0.0 --port ${VITE_PORT:-5173}' www-data &
 
-export CHOKIDAR_USEPOLLING WATCHPACK_POLLING VITE_HMR_HOST VITE_HMR_PORT VITE_HMR_PROTOCOL
+# --- Apache env & runtime dir ---
+. /etc/apache2/envvars
+mkdir -p ${APACHE_RUN_DIR} /var/lock/apache2
+chown -R www-data:www-data ${APACHE_RUN_DIR} /var/lock/apache2
 
-echo ">> Starting Vite (HMR at ${VITE_HMR_HOST}:${VITE_HMR_PORT}, protocol=${VITE_HMR_PROTOCOL}) ..."
-# --host 0.0.0.0 wajib agar bisa diakses dari luar container
-npm run dev -- --host 0.0.0.0 --port "${VITE_HMR_PORT}" &
-
-# Jalankan Apache di foreground
-echo ">> Starting Apache..."
-exec apache2-foreground
+# --- Foreground apache ---
+exec /usr/sbin/apache2 -DFOREGROUND

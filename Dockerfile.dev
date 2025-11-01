@@ -21,19 +21,20 @@ WORKDIR /var/www/html
 # Salin file dependency agar cache efisien
 COPY composer.json composer.lock package.json package-lock.json* ./
 
-# (Opsional) pre-install supaya layer cache kepakai; akan dipastikan lagi di entrypoint
-RUN composer install --no-interaction --prefer-dist --no-scripts || true
+# (Opsional) pre-install supaya layer cache kepakai; akan dipastikan lagi di entrypoint/command
+RUN export COMPOSER_ALLOW_SUPERUSER=1 \
+ && composer install --no-interaction --prefer-dist --no-scripts || true
 RUN npm ci || npm install
 
 # Salin seluruh aplikasi (setelah deps supaya cache build optimal)
 COPY . .
 
 # Pastikan folder runtime
-RUN mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache \
- && chown -R www-data:www-data /var/www/html \
+RUN mkdir -p storage/logs storage/framework/{cache,sessions,views} bootstrap/cache /var/log/apache2 \
+ && chown -R www-data:www-data /var/www/html /var/log/apache2 \
  && chmod -R 755 storage bootstrap/cache
 
-# VHost basic
+# VHost basic (DocumentRoot -> public)
 RUN printf '%s\n' \
   '<VirtualHost *:80>' \
   '  DocumentRoot /var/www/html/public' \
