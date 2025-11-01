@@ -20,6 +20,11 @@ export default defineConfig({
         host: true, // 0.0.0.0
         port: HMR_PORT,
         strictPort: true,
+
+        // --- TAMBAHKAN BARIS INI UNTUK MEMPERBAIKI CORS ---
+        origin: "http://localhost:8000",
+        // --------------------------------------------------
+
         hmr: {
             host: HMR_HOST, // 148.230.97.68
             port: HMR_PORT, // 5173
