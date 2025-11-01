@@ -170,6 +170,7 @@ class KhsFile extends Model
             'parent_id' => $parentId,
             'khs_file_id' => $this->id,
             'access_type' => $accessType,
+            'accessed_at' => now(),
             'ip_address' => $ipAddress ?? request()->ip(),
             'user_agent' => $userAgent ?? request()->userAgent()
         ]);

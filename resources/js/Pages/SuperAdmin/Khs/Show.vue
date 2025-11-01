@@ -6,7 +6,7 @@
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-4">
                         <Link
-                            :href="route('super-admin.khs.index')"
+                            :href="route('admin.khs.index')"
                             class="inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
                         >
                             <ArrowLeftIcon class="w-4 h-4 mr-1" />
@@ -503,7 +503,7 @@
                         <Link
                             :href="
                                 route(
-                                    'super-admin.khs.report',
+                                    'admin.khs.report',
                                     khsFile.academic_period_id
                                 )
                             "
@@ -591,7 +591,7 @@ const retryUpload = async () => {
 
     if (result.isConfirmed) {
         router.post(
-            route("super-admin.khs.retry", props.khsFile.id),
+            route("admin.khs.retry", props.khsFile.id),
             {},
             {
                 preserveScroll: true,
@@ -613,10 +613,10 @@ const deleteKhs = async () => {
     );
 
     if (result.isConfirmed) {
-        router.delete(route("super-admin.khs.destroy", props.khsFile.id), {
+        router.delete(route("admin.khs.destroy", props.khsFile.id), {
             onSuccess: () => {
                 success("Berhasil!", "File KHS berhasil dihapus.");
-                router.visit(route("super-admin.khs.index"));
+                router.visit(route("admin.khs.index"));
             },
             onError: (errors) => {
                 error("Error!", "Terjadi kesalahan saat menghapus file.");

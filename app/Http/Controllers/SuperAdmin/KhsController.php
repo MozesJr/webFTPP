@@ -125,7 +125,7 @@ class KhsController extends Controller
             $period->activate();
         }
 
-        return redirect()->route('super-admin.khs.periods')
+        return redirect()->route('admin.khs.periods')
             ->with('flash', [
                 'type' => 'success',
                 'message' => 'Period akademik berhasil dibuat!'
@@ -187,7 +187,7 @@ class KhsController extends Controller
                 auth()->id()
             );
 
-            return redirect()->route('super-admin.khs.index')
+            return redirect()->route('admin.khs.index')
                 ->with('flash', [
                     'type' => 'success',
                     'message' => "KHS untuk {$student->name} ({$student->nim}) berhasil diupload!"
@@ -260,7 +260,7 @@ class KhsController extends Controller
                 $message .= " | Errors: " . implode(', ', array_slice($errors, 0, 3));
             }
 
-            return redirect()->route('super-admin.khs.index')
+            return redirect()->route('admin.khs.index')
                 ->with('flash', [
                     'type' => $results['failed'] > 0 ? 'warning' : 'success',
                     'message' => $message
@@ -298,7 +298,7 @@ class KhsController extends Controller
             $studentName = $khsFile->student_name;
             $khsFile->delete();
 
-            return redirect()->route('super-admin.khs.index')
+            return redirect()->route('admin.khs.index')
                 ->with('flash', [
                     'type' => 'success',
                     'message' => "KHS untuk {$studentName} berhasil dihapus!"

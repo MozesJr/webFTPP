@@ -267,7 +267,8 @@ class KhsManagementService
             'parent_id' => $parent->id,
             'student_nim' => $khsFile->student_nim,
             'period' => $khsFile->semester_name,
-            'access_type' => $accessType
+            'access_type' => $accessType,
+            'accessed_at' => now(),
         ]);
     }
 

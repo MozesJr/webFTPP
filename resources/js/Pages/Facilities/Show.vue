@@ -2,10 +2,15 @@
 <template>
     <GuestLayout>
         <!-- Hero Section -->
-        <section class="bg-gradient-to-br from-blue-600 to-indigo-700 py-12">
+        <section
+            class="page-title dark-background py-12"
+            :style="`background-image: url(${'/storage/assets/img/imgBg2.png'})`"
+        >
             <div class="container mx-auto px-4">
                 <nav class="mb-6" data-aos="fade-right">
-                    <ol class="flex items-center space-x-2 text-sm text-blue-100">
+                    <ol
+                        class="flex items-center space-x-2 text-sm text-blue-100"
+                    >
                         <li>
                             <Link
                                 :href="route('home')"
@@ -98,14 +103,19 @@
                                 />
                                 Deskripsi
                             </h2>
-                            <p class="text-gray-700 leading-relaxed whitespace-pre-line">
+                            <p
+                                class="text-gray-700 leading-relaxed whitespace-pre-line"
+                            >
                                 {{ facility.description }}
                             </p>
                         </div>
 
                         <!-- Features -->
                         <div
-                            v-if="facility.features && facility.features.length > 0"
+                            v-if="
+                                facility.features &&
+                                facility.features.length > 0
+                            "
                             class="bg-white rounded-2xl shadow-lg p-8"
                             data-aos="fade-up"
                         >
@@ -119,7 +129,9 @@
                             </h2>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div
-                                    v-for="(feature, index) in facility.features"
+                                    v-for="(
+                                        feature, index
+                                    ) in facility.features"
                                     :key="index"
                                     class="flex items-start bg-blue-50 rounded-lg p-4"
                                 >
@@ -135,7 +147,10 @@
 
                         <!-- Gallery -->
                         <div
-                            v-if="facility.gallery_urls && facility.gallery_urls.length > 0"
+                            v-if="
+                                facility.gallery_urls &&
+                                facility.gallery_urls.length > 0
+                            "
                             class="bg-white rounded-2xl shadow-lg p-8"
                             data-aos="fade-up"
                         >
@@ -147,7 +162,9 @@
                             </h2>
                             <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                                 <img
-                                    v-for="(url, index) in facility.gallery_urls"
+                                    v-for="(
+                                        url, index
+                                    ) in facility.gallery_urls"
                                     :key="index"
                                     :src="url"
                                     :alt="facility.name"
@@ -182,10 +199,14 @@
                                             class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5 text-blue-600"
                                         />
                                         <div>
-                                            <p class="text-xs font-medium text-gray-500 uppercase">
+                                            <p
+                                                class="text-xs font-medium text-gray-500 uppercase"
+                                            >
                                                 Lokasi
                                             </p>
-                                            <p class="text-gray-900 font-medium">
+                                            <p
+                                                class="text-gray-900 font-medium"
+                                            >
                                                 {{ facility.location }}
                                             </p>
                                         </div>
@@ -200,10 +221,14 @@
                                             class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5 text-blue-600"
                                         />
                                         <div>
-                                            <p class="text-xs font-medium text-gray-500 uppercase">
+                                            <p
+                                                class="text-xs font-medium text-gray-500 uppercase"
+                                            >
                                                 Kapasitas
                                             </p>
-                                            <p class="text-gray-900 font-medium">
+                                            <p
+                                                class="text-gray-900 font-medium"
+                                            >
                                                 {{ facility.capacity }}
                                             </p>
                                         </div>
@@ -218,10 +243,14 @@
                                             class="w-5 h-5 mr-2 flex-shrink-0 mt-0.5 text-blue-600"
                                         />
                                         <div>
-                                            <p class="text-xs font-medium text-gray-500 uppercase">
+                                            <p
+                                                class="text-xs font-medium text-gray-500 uppercase"
+                                            >
                                                 Luas Area
                                             </p>
-                                            <p class="text-gray-900 font-medium">
+                                            <p
+                                                class="text-gray-900 font-medium"
+                                            >
                                                 {{ facility.area }}
                                             </p>
                                         </div>
@@ -231,10 +260,16 @@
 
                             <!-- Contact -->
                             <div
-                                v-if="facility.contact_person || facility.contact_phone || facility.contact_email"
+                                v-if="
+                                    facility.contact_person ||
+                                    facility.contact_phone ||
+                                    facility.contact_email
+                                "
                                 class="mt-6 pt-6 border-t border-gray-200"
                             >
-                                <h4 class="text-sm font-bold text-gray-900 mb-3">
+                                <h4
+                                    class="text-sm font-bold text-gray-900 mb-3"
+                                >
                                     Kontak
                                 </h4>
                                 <div class="space-y-2">
@@ -246,8 +281,10 @@
                                         {{ facility.contact_person }}
                                     </p>
                                     <p v-if="facility.contact_phone">
-
-                                            :href="'tel:' + facility.contact_phone"
+                                        <a
+                                            :href="
+                                                'tel:' + facility.contact_phone
+                                            "
                                             class="text-sm text-blue-600 hover:text-blue-800 flex items-center"
                                         >
                                             <PhoneIcon class="w-4 h-4 mr-2" />
@@ -255,11 +292,16 @@
                                         </a>
                                     </p>
                                     <p v-if="facility.contact_email">
-
-                                            :href="'mailto:' + facility.contact_email"
+                                        <a
+                                            :href="
+                                                'mailto:' +
+                                                facility.contact_email
+                                            "
                                             class="text-sm text-blue-600 hover:text-blue-800 flex items-center"
                                         >
-                                            <EnvelopeIcon class="w-4 h-4 mr-2" />
+                                            <EnvelopeIcon
+                                                class="w-4 h-4 mr-2"
+                                            />
                                             {{ facility.contact_email }}
                                         </a>
                                     </p>
@@ -283,10 +325,7 @@
         </section>
 
         <!-- Related Facilities -->
-        <section
-            v-if="relatedFacilities.length > 0"
-            class="py-16 bg-gray-50"
-        >
+        <section v-if="relatedFacilities.length > 0" class="py-16 bg-gray-50">
             <div class="container mx-auto px-4">
                 <h2
                     class="text-3xl font-bold text-gray-900 mb-8 text-center"
@@ -294,9 +333,7 @@
                 >
                     Fasilitas Lainnya
                 </h2>
-                <div
-                    class="grid grid-cols-1 md:grid-cols-3 gap-8"
-                >
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <div
                         v-for="related in relatedFacilities"
                         :key="related.id"

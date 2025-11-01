@@ -12,7 +12,7 @@
                         </p>
                     </div>
                     <Link
-                        :href="route('super-admin.khs.index')"
+                        :href="route('admin.khs.index')"
                         class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition ease-in-out duration-150"
                     >
                         <ArrowLeftIcon class="w-4 h-4 mr-2" />
@@ -226,7 +226,7 @@
                     <!-- Actions -->
                     <div class="flex justify-end space-x-3">
                         <Link
-                            :href="route('super-admin.khs.index')"
+                            :href="route('admin.khs.index')"
                             class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
                         >
                             Batal
@@ -322,7 +322,7 @@
                             dan format file.
                         </p>
                         <a
-                            :href="route('super-admin.khs.download-template')"
+                            :href="route('admin.khs.download-template')"
                             class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150"
                         >
                             <ArrowDownTrayIcon class="w-4 h-4 mr-2" />
@@ -560,7 +560,7 @@ const handleSubmit = () => {
     processing.value = true;
     errors.value = {};
 
-    form.post(route("super-admin.khs.store-bulk-upload"), {
+    form.post(route("admin.khs.store-bulk-upload"), {
         onSuccess: () => {
             processing.value = false;
             clearAllFiles();

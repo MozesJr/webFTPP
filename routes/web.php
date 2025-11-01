@@ -256,43 +256,6 @@ Route::middleware(['auth', 'verified', 'check.role:super_admin'])->prefix('super
     // User additional routes (if needed)
     Route::post('users/{user}/toggle-status', [UserController::class, 'toggleStatus'])->name('users.toggle-status');
 
-    Route::prefix('khs')->name('khs.')->group(function () {
-
-        // Main KHS management
-        Route::get('/', [KhsController::class, 'index'])->name('index');
-        Route::get('/{khsFile}', [KhsController::class, 'show'])->name('show');
-        Route::delete('/{khsFile}', [KhsController::class, 'destroy'])->name('destroy');
-        Route::post('/{khsFile}/retry', [KhsController::class, 'retry'])->name('retry');
-
-        // Academic Period Management
-        Route::get('/periods/manage', [KhsController::class, 'periods'])->name('periods');
-        Route::get('/periods/create', [KhsController::class, 'createPeriod'])->name('periods.create');
-        Route::post('/periods', [KhsController::class, 'storePeriod'])->name('periods.store');
-        Route::post('/periods/{period}/activate', [KhsController::class, 'activatePeriod'])->name('periods.activate');
-
-        // Single Upload
-        Route::get('/upload/single', [KhsController::class, 'upload'])->name('upload');
-        Route::post('/upload/single', [KhsController::class, 'storeUpload'])->name('store-upload');
-
-        // Bulk Upload
-        Route::get('/upload/bulk', [KhsController::class, 'bulkUpload'])->name('bulk-upload');
-        Route::post('/upload/bulk', [KhsController::class, 'storeBulkUpload'])->name('store-bulk-upload');
-
-        // Utilities
-        Route::get('/template/download', [KhsController::class, 'downloadTemplate'])->name('download-template');
-        Route::get('/report/{period}', [KhsController::class, 'generateReport'])->name('report');
-
-        // API Endpoints for Frontend
-        Route::get('/api/students-by-period', [KhsController::class, 'getStudentsByPeriod'])->name('api.students-by-period');
-        Route::get('/api/period-stats/{period}', [KhsController::class, 'getPeriodStats'])->name('api.period-stats');
-        Route::get('/api/search-students', [KhsController::class, 'searchStudents'])->name('api.search-students');
-
-        // Academic Period Management - Tambahan routes
-        Route::get('/periods/{period}/edit', [KhsController::class, 'editPeriod'])->name('periods.edit');
-        Route::put('/periods/{period}', [KhsController::class, 'updatePeriod'])->name('periods.update');
-        Route::delete('/periods/{period}', [KhsController::class, 'destroyPeriod'])->name('periods.destroy');
-    });
-
 
 
     Route::get('/google/drive/connect', [GoogleDriveAuthController::class, 'connect'])->name('gdrive.connect');
@@ -451,6 +414,43 @@ Route::middleware(['auth', 'verified', 'check.role:admin,super_admin'])->prefix(
             Route::get('/lecturer', [EvaluationReportController::class, 'lecturerReport'])->name('lecturer');
             Route::get('/category', [EvaluationReportController::class, 'categoryReport'])->name('category');
         });
+    });
+
+    Route::prefix('khs')->name('khs.')->group(function () {
+
+        // Main KHS management
+        Route::get('/', [KhsController::class, 'index'])->name('index');
+        Route::get('/{khsFile}', [KhsController::class, 'show'])->name('show');
+        Route::delete('/{khsFile}', [KhsController::class, 'destroy'])->name('destroy');
+        Route::post('/{khsFile}/retry', [KhsController::class, 'retry'])->name('retry');
+
+        // Academic Period Management
+        Route::get('/periods/manage', [KhsController::class, 'periods'])->name('periods');
+        Route::get('/periods/create', [KhsController::class, 'createPeriod'])->name('periods.create');
+        Route::post('/periods', [KhsController::class, 'storePeriod'])->name('periods.store');
+        Route::post('/periods/{period}/activate', [KhsController::class, 'activatePeriod'])->name('periods.activate');
+
+        // Single Upload
+        Route::get('/upload/single', [KhsController::class, 'upload'])->name('upload');
+        Route::post('/upload/single', [KhsController::class, 'storeUpload'])->name('store-upload');
+
+        // Bulk Upload
+        Route::get('/upload/bulk', [KhsController::class, 'bulkUpload'])->name('bulk-upload');
+        Route::post('/upload/bulk', [KhsController::class, 'storeBulkUpload'])->name('store-bulk-upload');
+
+        // Utilities
+        Route::get('/template/download', [KhsController::class, 'downloadTemplate'])->name('download-template');
+        Route::get('/report/{period}', [KhsController::class, 'generateReport'])->name('report');
+
+        // API Endpoints for Frontend
+        Route::get('/api/students-by-period', [KhsController::class, 'getStudentsByPeriod'])->name('api.students-by-period');
+        Route::get('/api/period-stats/{period}', [KhsController::class, 'getPeriodStats'])->name('api.period-stats');
+        Route::get('/api/search-students', [KhsController::class, 'searchStudents'])->name('api.search-students');
+
+        // Academic Period Management - Tambahan routes
+        Route::get('/periods/{period}/edit', [KhsController::class, 'editPeriod'])->name('periods.edit');
+        Route::put('/periods/{period}', [KhsController::class, 'updatePeriod'])->name('periods.update');
+        Route::delete('/periods/{period}', [KhsController::class, 'destroyPeriod'])->name('periods.destroy');
     });
 });
 

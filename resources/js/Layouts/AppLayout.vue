@@ -39,7 +39,7 @@
                                     <Link href="/about/history">Sejarah</Link>
                                 </li>
                                 <li>
-                                    <Link href="/about/vision-mision"
+                                    <Link href="/about/vision-mission"
                                         >Visi & Misi</Link
                                     >
                                 </li>
@@ -91,8 +91,8 @@
                         </li>
                         <li><Link href="/news">News</Link></li>
                         <li><Link href="/evaluation">GPM</Link></li>
-                        <li><Link href="#contact">Penelitian</Link></li>
-                        <li><Link href="#contact">Kemahasiswaan</Link></li>
+                        <li><Link href="#">Penelitian</Link></li>
+                        <li><Link href="#">Kemahasiswaan</Link></li>
                     </ul>
                     <i
                         class="mobile-nav-toggle d-xl-none bi bi-list"

@@ -2,7 +2,19 @@
 import GuestLayout from "@/Layouts/GuestLayout.vue";
 import InputError from "@/Components/InputError.vue";
 import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+
+onMounted(() => {
+    const reloadFlag = "login_page_reloaded";
+
+    if (sessionStorage.getItem(reloadFlag) === null) {
+        sessionStorage.setItem(reloadFlag, "true");
+        location.reload();
+    }
+
+    // Saat halaman di-reload, kode ini akan jalan lagi,
+    // tapi 'if' di atas akan false, jadi tidak loop.
+});
 
 defineProps({
     canResetPassword: Boolean,

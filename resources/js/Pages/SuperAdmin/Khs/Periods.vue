@@ -6,7 +6,7 @@
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-4">
                         <Link
-                            :href="route('super-admin.khs.index')"
+                            :href="route('admin.khs.index')"
                             class="inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
                         >
                             <ArrowLeftIcon class="w-4 h-4 mr-1" />
@@ -15,7 +15,7 @@
                     </div>
                     <div class="flex space-x-3">
                         <Link
-                            :href="route('super-admin.khs.periods.create')"
+                            :href="route('admin.khs.periods.create')"
                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150"
                         >
                             <PlusIcon class="w-4 h-4 mr-2" />
@@ -170,9 +170,7 @@
                                 <div class="mt-6">
                                     <Link
                                         :href="
-                                            route(
-                                                'super-admin.khs.periods.create'
-                                            )
+                                            route('admin.khs.periods.create')
                                         "
                                         class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150"
                                     >
@@ -291,7 +289,7 @@
                                     <Link
                                         :href="
                                             route(
-                                                'super-admin.khs.periods.edit',
+                                                'admin.khs.periods.edit',
                                                 period.id
                                             )
                                         "
@@ -384,7 +382,7 @@ const activatePeriod = async (period) => {
 
     if (result.isConfirmed) {
         router.post(
-            route("super-admin.khs.periods.activate", period.id),
+            route("admin.khs.periods.activate", period.id),
             {},
             {
                 preserveScroll: true,
@@ -417,7 +415,7 @@ const deletePeriod = async (period) => {
     );
 
     if (result.isConfirmed) {
-        router.delete(route("super-admin.khs.periods.destroy", period.id), {
+        router.delete(route("admin.khs.periods.destroy", period.id), {
             preserveScroll: true,
             onSuccess: () => {
                 success("Berhasil!", "Period berhasil dihapus.");

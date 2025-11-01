@@ -1,5 +1,4 @@
 <?php
-// app/Http/Controllers/Parent/DashboardController.php (Updated untuk Breeze)
 
 namespace App\Http\Controllers\Parent;
 
@@ -48,7 +47,8 @@ class DashboardController extends Controller
         $latestKhs = $student->getLatestKhsFile();
 
         return Inertia::render('Parent/Dashboard', [
-            'khsFiles' => $khsFiles->take(5), // Latest 5 for dashboard
+            'student' => $student, // FIX: Explicitly pass student
+            'khsFiles' => $khsFiles->take(5),
             'periodsWithKhs' => $periodsWithKhs,
             'accessStats' => $accessStats,
             'latestKhs' => $latestKhs,
@@ -95,6 +95,7 @@ class DashboardController extends Controller
         $availableYears = $availablePeriods->pluck('year')->unique()->sort()->reverse();
 
         return Inertia::render('Parent/Khs/Index', [
+            'student' => $student, // FIX: Explicitly pass student
             'khsFiles' => $khsFiles,
             'availablePeriods' => $availablePeriods,
             'availableYears' => $availableYears->values(),
@@ -109,6 +110,7 @@ class DashboardController extends Controller
     public function khsDetail(KhsFile $khsFile)
     {
         $parent = Auth::guard('parent')->user();
+        $student = $parent->student;
 
         // Check if parent can access this KHS
         if (!$this->khsService->canParentAccessKhs($parent, $khsFile)) {
@@ -122,6 +124,7 @@ class DashboardController extends Controller
         $this->khsService->logParentAccess($parent, $khsFile, 'view');
 
         return Inertia::render('Parent/Khs/Detail', [
+            'student' => $student, // FIX: Explicitly pass student
             'khsFile' => $khsFile
         ]);
     }
@@ -192,6 +195,8 @@ class DashboardController extends Controller
         $recentAccess = $parent->getAccessLogs(10);
 
         return Inertia::render('Parent/Profile', [
+            'student' => $student, // FIX: Explicitly pass student
+            'parent' => $parent, // FIX: Explicitly pass parent
             'khsSummary' => $khsSummary,
             'recentAccess' => $recentAccess
         ]);
@@ -204,6 +209,7 @@ class DashboardController extends Controller
     public function accessHistory(Request $request)
     {
         $parent = Auth::guard('parent')->user();
+        $student = $parent->student;
 
         // Get access logs with pagination
         $accessLogs = $parent->getAccessLogs(50);
@@ -214,6 +220,7 @@ class DashboardController extends Controller
         });
 
         return Inertia::render('Parent/AccessHistory', [
+            'student' => $student, // FIX: Explicitly pass student
             'accessLogs' => $accessLogs,
             'groupedLogs' => $groupedLogs
         ]);

@@ -3,7 +3,7 @@
         <div
             class="page-title dark-background"
             data-aos="fade"
-            style="background-image: url(storage/assets/img/imgBg3.png)"
+            style="background-image: url(/storage/assets/img/imgBg3.png)"
         >
             <div class="container position-relative">
                 <h1>Program Studi</h1>
@@ -265,7 +265,6 @@ defineProps({
 
 function getDegreeTitle(level) {
     const titles = {
-        D3: "Program Diploma III",
         S1: "Program Sarjana (S1)",
         S2: "Program Magister (S2)",
         S3: "Program Doktor (S3)",
@@ -275,7 +274,6 @@ function getDegreeTitle(level) {
 
 function getDegreeDescription(level) {
     const descriptions = {
-        D3: "Program vokasi 3 tahun dengan fokus pada keahlian praktis",
         S1: "Program sarjana 4 tahun dengan keseimbangan teori dan praktik",
         S2: "Program magister 2 tahun untuk spesialisasi lanjutan",
         S3: "Program doktor untuk penelitian dan pengembangan ilmu pengetahuan",

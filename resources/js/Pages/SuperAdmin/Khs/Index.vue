@@ -14,21 +14,21 @@
                     </div>
                     <div class="flex space-x-3">
                         <Link
-                            :href="route('super-admin.khs.periods')"
+                            :href="route('admin.khs.periods')"
                             class="inline-flex items-center px-4 py-2 bg-purple-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-purple-700 focus:bg-purple-700 active:bg-purple-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition ease-in-out duration-150"
                         >
                             <CalendarIcon class="w-4 h-4 mr-2" />
                             Kelola Period
                         </Link>
                         <Link
-                            :href="route('super-admin.khs.bulk-upload')"
+                            :href="route('admin.khs.bulk-upload')"
                             class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-700 focus:bg-green-700 active:bg-green-900 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition ease-in-out duration-150"
                         >
                             <DocumentArrowUpIcon class="w-4 h-4 mr-2" />
                             Bulk Upload
                         </Link>
                         <Link
-                            :href="route('super-admin.khs.upload')"
+                            :href="route('admin.khs.upload')"
                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
                         >
                             <PlusIcon class="w-4 h-4 mr-2" />
@@ -219,7 +219,7 @@
             :items="khsFiles.data"
             :filters="filters"
             :pagination="khsFiles"
-            :route-name="'super-admin.khs.index'"
+            :route-name="'admin.khs.index'"
         >
             <template #body="{ items }">
                 <tr v-if="items.length === 0">
@@ -238,7 +238,7 @@
                         </p>
                         <div class="mt-6">
                             <Link
-                                :href="route('super-admin.khs.upload')"
+                                :href="route('admin.khs.upload')"
                                 class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150"
                             >
                                 <PlusIcon class="w-4 h-4 mr-2" />
@@ -330,7 +330,7 @@
                         <div class="flex items-center justify-end space-x-2">
                             <!-- View Details -->
                             <Link
-                                :href="route('super-admin.khs.show', khs.id)"
+                                :href="route('admin.khs.show', khs.id)"
                                 class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs leading-4 font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                             >
                                 <EyeIcon class="h-4 w-4 mr-1" />
@@ -460,7 +460,7 @@ const handleFilter = () => {
     if (searchForm.period_id) params.period_id = searchForm.period_id;
     if (searchForm.status) params.status = searchForm.status;
 
-    router.get(route("super-admin.khs.index"), params, {
+    router.get(route("admin.khs.index"), params, {
         preserveState: true,
         replace: true,
     });
@@ -471,7 +471,7 @@ const clearFilters = () => {
     searchForm.period_id = "";
     searchForm.status = "";
     router.get(
-        route("super-admin.khs.index"),
+        route("admin.khs.index"),
         {},
         {
             preserveState: true,
@@ -488,7 +488,7 @@ const retryUpload = async (khs) => {
 
     if (result.isConfirmed) {
         router.post(
-            route("super-admin.khs.retry", khs.id),
+            route("admin.khs.retry", khs.id),
             {},
             {
                 preserveScroll: true,
@@ -510,7 +510,7 @@ const deleteKhs = async (khs) => {
     );
 
     if (result.isConfirmed) {
-        router.delete(route("super-admin.khs.destroy", khs.id), {
+        router.delete(route("admin.khs.destroy", khs.id), {
             preserveScroll: true,
             onSuccess: () => {
                 success("Berhasil!", "File KHS berhasil dihapus.");
