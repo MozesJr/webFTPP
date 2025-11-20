@@ -81,7 +81,9 @@
                                     : 'text-green-700 bg-green-100 hover:bg-green-200 focus:ring-green-500',
                             ]"
                         >
-                            {{ facility.is_active ? "Nonaktifkan" : "Aktifkan" }}
+                            {{
+                                facility.is_active ? "Nonaktifkan" : "Aktifkan"
+                            }}
                         </button>
                         <button
                             @click="toggleAvailability"
@@ -193,7 +195,8 @@
                         <!-- Features -->
                         <div
                             v-if="
-                                facility.features && facility.features.length > 0
+                                facility.features &&
+                                facility.features.length > 0
                             "
                         >
                             <h3 class="text-lg font-medium text-gray-900 mb-4">
@@ -202,7 +205,9 @@
                             <div class="bg-blue-50 rounded-lg p-4">
                                 <ul class="space-y-2">
                                     <li
-                                        v-for="(feature, index) in facility.features"
+                                        v-for="(
+                                            feature, index
+                                        ) in facility.features"
                                         :key="index"
                                         class="flex items-start"
                                     >
@@ -248,7 +253,7 @@
                                         >
                                             Telepon
                                         </label>
-
+                                        <a
                                             :href="
                                                 'tel:' + facility.contact_phone
                                             "
@@ -257,15 +262,17 @@
                                             {{ facility.contact_phone }}
                                         </a>
                                     </div>
+
                                     <div v-if="facility.contact_email">
                                         <label
                                             class="block text-sm font-medium text-gray-700 mb-1"
                                         >
                                             Email
                                         </label>
-
+                                        <a
                                             :href="
-                                                'mailto:' + facility.contact_email
+                                                'mailto:' +
+                                                facility.contact_email
                                             "
                                             class="text-sm text-blue-600 hover:text-blue-800"
                                         >
@@ -286,11 +293,11 @@
                             <h3 class="text-lg font-medium text-gray-900 mb-4">
                                 Galeri Foto
                             </h3>
-                            <div
-                                class="grid grid-cols-2 md:grid-cols-3 gap-4"
-                            >
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
                                 <img
-                                    v-for="(url, index) in facility.gallery_urls"
+                                    v-for="(
+                                        url, index
+                                    ) in facility.gallery_urls"
                                     :key="index"
                                     :src="url"
                                     :alt="facility.name"

@@ -34,7 +34,10 @@
                 <form @submit.prevent="submit" class="px-6 py-4 space-y-6">
                     <!-- Tahun -->
                     <div>
-                        <label for="year" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label
+                            for="year"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
                             Tahun <span class="text-red-500">*</span>
                         </label>
                         <input
@@ -57,7 +60,10 @@
 
                     <!-- Semester -->
                     <div>
-                        <label for="semester" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label
+                            for="semester"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
                             Semester <span class="text-red-500">*</span>
                         </label>
                         <select
@@ -71,15 +77,23 @@
                             <option value="ganjil">Ganjil</option>
                             <option value="genap">Genap</option>
                         </select>
-                        <p v-if="errors.semester" class="mt-1 text-sm text-red-600">
+                        <p
+                            v-if="errors.semester"
+                            class="mt-1 text-sm text-red-600"
+                        >
                             {{ errors.semester }}
                         </p>
                     </div>
 
                     <!-- Preview Academic Year -->
-                    <div v-if="form.year && form.semester" class="p-4 bg-blue-50 border border-blue-200 rounded-md">
+                    <div
+                        v-if="form.year && form.semester"
+                        class="p-4 bg-blue-50 border border-blue-200 rounded-md"
+                    >
                         <div class="flex items-center">
-                            <InformationCircleIcon class="h-5 w-5 text-blue-600 mr-2" />
+                            <InformationCircleIcon
+                                class="h-5 w-5 text-blue-600 mr-2"
+                            />
                             <div>
                                 <p class="text-sm font-medium text-blue-800">
                                     Tahun Akademik: {{ academicYear }}
@@ -93,7 +107,10 @@
 
                     <!-- Nama Custom (Opsional) -->
                     <div>
-                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label
+                            for="name"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
                             Nama Custom (Opsional)
                         </label>
                         <input
@@ -114,7 +131,10 @@
 
                     <!-- Tanggal Mulai -->
                     <div>
-                        <label for="start_date" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label
+                            for="start_date"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
                             Tanggal Mulai (Opsional)
                         </label>
                         <input
@@ -124,14 +144,20 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             :class="{ 'border-red-500': errors.start_date }"
                         />
-                        <p v-if="errors.start_date" class="mt-1 text-sm text-red-600">
+                        <p
+                            v-if="errors.start_date"
+                            class="mt-1 text-sm text-red-600"
+                        >
                             {{ errors.start_date }}
                         </p>
                     </div>
 
                     <!-- Tanggal Selesai -->
                     <div>
-                        <label for="end_date" class="block text-sm font-medium text-gray-700 mb-1">
+                        <label
+                            for="end_date"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
                             Tanggal Selesai (Opsional)
                         </label>
                         <input
@@ -142,7 +168,10 @@
                             class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                             :class="{ 'border-red-500': errors.end_date }"
                         />
-                        <p v-if="errors.end_date" class="mt-1 text-sm text-red-600">
+                        <p
+                            v-if="errors.end_date"
+                            class="mt-1 text-sm text-red-600"
+                        >
                             {{ errors.end_date }}
                         </p>
                     </div>
@@ -155,17 +184,25 @@
                             v-model="form.is_active"
                             class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                         />
-                        <label for="is_active" class="ml-2 block text-sm text-gray-900">
+                        <label
+                            for="is_active"
+                            class="ml-2 block text-sm text-gray-900"
+                        >
                             Aktifkan period ini setelah dibuat
                         </label>
                     </div>
-                    <p v-if="form.is_active" class="mt-1 text-sm text-yellow-600">
+                    <p
+                        v-if="form.is_active"
+                        class="mt-1 text-sm text-yellow-600"
+                    >
                         <ExclamationTriangleIcon class="h-4 w-4 inline mr-1" />
                         Period lain akan dinonaktifkan secara otomatis
                     </p>
 
                     <!-- Submit Buttons -->
-                    <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+                    <div
+                        class="flex justify-end space-x-3 pt-6 border-t border-gray-200"
+                    >
                         <Link
                             :href="route('admin.khs.periods')"
                             class="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -174,16 +211,33 @@
                         </Link>
                         <button
                             type="submit"
-                            :disabled="processing || !form.year || !form.semester"
+                            :disabled="
+                                processing || !form.year || !form.semester
+                            "
                             class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 disabled:bg-gray-400 disabled:cursor-not-allowed"
                         >
                             <span v-if="processing" class="mr-2">
-                                <svg class="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none"></circle>
-                                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                <svg
+                                    class="animate-spin h-4 w-4"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <circle
+                                        class="opacity-25"
+                                        cx="12"
+                                        cy="12"
+                                        r="10"
+                                        stroke="currentColor"
+                                        stroke-width="4"
+                                        fill="none"
+                                    ></circle>
+                                    <path
+                                        class="opacity-75"
+                                        fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                    ></path>
                                 </svg>
                             </span>
-                            {{ processing ? 'Menyimpan...' : 'Simpan Period' }}
+                            {{ processing ? "Menyimpan..." : "Simpan Period" }}
                         </button>
                     </div>
                 </form>
@@ -250,3 +304,4 @@ const submit = () => {
         },
     });
 };
+</script>

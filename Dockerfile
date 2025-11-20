@@ -1,81 +1,60 @@
-FROM php:8.3-apache
+# =========================
+# 1) Build Vite assets
+# =========================
+FROM node:18 AS frontend
 
-# Install system dependencies
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm install
+
+COPY . .
+RUN npm run build
+
+
+# =========================
+# 2) PHP + Apache
+# =========================
+FROM php:8.3-apache AS backend
+
+# Install system dependencies & PHP extensions
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    zip \
-    unzip \
-    nano \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    git zip unzip libzip-dev libpng-dev libonig-dev libxml2-dev \
+    && docker-php-ext-install pdo_mysql mbstring zip gd dom xml
 
-# Install PHP extensions
-RUN docker-php-ext-install \
-    pdo_mysql \
-    mbstring \
-    exif \
-    pcntl \
-    bcmath \
-    gd \
-    zip \
-    dom \
-    xml \
-    fileinfo
-
-# Get latest Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Enable Apache mod_rewrite
+# Enable rewrite
 RUN a2enmod rewrite
 
-# Set working directory
 WORKDIR /var/www/html
 
-# Copy application files
-COPY . .
+# Copy apache config from project into image (safer than heredoc)
+COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
-# Fix git ownership issue
+# Fix git safe.directory ownership issues
 RUN git config --global --add safe.directory /var/www/html || true
 
-# Remove problematic providers
-RUN rm -f app/Providers/TelescopeServiceProvider.php
-RUN sed -i '/PailServiceProvider/d' config/app.php || true
-RUN sed -i '/TelescopeServiceProvider/d' config/app.php || true
+# Copy composer binary
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Install composer dependencies with all platform requirements ignored
+# Copy project files
+COPY . .
+
+# Copy built Vite assets
+COPY --from=frontend /app/public/build ./public/build
+
+# Install PHP dependencies WITHOUT running artisan or scripts
 RUN composer install \
     --no-dev \
-    --no-scripts \
-    --ignore-platform-reqs \
-    --optimize-autoloader
+    --optimize-autoloader \
+    --no-interaction \
+    --no-scripts
 
-# Generate autoload without platform check
-RUN composer dump-autoload --optimize --ignore-platform-reqs || \
-    composer dump-autoload --ignore-platform-reqs
+# Generate optimized autoload
+RUN composer dump-autoload --optimize --no-interaction || true
 
-# Set proper permissions
-RUN chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html/storage && \
-    chmod -R 755 /var/www/html/bootstrap/cache
+# Storage & cache permissions
+RUN chown -R www-data:www-data storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache
 
-# Apache configuration for Laravel
-RUN echo '<VirtualHost *:80>\n\
-    DocumentRoot /var/www/html/public\n\
-    <Directory "/var/www/html/public">\n\
-        AllowOverride All\n\
-        Require all granted\n\
-        DirectoryIndex index.php\n\
-    </Directory>\n\
-    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
-    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
-</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
-
-# Expose port 80
 EXPOSE 80
-
-# Start Apache
 CMD ["apache2-foreground"]

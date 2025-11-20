@@ -63,9 +63,7 @@
                                         "
                                         class="inline w-4 h-4 mr-1"
                                     />
-                                    {{
-                                        formatGrowthRate(growthRates.students)
-                                    }}
+                                    {{ formatGrowthRate(growthRates.students) }}
                                     dari tahun sebelumnya
                                 </p>
                             </div>
@@ -139,9 +137,7 @@
                                         :is="getGrowthIcon(growthRates.alumni)"
                                         class="inline w-4 h-4 mr-1"
                                     />
-                                    {{
-                                        formatGrowthRate(growthRates.alumni)
-                                    }}
+                                    {{ formatGrowthRate(growthRates.alumni) }}
                                     dari tahun sebelumnya
                                 </p>
                             </div>
@@ -523,13 +519,15 @@ import {
     BuildingOfficeIcon,
     AcademicCapIcon,
     UserGroupIcon,
-    TrendingUpIcon,
-    TrendingDownIcon,
+    // --- KOREKSI NAMA IKON DI BAWAH INI ---
+    ArrowTrendingUpIcon, // <--- Diperbaiki dari TrendingUpIcon
+    ArrowTrendingDownIcon, // <--- Diperbaiki dari TrendingDownIcon
     MinusIcon,
 } from "@heroicons/vue/24/outline";
 
 // Props
 const props = defineProps({
+    // ... (Props lainnya tetap sama)
     stat: {
         type: Object,
         required: true,
@@ -569,8 +567,9 @@ const getGrowthClass = (rate) => {
 };
 
 const getGrowthIcon = (rate) => {
-    if (rate > 0) return TrendingUpIcon;
-    if (rate < 0) return TrendingDownIcon;
+    // --- KOREKSI PENGGUNAAN IKON DI BAWAH INI ---
+    if (rate > 0) return ArrowTrendingUpIcon; // <--- Menggunakan ikon yang benar
+    if (rate < 0) return ArrowTrendingDownIcon; // <--- Menggunakan ikon yang benar
     return MinusIcon;
 };
 
