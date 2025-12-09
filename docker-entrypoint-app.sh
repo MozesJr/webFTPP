@@ -21,3 +21,4 @@ chmod -R 0775 storage bootstrap/cache || true
 
 echo "Starting: $*"
 exec "$@"
+#test
