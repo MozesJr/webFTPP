@@ -220,7 +220,7 @@
                                         Gambar Utama
                                     </label>
                                     <img
-                                        :src="`/${about.image_url}`"
+                                        :src="`${about.image_url}`"
                                         :alt="about.title"
                                         class="w-full h-48 object-cover rounded-lg shadow-sm"
                                     />
@@ -232,7 +232,7 @@
                                         Gambar Kedua
                                     </label>
                                     <img
-                                        :src="`/${about.secondary_image_url}`"
+                                        :src="`${about.secondary_image_url}`"
                                         :alt="about.title"
                                         class="w-full h-48 object-cover rounded-lg shadow-sm"
                                     />

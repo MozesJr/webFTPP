@@ -66,7 +66,7 @@
                             <div class="flex-shrink-0 h-10 w-10">
                                 <img
                                     v-if="prodi.image_url"
-                                    :src="`/${prodi.image_url}`"
+                                    :src="`${prodi.image_url}`"
                                     :alt="prodi.name"
                                     class="h-10 w-10 rounded-lg object-cover"
                                 />

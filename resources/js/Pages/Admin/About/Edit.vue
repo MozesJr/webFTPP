@@ -581,13 +581,11 @@ const imagePreview = ref(null);
 const secondaryImagePreview = ref(null);
 
 const currentImageUrl = computed(() => {
-    return props.about?.image_url ? `/${props.about.image_url}` : null;
+    return `${props.about.image_url}`;
 });
 
 const currentSecondaryImageUrl = computed(() => {
-    return props.about?.secondary_image_url
-        ? `/${props.about.secondary_image_url}`
-        : null;
+    return `${props.about.secondary_image_url}`;
 });
 
 function handleImageChange(event) {

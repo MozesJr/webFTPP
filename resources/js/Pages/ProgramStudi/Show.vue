@@ -227,6 +227,32 @@
                                     Dosen
                                 </button>
                             </li>
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link"
+                                    id="dosen-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#dosen"
+                                    type="button"
+                                    role="tab"
+                                >
+                                    <i class="bi bi-people me-2"></i>Prestasi
+                                    Dosen / Mahasiwa
+                                </button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button
+                                    class="nav-link"
+                                    id="dosen-tab"
+                                    data-bs-toggle="tab"
+                                    data-bs-target="#dosen"
+                                    type="button"
+                                    role="tab"
+                                >
+                                    <i class="bi bi-people me-2"></i>Media
+                                    Sosial
+                                </button>
+                            </li>
                         </ul>
 
                         <!-- Tab Content -->

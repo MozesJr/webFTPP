@@ -41,8 +41,17 @@
 
     <!-- Scripts -->
     @routes
-    @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+
+    @if (app()->environment('local'))
+        {{-- di dev: gunakan vite dev server, bisa minta file .vue --}}
+        @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+    @else
+        {{-- di production: minta hanya app.js (manifest tidak selalu memuat .vue) --}}
+        @vite('resources/js/app.js')
+    @endif
+
     @inertiaHead
+
 </head>
 
 <body class="index-page">

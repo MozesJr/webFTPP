@@ -59,36 +59,68 @@
                             </ul>
                         </li>
 
-                        <li class="dropdown">
-                            <Link href="/program-studi"
-                                ><span>Prodi</span>
-                                <i
-                                    class="bi bi-chevron-down toggle-dropdown"
-                                ></i
-                            ></Link>
-                            <ul>
-                                <li>
-                                    <Link href="/program-studi/TPR"
-                                        >S1 Teknik Perminyakan</Link
-                                    >
-                                </li>
-                                <li>
-                                    <Link href="/program-studi/TPT"
-                                        >S1 Teknik Pertambangan</Link
-                                    >
-                                </li>
-                                <li>
-                                    <Link href="/program-studi/TG"
-                                        >S1 Teknik Geologi</Link
-                                    >
-                                </li>
-                                <!-- <li>
-                                    <Link href="/program-studi/DTPT"
-                                        >D3 Teknik Pertambangan</Link
-                                    >
-                                </li> -->
-                            </ul>
-                        </li>
+                        <ul>
+                            <li class="dropdown">
+                                <Link href="/program-studi">
+                                    <span>Jurusan</span>
+                                    <i
+                                        class="bi bi-chevron-down toggle-dropdown"
+                                    ></i>
+                                </Link>
+
+                                <ul>
+                                    <li class="dropdown">
+                                        <Link href="/program-studi">
+                                            <span>Perminyakan</span>
+                                            <i
+                                                class="bi bi-chevron-down toggle-dropdown"
+                                            ></i>
+                                        </Link>
+
+                                        <ul>
+                                            <li>
+                                                <Link href="/program-studi/TPR"
+                                                    >S1 Teknik Perminyakan</Link
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <Link href="/program-studi">
+                                            <span>Pertambangan</span>
+                                            <i
+                                                class="bi bi-chevron-down toggle-dropdown"
+                                            ></i>
+                                        </Link>
+
+                                        <ul>
+                                            <li>
+                                                <Link href="/program-studi/TPT"
+                                                    >S1 Teknik
+                                                    Pertambangan</Link
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li class="dropdown">
+                                        <Link href="/program-studi">
+                                            <span>Geologi</span>
+                                            <i
+                                                class="bi bi-chevron-down toggle-dropdown"
+                                            ></i>
+                                        </Link>
+
+                                        <ul>
+                                            <li>
+                                                <Link href="/program-studi/TG"
+                                                    >S1 Teknik Geologi</Link
+                                                >
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
                         <li><Link href="/news">News</Link></li>
                         <li><Link href="/evaluation">GPM</Link></li>
                         <li><Link href="#">Penelitian</Link></li>

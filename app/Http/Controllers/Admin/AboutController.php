@@ -86,6 +86,7 @@ class AboutController extends Controller
     public function edit(): Response
     {
         $about = About::first();
+        // dd($about);
 
         if (!$about) {
             return redirect()->route('admin.about.create')
