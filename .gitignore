@@ -31,3 +31,5 @@ storage/*
 
 # Laravel public storage (hasil upload / symlink)
 public/storage
+
+!storage/assets/img/fasilitas/
