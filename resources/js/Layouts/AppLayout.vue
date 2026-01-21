@@ -125,6 +125,15 @@
                         <li><Link href="/evaluation">GPM</Link></li>
                         <li><Link href="#">Penelitian</Link></li>
                         <li><Link href="#">Kemahasiswaan</Link></li>
+                        <li>
+                            <a
+                                href="https://elearning.unipa.ac.id"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                e-Learning
+                            </a>
+                        </li>
                     </ul>
                     <i
                         class="mobile-nav-toggle d-xl-none bi bi-list"
