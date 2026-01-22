@@ -23,19 +23,13 @@ yarn-error.log
 /.vscode
 /.zed
 
-# --- PERBAIKAN DI SINI ---
+# --- KONFIGURASI AGAR PUBLIC NAIK SEMUA ---
 
-# Biarkan folder public di-track oleh Git sepenuhnya
-# Kita HAPUS baris /public/storage agar folder fasilitas di dalamnya ikut naik
-!/public/assets/
-!/public/storage/
+# Jangan abaikan folder public sama sekali
+!/public/
 
-# Tetap abaikan file log dan cache di folder storage asli
-/storage/app/*
+# Tetap abaikan file sistem Laravel yang tidak perlu di-upload
 /storage/framework/cache/data/*
 /storage/framework/views/*
 /storage/framework/sessions/*
 /storage/logs/*
-
-# Pastikan folder resources/assets tidak diabaikan (karena di gambar kamu pakai SCSS/JS)
-!resources/assets/
