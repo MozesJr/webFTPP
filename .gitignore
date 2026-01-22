@@ -33,3 +33,14 @@ storage/*
 public/storage
 
 !storage/assets/img/fasilitas/
+
+# Abaikan semua isi storage/app/public
+storage/app/public/*
+
+# Berikan pengecualian untuk folder fasilitas
+!storage/app/public/assets
+!storage/app/public/assets/img
+!storage/app/public/assets/img/fasilitas/
+
+# Pastikan file di dalam fasilitas tidak diabaikan
+!storage/app/public/assets/img/fasilitas/**
