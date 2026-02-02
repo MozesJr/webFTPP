@@ -122,7 +122,36 @@
                             </li>
                         </ul>
                         <li><Link href="/news">News</Link></li>
-                        <li><Link href="/evaluation">GPM</Link></li>
+                        <li class="dropdown">
+                            <Link href="/evaluation">
+                                <span>GPM</span>
+                                <i
+                                    class="bi bi-chevron-down toggle-dropdown"
+                                ></i>
+                            </Link>
+                            <ul>
+                                <li>
+                                    <Link href="/gpm/struktur-organisasi"
+                                        >Struktur Organisasi</Link
+                                    >
+                                </li>
+                                <li>
+                                    <Link href="/gpm/dokumen-spmi"
+                                        >Dokumen SPMI</Link
+                                    >
+                                </li>
+                                <li>
+                                    <Link href="/gpm/survey-kepuasan"
+                                        >Survey Kepuasan</Link
+                                    >
+                                </li>
+                                <li>
+                                    <Link href="/gpm/survey-edom"
+                                        >Survey EDOM</Link
+                                    >
+                                </li>
+                            </ul>
+                        </li>
                         <li><Link href="#">Penelitian</Link></li>
                         <li><Link href="#">Kemahasiswaan</Link></li>
                         <li>

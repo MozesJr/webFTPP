@@ -23,9 +23,6 @@ use App\Http\Controllers\EvaluationFormController;
 use App\Http\Controllers\Admin\DeanGreetingController;
 use App\Http\Controllers\FacilityController;
 
-
-
-
 // Super Admin Controllers
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
 use App\Http\Controllers\SuperAdmin\UserController;
@@ -34,7 +31,7 @@ use App\Http\Controllers\SuperAdmin\PermissionController;
 use App\Http\Controllers\SuperAdmin\ParentController;
 use App\Http\Controllers\SuperAdmin\GoogleDriveAuthController;
 use App\Http\Controllers\SuperAdmin\KhsController;
-
+use App\Http\Controllers\GPMController;
 
 use Illuminate\Support\Facades\Storage;
 
@@ -97,6 +94,17 @@ Route::prefix('contact')->name('contact.')->group(function () {
 
 Route::get('/facilities', [FacilityController::class, 'index'])->name('facilities.index');
 Route::get('/facilities/{slug}', [FacilityController::class, 'show'])->name('facilities.show');
+
+// GPM Main Page (existing)
+Route::get('/evaluation', [GPMController::class, 'index'])->name('gpm.index');
+
+// GPM Sub-menu Routes
+Route::prefix('gpm')->name('gpm.')->group(function () {
+    Route::get('/struktur-organisasi', [GPMController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
+    Route::get('/dokumen-spmi', [GPMController::class, 'dokumenSPMI'])->name('dokumen-spmi');
+    Route::get('/survey-kepuasan', [GPMController::class, 'surveyKepuasan'])->name('survey-kepuasan');
+    Route::get('/survey-edom', [GPMController::class, 'surveyEDOM'])->name('survey-edom');
+});
 
 // Unauthorized route
 Route::get('/unauthorized', function () {
