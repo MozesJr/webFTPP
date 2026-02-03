@@ -1,3 +1,4 @@
+<!-- programstudiindex -->
 <template>
     <AdminLayout>
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
@@ -210,7 +211,7 @@ const { success, error, confirmDelete } = useSwal();
 const handleDelete = async (prodi) => {
     const result = await confirmDelete(
         "Hapus Program Studi?",
-        `Program Studi "${prodi.name}" akan dihapus permanen!`
+        `Program Studi "${prodi.name}" akan dihapus permanen!`,
     );
 
     if (result.isConfirmed) {

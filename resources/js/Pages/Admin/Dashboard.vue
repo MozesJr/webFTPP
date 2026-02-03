@@ -1,3 +1,4 @@
+<!-- Dashboard.vue -->
 <template>
     <AdminLayout>
         <!-- Welcome Banner -->

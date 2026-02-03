@@ -33,6 +33,12 @@ use App\Http\Controllers\SuperAdmin\GoogleDriveAuthController;
 use App\Http\Controllers\SuperAdmin\KhsController;
 use App\Http\Controllers\GPMController;
 
+// GPM
+use App\Http\Controllers\Admin\GPM\StrukturOrganisasiController;
+use App\Http\Controllers\Admin\GPM\DokumenSPMIController;
+use App\Http\Controllers\Admin\GPM\SurveyController;
+use App\Http\Controllers\Admin\GPM\EDOMPeriodController;
+
 use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Foundation\Application;
@@ -459,6 +465,82 @@ Route::middleware(['auth', 'verified', 'check.role:admin,super_admin'])->prefix(
         Route::get('/periods/{period}/edit', [KhsController::class, 'editPeriod'])->name('periods.edit');
         Route::put('/periods/{period}', [KhsController::class, 'updatePeriod'])->name('periods.update');
         Route::delete('/periods/{period}', [KhsController::class, 'destroyPeriod'])->name('periods.destroy');
+    });
+
+    /**
+     * ==============================================
+     * PASTE THIS INSIDE ADMIN MIDDLEWARE GROUP
+     * ==============================================
+     */
+
+    // GPM (Gugus Penjaminan Mutu) Management
+    Route::prefix('gpm')->name('gpm.')->group(function () {
+
+        // 1. STRUKTUR ORGANISASI GPM
+        Route::prefix('struktur-organisasi')->name('struktur-organisasi.')->group(function () {
+            Route::get('/', [StrukturOrganisasiController::class, 'index'])->name('index');
+            Route::get('/create', [StrukturOrganisasiController::class, 'create'])->name('create');
+            Route::post('/', [StrukturOrganisasiController::class, 'store'])->name('store');
+            Route::get('/{strukturOrganisasi}/edit', [StrukturOrganisasiController::class, 'edit'])->name('edit');
+            Route::put('/{strukturOrganisasi}', [StrukturOrganisasiController::class, 'update'])->name('update');
+            Route::delete('/{strukturOrganisasi}', [StrukturOrganisasiController::class, 'destroy'])->name('destroy');
+
+            // Additional actions
+            Route::post('/reorder', [StrukturOrganisasiController::class, 'reorder'])->name('reorder');
+            Route::post('/{strukturOrganisasi}/toggle-active', [StrukturOrganisasiController::class, 'toggleActive'])->name('toggle-active');
+        });
+
+        // 2. DOKUMEN SPMI
+        Route::prefix('dokumen-spmi')->name('dokumen-spmi.')->group(function () {
+            Route::get('/', [DokumenSPMIController::class, 'index'])->name('index');
+            Route::get('/create', [DokumenSPMIController::class, 'create'])->name('create');
+            Route::post('/', [DokumenSPMIController::class, 'store'])->name('store');
+            Route::get('/{dokumenSpmi}', [DokumenSPMIController::class, 'show'])->name('show');
+            Route::get('/{dokumenSpmi}/edit', [DokumenSPMIController::class, 'edit'])->name('edit');
+            Route::put('/{dokumenSpmi}', [DokumenSPMIController::class, 'update'])->name('update');
+            Route::delete('/{dokumenSpmi}', [DokumenSPMIController::class, 'destroy'])->name('destroy');
+
+            // Additional actions
+            Route::get('/{dokumenSpmi}/download', [DokumenSPMIController::class, 'download'])->name('download');
+            Route::post('/{dokumenSpmi}/toggle-publish', [DokumenSPMIController::class, 'togglePublish'])->name('toggle-publish');
+        });
+
+        // 3. SURVEY KEPUASAN
+        Route::prefix('survey')->name('survey.')->group(function () {
+            Route::get('/', [SurveyController::class, 'index'])->name('index');
+            Route::get('/create', [SurveyController::class, 'create'])->name('create');
+            Route::post('/', [SurveyController::class, 'store'])->name('store');
+            Route::get('/{survey}', [SurveyController::class, 'show'])->name('show');
+            Route::get('/{survey}/edit', [SurveyController::class, 'edit'])->name('edit');
+            Route::put('/{survey}', [SurveyController::class, 'update'])->name('update');
+            Route::delete('/{survey}', [SurveyController::class, 'destroy'])->name('destroy');
+
+            // Additional actions
+            Route::post('/{survey}/toggle-active', [SurveyController::class, 'toggleActive'])->name('toggle-active');
+            Route::get('/{survey}/results', [SurveyController::class, 'results'])->name('results');
+            Route::get('/{survey}/export', [SurveyController::class, 'export'])->name('export');
+        });
+
+        // 4. EDOM PERIOD
+        Route::prefix('edom-period')->name('edom-period.')->group(function () {
+            Route::get('/', [EDOMPeriodController::class, 'index'])->name('index');
+            Route::get('/create', [EDOMPeriodController::class, 'create'])->name('create');
+            Route::post('/', [EDOMPeriodController::class, 'store'])->name('store');
+            Route::get('/{edomPeriod}', [EDOMPeriodController::class, 'show'])->name('show');
+            Route::get('/{edomPeriod}/edit', [EDOMPeriodController::class, 'edit'])->name('edit');
+            Route::put('/{edomPeriod}', [EDOMPeriodController::class, 'update'])->name('update');
+            Route::delete('/{edomPeriod}', [EDOMPeriodController::class, 'destroy'])->name('destroy');
+
+            // Additional actions
+            Route::post('/{edomPeriod}/toggle-active', [EDOMPeriodController::class, 'toggleActive'])->name('toggle-active');
+            Route::post('/{edomPeriod}/toggle-publish', [EDOMPeriodController::class, 'togglePublish'])->name('toggle-publish');
+            Route::post('/{edomPeriod}/update-statistics', [EDOMPeriodController::class, 'updateStatistics'])->name('update-statistics');
+
+            // Reports & Analytics
+            Route::get('/{edomPeriod}/lecturer-statistics', [EDOMPeriodController::class, 'lecturerStatistics'])->name('lecturer-statistics');
+            Route::get('/{edomPeriod}/lecturer-submissions', [EDOMPeriodController::class, 'lecturerSubmissions'])->name('lecturer-submissions');
+            Route::get('/{edomPeriod}/export', [EDOMPeriodController::class, 'export'])->name('export');
+        });
     });
 });
 

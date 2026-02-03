@@ -270,7 +270,7 @@
                         icon="document-text"
                         :active="
                             currentUrl.startsWith(
-                                '/admin/edom/questionnaire'
+                                '/admin/edom/questionnaire',
                             ) ||
                             currentUrl.startsWith('/admin/edom/evaluation') ||
                             currentUrl.startsWith('/admin/edom/report')
@@ -284,6 +284,38 @@
                         >
                         <SidebarSubItem href="/admin/edom/reports"
                             >Laporan</SidebarSubItem
+                        >
+                    </SidebarDropdown>
+
+                    <SidebarDropdown
+                        title="Penjaminan Mutu (GPM)"
+                        icon="document-text"
+                        :active="
+                            currentUrl.startsWith(
+                                '/admin/gpm/struktur-organisasi',
+                            ) ||
+                            currentUrl.startsWith('/admin/gpm/dokumen-spmi') ||
+                            currentUrl.startsWith('/admin/gpm/survey') ||
+                            currentUrl.startsWith(
+                                '/admin/gpm/edom-questions',
+                            ) ||
+                            currentUrl === '/admin/gpm/edom-period'
+                        "
+                    >
+                        <SidebarSubItem href="/admin/gpm/struktur-organisasi"
+                            >Struktur Organisasi</SidebarSubItem
+                        >
+                        <SidebarSubItem href="/admin/gpm/dokumen-spmi"
+                            >Dokumen SPMI</SidebarSubItem
+                        >
+                        <SidebarSubItem href="/admin/gpm/survey"
+                            >Survey</SidebarSubItem
+                        >
+                        <SidebarSubItem href="/admin/gpm/edom-period"
+                            >Periode EDOM</SidebarSubItem
+                        >
+                        <SidebarSubItem href="/admin/gpm/edom-questions"
+                            >Bank Pertanyaan</SidebarSubItem
                         >
                     </SidebarDropdown>
 
