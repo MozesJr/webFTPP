@@ -183,11 +183,14 @@ const formatDate = (date) => {
                             <h3 class="text-lg font-medium text-gray-900 mb-4">
                                 Daftar Pertanyaan
                                 <span class="text-sm font-normal text-gray-500"
-                                    >({{ questions.length }} pertanyaan)</span
+                                    >({{
+                                        questions?.length || 0
+                                    }}
+                                    pertanyaan)</span
                                 >
                             </h3>
 
-                            <div v-if="questions.length > 0" class="space-y-4">
+                            <div v-if="questions?.length > 0" class="space-y-4">
                                 <div
                                     v-for="(question, index) in questions"
                                     :key="question.id"
@@ -306,7 +309,7 @@ const formatDate = (date) => {
                                     <dd class="mt-1 text-sm text-gray-900">
                                         {{
                                             survey.total_questions ||
-                                            questions.length
+                                            questions?.length
                                         }}
                                         pertanyaan
                                     </dd>
