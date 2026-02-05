@@ -314,9 +314,9 @@
                         <SidebarSubItem href="/admin/gpm/edom-period"
                             >Periode EDOM</SidebarSubItem
                         >
-                        <SidebarSubItem href="/admin/gpm/edom-questions"
+                        <!-- <SidebarSubItem href="/admin/gpm/edom-questions"
                             >Bank Pertanyaan</SidebarSubItem
-                        >
+                        > -->
                     </SidebarDropdown>
 
                     <!-- Events -->

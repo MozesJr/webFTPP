@@ -104,12 +104,17 @@ Route::get('/facilities/{slug}', [FacilityController::class, 'show'])->name('fac
 // GPM Main Page (existing)
 Route::get('/evaluation', [GPMController::class, 'index'])->name('gpm.index');
 
+
 // GPM Sub-menu Routes
 Route::prefix('gpm')->name('gpm.')->group(function () {
     Route::get('/struktur-organisasi', [GPMController::class, 'strukturOrganisasi'])->name('struktur-organisasi');
     Route::get('/dokumen-spmi', [GPMController::class, 'dokumenSPMI'])->name('dokumen-spmi');
     Route::get('/survey-kepuasan', [GPMController::class, 'surveyKepuasan'])->name('survey-kepuasan');
     Route::get('/survey-edom', [GPMController::class, 'surveyEDOM'])->name('survey-edom');
+
+    // Document detail & download
+    Route::get('/dokumen-spmi/{slug}', [GPMController::class, 'viewDokumen'])->name('dokumen-spmi.view');
+    Route::get('/dokumen-spmi/{slug}/download', [GPMController::class, 'downloadDokumen'])->name('dokumen-spmi.download');
 });
 
 // Unauthorized route
