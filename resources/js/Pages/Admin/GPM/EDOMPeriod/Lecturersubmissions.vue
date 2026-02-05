@@ -179,6 +179,9 @@ const exportResults = (format) => {
 
                 <!-- Statistics Cards -->
                 <div class="grid grid-cols-1 gap-5 sm:grid-cols-4 mb-6">
+                    <dd class="text-lg font-semibold text-gray-900">
+                        {{ overallStats?.total_responses || 0 }}
+                    </dd>
                     <div class="bg-white overflow-hidden shadow rounded-lg">
                         <div class="p-5">
                             <div class="flex items-center">

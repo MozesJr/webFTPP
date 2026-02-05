@@ -23,7 +23,7 @@ class EDOMPeriodController extends Controller
         if ($request->filled('search')) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('academic_year', 'like', "%{$request->search}%");
+                    ->orWhere('academic_year', 'like', "%{$request->search}%");
             });
         }
 
@@ -207,11 +207,14 @@ class EDOMPeriodController extends Controller
     /**
      * Toggle active status.
      */
+
     public function toggleActive(EDOMPeriod $edomPeriod)
     {
         // Deactivate other active periods if activating this one
         if (!$edomPeriod->is_active) {
-            EDOMPeriod::where('is_active', true)->update(['is_active' => false]);
+            EDOMPeriod::where('is_active', true)
+                ->where('id', '!=', $edomPeriod->id)
+                ->update(['is_active' => false]);
         }
 
         $edomPeriod->update([
@@ -267,7 +270,7 @@ class EDOMPeriodController extends Controller
         if ($request->filled('search')) {
             $query->whereHas('lecturer', function ($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
-                  ->orWhere('email', 'like', "%{$request->search}%");
+                    ->orWhere('email', 'like', "%{$request->search}%");
             });
         }
 
@@ -323,8 +326,8 @@ class EDOMPeriodController extends Controller
         // Calculate averages
         $categoryAverages = [];
         foreach ($categoryScores as $category => $data) {
-            $categoryAverages[$category] = $data['count'] > 0 
-                ? round($data['total'] / $data['count'], 2) 
+            $categoryAverages[$category] = $data['count'] > 0
+                ? round($data['total'] / $data['count'], 2)
                 : 0;
         }
 

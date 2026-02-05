@@ -111,11 +111,14 @@ Route::prefix('gpm')->name('gpm.')->group(function () {
     Route::get('/dokumen-spmi', [GPMController::class, 'dokumenSPMI'])->name('dokumen-spmi');
     Route::get('/survey-kepuasan', [GPMController::class, 'surveyKepuasan'])->name('survey-kepuasan');
     Route::get('/survey-edom', [GPMController::class, 'surveyEDOM'])->name('survey-edom');
+    Route::get('/survey/{slug}', [GPMController::class, 'surveyFill'])
+        ->name('survey.fill');
 
     // Document detail & download
     Route::get('/dokumen-spmi/{slug}', [GPMController::class, 'viewDokumen'])->name('dokumen-spmi.view');
     Route::get('/dokumen-spmi/{slug}/download', [GPMController::class, 'downloadDokumen'])->name('dokumen-spmi.download');
 });
+
 
 // Unauthorized route
 Route::get('/unauthorized', function () {

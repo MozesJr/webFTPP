@@ -6,11 +6,11 @@ import DataTable from "@/Components/DataTable.vue";
 import { useSwal } from "@/Composables/useSwal";
 
 const props = defineProps({
-    periods: Object, // Laravel pagination object
+    periods: Object,
     filters: Object,
 });
 
-const { showSuccess, showError, confirmDelete } = useSwal();
+const { success, error, confirmDelete } = useSwal();
 const page = usePage();
 
 // Additional filters
@@ -59,21 +59,19 @@ const resetFilters = () => {
 
 // Delete period
 const deletePeriod = async (period) => {
-    const confirmed = await confirmDelete(
+    const result = await confirmDelete(
         "Hapus Periode EDOM",
         `Yakin ingin menghapus "${period.name}"? Semua data evaluasi akan ikut terhapus.`,
     );
 
-    if (confirmed) {
+    if (result.isConfirmed) {
+        // ✅ FIX: Check result.isConfirmed
         router.delete(route("admin.gpm.edom-period.destroy", period.id), {
             onSuccess: () => {
-                showSuccess("Berhasil!", "Periode EDOM berhasil dihapus.");
+                success("Berhasil!", "Periode EDOM berhasil dihapus.");
             },
             onError: () => {
-                showError(
-                    "Gagal!",
-                    "Terjadi kesalahan saat menghapus periode.",
-                );
+                error("Gagal!", "Terjadi kesalahan saat menghapus periode.");
             },
         });
     }
@@ -87,10 +85,10 @@ const toggleActive = (period) => {
         {
             preserveScroll: true,
             onSuccess: () => {
-                const status = period.is_active
-                    ? "dinonaktifkan"
-                    : "diaktifkan";
-                showSuccess("Berhasil!", `Periode berhasil ${status}.`);
+                const status = !period.is_active
+                    ? "diaktifkan"
+                    : "dinonaktifkan"; // ✅ FIX: Invert logic
+                success("Berhasil!", `Periode berhasil ${status}.`);
             },
         },
     );
@@ -104,10 +102,10 @@ const togglePublish = (period) => {
         {
             preserveScroll: true,
             onSuccess: () => {
-                const status = period.is_published
+                const status = !period.is_published
                     ? "dipublish"
-                    : "di-unpublish";
-                showSuccess("Berhasil!", `Hasil evaluasi berhasil ${status}.`);
+                    : "di-unpublish"; // ✅ FIX: Invert logic
+                success("Berhasil!", `Hasil evaluasi berhasil ${status}.`);
             },
         },
     );
@@ -146,7 +144,7 @@ const getScoreColor = (score) => {
 
 // Show flash messages
 if (page.props.flash?.success) {
-    showSuccess("Berhasil!", page.props.flash.success);
+    success("Berhasil!", page.props.flash.success);
 }
 </script>
 

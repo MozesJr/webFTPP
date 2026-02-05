@@ -55,6 +55,7 @@ class GPMController extends Controller
      * - Only fetch active members
      * - Ordered by display order
      */
+
     public function strukturOrganisasi(): Response
     {
         // Fetch struktur organisasi yang aktif, ordered by position
@@ -65,11 +66,11 @@ class GPMController extends Controller
                 return [
                     'id' => $struktur->id,
                     'nama' => $struktur->nama,
-                    'nip' => $struktur->nip,
+                    'nip' => $struktur->nip ?? '-',
                     'jabatan' => $struktur->jabatan,
-                    'email' => $struktur->email,
-                    'phone' => $struktur->phone,
-                    'photo_url' => $struktur->photo_url,
+                    'email' => $struktur->email ?? '-',
+                    'phone' => $struktur->phone ?? '-',
+                    'photo_url' => $struktur->photo_url ?? asset('images/default-avatar.png'),
                     'tugas_fungsi' => $struktur->tugas_fungsi,
                     'bio' => $struktur->bio,
                     'is_featured' => $struktur->is_featured,
@@ -77,16 +78,20 @@ class GPMController extends Controller
                 ];
             });
 
-        // Group by featured status (featured first)
-        $featured = $strukturs->where('is_featured', true)->values();
-        $regular = $strukturs->where('is_featured', false)->values();
+        // Group by featured status
+        $featured = $strukturs->where('is_featured', true)->values()->all();
+        $regular = $strukturs->where('is_featured', false)->values()->all();
+
+        // Check if there's data
+        $hasData = $strukturs->isNotEmpty();
 
         return Inertia::render('GPM/StrukturOrganisasi', [
             'pageTitle' => 'Struktur Organisasi GPM',
             'pageDescription' => 'Struktur Organisasi Gugus Penjaminan Mutu FTPP',
-            'strukturs' => $strukturs,
+            'strukturs' => $strukturs->all(),
             'featured' => $featured,
             'regular' => $regular,
+            'hasData' => $hasData,
             'breadcrumbs' => [
                 ['label' => 'Home', 'url' => '/'],
                 ['label' => 'GPM', 'url' => '/evaluation'],
@@ -181,6 +186,7 @@ class GPMController extends Controller
      * - Filter by target respondent
      * - Show completion stats
      */
+
     public function surveyKepuasan(Request $request): Response
     {
         // Get currently running surveys
@@ -199,18 +205,22 @@ class GPMController extends Controller
                 'title' => $survey->title,
                 'slug' => $survey->slug,
                 'description' => $survey->description,
+                'introduction' => $survey->introduction,
                 'target_respondent' => $survey->target_respondent,
                 'target_respondent_label' => $survey->target_respondent_label,
                 'start_date' => $survey->start_date->format('d M Y'),
                 'end_date' => $survey->end_date->format('d M Y'),
+                'days_remaining' => now()->diffInDays($survey->end_date, false),
                 'total_questions' => $survey->total_questions,
                 'total_responses' => $survey->total_responses,
+                'target_responses' => $survey->target_responses,
                 'completion_percentage' => round($survey->completion_percentage, 1),
                 'is_anonymous' => $survey->is_anonymous,
                 'require_login' => $survey->require_login,
                 'status' => $survey->status,
                 'status_label' => $survey->status_label,
                 'can_be_filled' => $survey->canBeFilled(),
+                'survey_url' => route('gpm.survey.fill', $survey->slug),
             ];
         });
 
@@ -225,26 +235,37 @@ class GPMController extends Controller
             'mahasiswa' => [
                 'label' => 'Mahasiswa',
                 'count' => $targetCounts['mahasiswa'] ?? 0,
+                'icon' => 'academic-cap',
+                'color' => 'blue',
             ],
             'dosen' => [
                 'label' => 'Dosen',
                 'count' => $targetCounts['dosen'] ?? 0,
+                'icon' => 'users',
+                'color' => 'green',
             ],
             'alumni' => [
                 'label' => 'Alumni',
                 'count' => $targetCounts['alumni'] ?? 0,
+                'icon' => 'user-group',
+                'color' => 'purple',
             ],
             'stakeholder' => [
                 'label' => 'Stakeholder',
                 'count' => $targetCounts['stakeholder'] ?? 0,
+                'icon' => 'briefcase',
+                'color' => 'orange',
             ],
         ];
+
+        $hasActiveSurveys = $surveys->isNotEmpty();
 
         return Inertia::render('GPM/SurveyKepuasan', [
             'pageTitle' => 'Survey Kepuasan',
             'pageDescription' => 'Survey Kepuasan Mahasiswa, Dosen, dan Stakeholder',
-            'surveys' => $surveys,
+            'surveys' => $surveys->all(),
             'targets' => $targets,
+            'hasActiveSurveys' => $hasActiveSurveys,
             'filters' => $request->only(['target']),
             'breadcrumbs' => [
                 ['label' => 'Home', 'url' => '/'],

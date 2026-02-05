@@ -5,7 +5,7 @@ import AdminLayout from "@/Layouts/AdminLayout.vue";
 
 const props = defineProps({
     period: Object,
-    lecturers: Array,
+    lecturerStats: Object, // ✅ FIX: Should be paginated object, not array
     filters: Object,
 });
 
@@ -41,12 +41,15 @@ const resetFilters = () => {
     );
 };
 
-// Get departments
+// ✅ FIX: Get lecturers from pagination data
+const lecturers = computed(() => props.lecturerStats?.data || []);
+
+// Get departments from all lecturers
 const departments = computed(() => {
     const depts = new Set();
-    props.lecturers.forEach((lecturer) => {
-        if (lecturer.department) {
-            depts.add(lecturer.department);
+    lecturers.value.forEach((lecturer) => {
+        if (lecturer.lecturer?.department) {
+            depts.add(lecturer.lecturer.department);
         }
     });
     return Array.from(depts).sort();
@@ -124,7 +127,8 @@ const exportResults = (format) => {
                                 Ranking Dosen
                             </h2>
                             <p class="mt-1 text-sm text-gray-500">
-                                {{ period.name }} - {{ lecturers.length }} dosen
+                                {{ period.name }} -
+                                {{ lecturerStats.total || 0 }} dosen
                             </p>
                         </div>
                         <div class="flex items-center gap-2 ml-4">
@@ -176,8 +180,9 @@ const exportResults = (format) => {
                         <div>
                             <label
                                 class="block text-sm font-medium text-gray-700"
-                                >Program Studi</label
                             >
+                                Program Studi
+                            </label>
                             <select
                                 v-model="departmentFilter"
                                 @change="applyFilters"
@@ -196,8 +201,9 @@ const exportResults = (format) => {
                         <div>
                             <label
                                 class="block text-sm font-medium text-gray-700"
-                                >Urutkan</label
                             >
+                                Urutkan
+                            </label>
                             <select
                                 v-model="sortBy"
                                 @change="applyFilters"
@@ -231,10 +237,13 @@ const exportResults = (format) => {
                 </div>
 
                 <!-- Top 3 Lecturers -->
-                <div class="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-6">
+                <div
+                    v-if="lecturers.length > 0"
+                    class="grid grid-cols-1 gap-5 sm:grid-cols-3 mb-6"
+                >
                     <div
-                        v-for="(lecturer, index) in lecturers.slice(0, 3)"
-                        :key="lecturer.id"
+                        v-for="(stat, index) in lecturers.slice(0, 3)"
+                        :key="stat.lecturer_id"
                         class="bg-white overflow-hidden shadow rounded-lg border-2"
                         :class="{
                             'border-yellow-400': index === 0,
@@ -247,36 +256,34 @@ const exportResults = (format) => {
                                 <div class="text-4xl mr-3">
                                     {{ getRankingBadge(index + 1) }}
                                 </div>
-                                <div class="flex-1">
+                                <div class="flex-1 min-w-0">
                                     <div
                                         class="text-sm font-medium text-gray-900 truncate"
                                     >
-                                        {{ lecturer.name }}
+                                        {{ stat.lecturer?.name || "Unknown" }}
                                     </div>
                                     <div class="text-xs text-gray-500 truncate">
-                                        {{ lecturer.department }}
+                                        {{ stat.lecturer?.department || "-" }}
                                     </div>
                                     <div class="mt-2 flex items-baseline">
                                         <div
                                             :class="[
                                                 'text-2xl font-bold',
                                                 getScoreColor(
-                                                    lecturer.average_score,
+                                                    stat.average_score,
                                                 ).split(' ')[0],
                                             ]"
                                         >
-                                            {{
-                                                lecturer.average_score.toFixed(
-                                                    2,
-                                                )
-                                            }}
+                                            {{ stat.average_score.toFixed(2) }}
                                         </div>
-                                        <span class="ml-2 text-sm text-gray-500"
-                                            >/ 5.0</span
+                                        <span
+                                            class="ml-2 text-sm text-gray-500"
                                         >
+                                            / 5.0
+                                        </span>
                                     </div>
                                     <div class="mt-1 text-xs text-gray-500">
-                                        {{ lecturer.total_responses }} respons
+                                        {{ stat.submission_count }} respons
                                     </div>
                                 </div>
                             </div>
@@ -329,8 +336,8 @@ const exportResults = (format) => {
                             </thead>
                             <tbody class="bg-white divide-y divide-gray-200">
                                 <tr
-                                    v-for="(lecturer, index) in lecturers"
-                                    :key="lecturer.id"
+                                    v-for="(stat, index) in lecturers"
+                                    :key="stat.lecturer_id"
                                     class="hover:bg-gray-50"
                                     :class="{ 'bg-yellow-50': index < 3 }"
                                 >
@@ -339,7 +346,11 @@ const exportResults = (format) => {
                                         class="px-6 py-4 whitespace-nowrap text-center"
                                     >
                                         <span class="text-2xl">
-                                            {{ getRankingBadge(index + 1) }}
+                                            {{
+                                                getRankingBadge(
+                                                    lecturerStats.from + index,
+                                                )
+                                            }}
                                         </span>
                                     </td>
 
@@ -350,12 +361,18 @@ const exportResults = (format) => {
                                                 <div
                                                     class="text-sm font-medium text-gray-900"
                                                 >
-                                                    {{ lecturer.name }}
+                                                    {{
+                                                        stat.lecturer?.name ||
+                                                        "Unknown"
+                                                    }}
                                                 </div>
                                                 <div
                                                     class="text-sm text-gray-500"
                                                 >
-                                                    {{ lecturer.nip || "-" }}
+                                                    {{
+                                                        stat.lecturer?.nip ||
+                                                        "-"
+                                                    }}
                                                 </div>
                                             </div>
                                         </div>
@@ -364,7 +381,9 @@ const exportResults = (format) => {
                                     <!-- Department -->
                                     <td class="px-6 py-4 whitespace-nowrap">
                                         <div class="text-sm text-gray-900">
-                                            {{ lecturer.department }}
+                                            {{
+                                                stat.lecturer?.department || "-"
+                                            }}
                                         </div>
                                     </td>
 
@@ -375,7 +394,7 @@ const exportResults = (format) => {
                                         <div
                                             class="text-sm font-medium text-gray-900"
                                         >
-                                            {{ lecturer.total_responses }}
+                                            {{ stat.submission_count }}
                                         </div>
                                     </td>
 
@@ -387,15 +406,11 @@ const exportResults = (format) => {
                                             :class="[
                                                 'inline-flex items-center px-3 py-1 rounded-full text-sm font-semibold',
                                                 getScoreColor(
-                                                    lecturer.average_score,
+                                                    stat.average_score,
                                                 ),
                                             ]"
                                         >
-                                            {{
-                                                lecturer.average_score.toFixed(
-                                                    2,
-                                                )
-                                            }}
+                                            {{ stat.average_score.toFixed(2) }}
                                         </span>
                                     </td>
 
@@ -407,13 +422,13 @@ const exportResults = (format) => {
                                             :class="[
                                                 'inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium',
                                                 getPerformanceLabel(
-                                                    lecturer.average_score,
+                                                    stat.average_score,
                                                 ).color,
                                             ]"
                                         >
                                             {{
                                                 getPerformanceLabel(
-                                                    lecturer.average_score,
+                                                    stat.average_score,
                                                 ).label
                                             }}
                                         </span>
@@ -428,8 +443,9 @@ const exportResults = (format) => {
                                                 route(
                                                     'admin.gpm.edom-period.lecturer-submissions',
                                                     {
-                                                        period: period.id,
-                                                        lecturer: lecturer.id,
+                                                        edomPeriod: period.id,
+                                                        lecturer_id:
+                                                            stat.lecturer_id,
                                                     },
                                                 )
                                             "
@@ -467,6 +483,34 @@ const exportResults = (format) => {
                         <p class="mt-1 text-sm text-gray-500">
                             Belum ada submission untuk periode ini.
                         </p>
+                    </div>
+                </div>
+
+                <!-- Pagination -->
+                <div
+                    v-if="lecturerStats.last_page > 1"
+                    class="mt-6 flex items-center justify-between"
+                >
+                    <div class="text-sm text-gray-700">
+                        Menampilkan {{ lecturerStats.from }} -
+                        {{ lecturerStats.to }} dari
+                        {{ lecturerStats.total }} dosen
+                    </div>
+                    <div class="flex gap-2">
+                        <a
+                            href=""
+                            v-for="page in lecturerStats.links"
+                            :key="page.label"
+                            :href="page.url"
+                            v-html="page.label"
+                            :class="[
+                                'px-4 py-2 text-sm border rounded',
+                                page.active
+                                    ? 'bg-blue-600 text-white border-blue-600'
+                                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50',
+                                !page.url && 'opacity-50 cursor-not-allowed',
+                            ]"
+                        ></a>
                     </div>
                 </div>
             </div>
