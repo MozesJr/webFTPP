@@ -1,4 +1,4 @@
-<!-- programstudiedit -->
+<!-- resources/js/Pages/Admin/ProgramStudi/Edit.vue -->
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import { Link, useForm, usePage } from "@inertiajs/vue3";
@@ -31,12 +31,15 @@ const currentImageUrl = computed(() => {
 
 // Form dengan _method untuk method spoofing
 const form = useForm({
-    _method: "PUT", // Method spoofing untuk Laravel
+    _method: "PUT",
     name: props.programStudi?.name || "",
     code: props.programStudi?.code || "",
     degree_level: props.programStudi?.degree_level || "",
     description: props.programStudi?.description || "",
     overview: props.programStudi?.overview || "",
+    vision: props.programStudi?.vision || "", // ✅ TAMBAHKAN
+    mission: props.programStudi?.mission || "", // ✅ TAMBAHKAN
+    questionnaire_link: props.programStudi?.questionnaire_link || "", // ✅ TAMBAHKAN
     image_url: null,
     accreditation: props.programStudi?.accreditation || "",
     accreditation_date: props.programStudi?.accreditation_date || "",
@@ -61,7 +64,6 @@ const handleImageChange = (event) => {
 };
 
 const submit = () => {
-    // Gunakan POST dengan method spoofing
     form.post(`/admin/program-studi/${props.programStudi.id}`, {
         forceFormData: true,
         preserveScroll: true,
@@ -231,6 +233,7 @@ onMounted(() => {
                             v-model="form.description"
                             rows="4"
                             required
+                            maxlength="1000"
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             :class="{
                                 'border-red-300': form.errors.description,
@@ -243,6 +246,9 @@ onMounted(() => {
                         >
                             {{ form.errors.description }}
                         </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            {{ form.description.length }}/1000 karakter
+                        </p>
                     </div>
 
                     <!-- Overview -->
@@ -257,6 +263,7 @@ onMounted(() => {
                             id="overview"
                             v-model="form.overview"
                             rows="6"
+                            maxlength="5000"
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             :class="{ 'border-red-300': form.errors.overview }"
                             placeholder="Overview lengkap tentang program studi"
@@ -268,8 +275,175 @@ onMounted(() => {
                             {{ form.errors.overview }}
                         </div>
                         <p class="mt-1 text-sm text-gray-500">
-                            Anda dapat menggunakan HTML untuk formatting
+                            {{ form.overview.length }}/5000 karakter. Anda dapat
+                            menggunakan HTML untuk formatting
                         </p>
+                    </div>
+
+                    <!-- ✅ SECTION DIVIDER - VMTS -->
+                    <div class="md:col-span-2">
+                        <div class="border-t border-gray-200 pt-6 mt-2">
+                            <h3 class="text-lg font-medium text-gray-900 mb-1">
+                                Visi, Misi & Kuesioner VMTS
+                            </h3>
+                            <p class="text-sm text-gray-500">
+                                Informasi visi, misi, dan link kuesioner
+                                pemahaman VMTS untuk mahasiswa/dosen
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- ✅ Vision -->
+                    <div class="md:col-span-2">
+                        <label
+                            for="vision"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Visi Program Studi
+                        </label>
+                        <textarea
+                            id="vision"
+                            v-model="form.vision"
+                            rows="4"
+                            maxlength="2000"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            :class="{
+                                'border-red-300': form.errors.vision,
+                            }"
+                            placeholder="Tuliskan visi program studi..."
+                        ></textarea>
+                        <div
+                            v-if="form.errors.vision"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ form.errors.vision }}
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            {{ form.vision.length }}/2000 karakter
+                        </p>
+                    </div>
+
+                    <!-- ✅ Mission -->
+                    <div class="md:col-span-2">
+                        <label
+                            for="mission"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Misi Program Studi
+                        </label>
+                        <textarea
+                            id="mission"
+                            v-model="form.mission"
+                            rows="8"
+                            maxlength="5000"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            :class="{
+                                'border-red-300': form.errors.mission,
+                            }"
+                            placeholder="Tuliskan misi program studi (pisahkan dengan enter untuk multiple points)..."
+                        ></textarea>
+                        <div
+                            v-if="form.errors.mission"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ form.errors.mission }}
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            {{ form.mission.length }}/5000 karakter. Gunakan
+                            enter untuk memisahkan setiap poin misi.
+                        </p>
+                    </div>
+
+                    <!-- ✅ Questionnaire Link -->
+                    <div class="md:col-span-2">
+                        <label
+                            for="questionnaire_link"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Link Kuesioner Pemahaman VMTS
+                        </label>
+                        <input
+                            id="questionnaire_link"
+                            v-model="form.questionnaire_link"
+                            type="url"
+                            maxlength="500"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            :class="{
+                                'border-red-300':
+                                    form.errors.questionnaire_link,
+                            }"
+                            placeholder="https://forms.google.com/..."
+                        />
+                        <div
+                            v-if="form.errors.questionnaire_link"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ form.errors.questionnaire_link }}
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            Link ke kuesioner pemahaman Visi, Misi, Tujuan &
+                            Strategi (VMTS). Mahasiswa/dosen dapat mengakses
+                            kuesioner melalui link ini.
+                        </p>
+                    </div>
+
+                    <!-- ✅ Info Box untuk VMTS -->
+                    <div class="md:col-span-2">
+                        <div
+                            class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+                        >
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg
+                                        class="h-5 w-5 text-blue-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3
+                                        class="text-sm font-medium text-blue-900"
+                                    >
+                                        Tentang Visi, Misi & Kuesioner VMTS
+                                    </h3>
+                                    <div class="mt-2 text-sm text-blue-700">
+                                        <ul
+                                            class="list-disc list-inside space-y-1"
+                                        >
+                                            <li>
+                                                Visi dan Misi akan ditampilkan
+                                                di halaman detail program studi
+                                            </li>
+                                            <li>
+                                                Link kuesioner VMTS akan muncul
+                                                sebagai tombol untuk
+                                                mahasiswa/dosen mengisi survey
+                                                pemahaman
+                                            </li>
+                                            <li>
+                                                Pastikan link kuesioner sudah
+                                                aktif dan dapat diakses publik
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ✅ SECTION DIVIDER - Media & Info Lainnya -->
+                    <div class="md:col-span-2">
+                        <div class="border-t border-gray-200 pt-6 mt-2">
+                            <h3 class="text-lg font-medium text-gray-900">
+                                Media & Informasi Lainnya
+                            </h3>
+                        </div>
                     </div>
 
                     <!-- Current Image & Upload -->
@@ -422,6 +596,7 @@ onMounted(() => {
                             id="head_of_program"
                             v-model="form.head_of_program"
                             type="text"
+                            maxlength="255"
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
                             :class="{
                                 'border-red-300': form.errors.head_of_program,
@@ -521,7 +696,7 @@ onMounted(() => {
                                     d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                                 ></path>
                             </svg>
-                            Processing...
+                            Memproses...
                         </span>
                         <span v-else> Update Program Studi </span>
                     </button>

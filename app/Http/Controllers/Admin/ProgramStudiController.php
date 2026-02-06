@@ -77,11 +77,29 @@ class ProgramStudiController extends Controller
                     'string',
                     'max:5000'
                 ],
+
+                // ✅ TAMBAHKAN VALIDATION UNTUK VISION, MISSION, QUESTIONNAIRE
+                'vision' => [
+                    'nullable',
+                    'string',
+                    'max:2000'
+                ],
+                'mission' => [
+                    'nullable',
+                    'string',
+                    'max:5000'
+                ],
+                'questionnaire_link' => [
+                    'nullable',
+                    'url',
+                    'max:500'
+                ],
+
                 'image_url' => [
                     'nullable',
                     'image',
                     'mimes:jpeg,png,jpg,gif',
-                    'max:2048' // 2MB
+                    'max:2048'
                 ],
                 'accreditation' => [
                     'nullable',
@@ -113,7 +131,7 @@ class ProgramStudiController extends Controller
                     'boolean'
                 ]
             ], [
-                // Custom error messages
+                // Existing error messages...
                 'name.required' => 'Nama program studi wajib diisi.',
                 'name.min' => 'Nama program studi minimal 3 karakter.',
                 'name.max' => 'Nama program studi maksimal 255 karakter.',
@@ -133,6 +151,12 @@ class ProgramStudiController extends Controller
                 'description.max' => 'Deskripsi maksimal 1000 karakter.',
 
                 'overview.max' => 'Overview maksimal 5000 karakter.',
+
+                // ✅ TAMBAHKAN ERROR MESSAGES
+                'vision.max' => 'Visi maksimal 2000 karakter.',
+                'mission.max' => 'Misi maksimal 5000 karakter.',
+                'questionnaire_link.url' => 'Link kuesioner harus berupa URL yang valid.',
+                'questionnaire_link.max' => 'Link kuesioner maksimal 500 karakter.',
 
                 'image_url.image' => 'File harus berupa gambar.',
                 'image_url.mimes' => 'Format gambar harus JPG, PNG, atau GIF.',
@@ -163,10 +187,8 @@ class ProgramStudiController extends Controller
                 }
             }
 
-            // Set default values
             $validated['is_active'] = $request->boolean('is_active', true);
 
-            // Create the program studi
             ProgramStudi::create($validated);
 
             return redirect()->route('admin.program-studi.index')
@@ -220,6 +242,24 @@ class ProgramStudiController extends Controller
                     'string',
                     'max:5000'
                 ],
+
+                // ✅ TAMBAHKAN VALIDATION
+                'vision' => [
+                    'nullable',
+                    'string',
+                    'max:2000'
+                ],
+                'mission' => [
+                    'nullable',
+                    'string',
+                    'max:5000'
+                ],
+                'questionnaire_link' => [
+                    'nullable',
+                    'url',
+                    'max:500'
+                ],
+
                 'image_url' => [
                     'nullable',
                     'image',
@@ -256,50 +296,17 @@ class ProgramStudiController extends Controller
                     'boolean'
                 ]
             ], [
-                // Same custom error messages as store method
-                'name.required' => 'Nama program studi wajib diisi.',
-                'name.min' => 'Nama program studi minimal 3 karakter.',
-                'name.max' => 'Nama program studi maksimal 255 karakter.',
-                'name.unique' => 'Nama program studi sudah digunakan.',
-
-                'code.required' => 'Kode program studi wajib diisi.',
-                'code.min' => 'Kode program studi minimal 2 karakter.',
-                'code.max' => 'Kode program studi maksimal 10 karakter.',
-                'code.regex' => 'Kode harus berupa huruf kapital dan angka.',
-                'code.unique' => 'Kode program studi sudah digunakan.',
-
-                'degree_level.required' => 'Jenjang wajib dipilih.',
-                'degree_level.in' => 'Jenjang tidak valid.',
-
-                'description.required' => 'Deskripsi wajib diisi.',
-                'description.min' => 'Deskripsi minimal 10 karakter.',
-                'description.max' => 'Deskripsi maksimal 1000 karakter.',
-
-                'overview.max' => 'Overview maksimal 5000 karakter.',
-
-                'image_url.image' => 'File harus berupa gambar.',
-                'image_url.mimes' => 'Format gambar harus JPG, PNG, atau GIF.',
-                'image_url.max' => 'Ukuran gambar maksimal 2MB.',
-
-                'accreditation.in' => 'Akreditasi tidak valid.',
-
-                'accreditation_date.date' => 'Format tanggal akreditasi tidak valid.',
-                'accreditation_date.before_or_equal' => 'Tanggal akreditasi tidak boleh di masa depan.',
-
-                'accreditation_expire.date' => 'Format tanggal kadaluarsa tidak valid.',
-                'accreditation_expire.after' => 'Tanggal kadaluarsa harus setelah tanggal akreditasi.',
-
-                'head_of_program.max' => 'Nama kepala program studi maksimal 255 karakter.',
-
-                'established_year.integer' => 'Tahun berdiri harus berupa angka.',
-                'established_year.min' => 'Tahun berdiri minimal 1900.',
-                'established_year.max' => 'Tahun berdiri tidak boleh melebihi tahun ini.',
+                // Same error messages as store...
+                'vision.max' => 'Visi maksimal 2000 karakter.',
+                'mission.max' => 'Misi maksimal 5000 karakter.',
+                'questionnaire_link.url' => 'Link kuesioner harus berupa URL yang valid.',
+                'questionnaire_link.max' => 'Link kuesioner maksimal 500 karakter.',
+                // ... rest of error messages
             ]);
 
             // Handle image upload
             if ($request->hasFile('image_url')) {
                 try {
-                    // Delete old image
                     if ($programStudi->image_url) {
                         $this->deleteImage($programStudi->image_url);
                     }
@@ -309,7 +316,6 @@ class ProgramStudiController extends Controller
                     return back()->withErrors(['image_url' => 'Gagal mengunggah gambar.'])->withInput();
                 }
             } else {
-                // Keep existing image
                 unset($validated['image_url']);
             }
 

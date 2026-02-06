@@ -426,6 +426,158 @@
                             }}
                         </div>
                     </div>
+                    <!-- Vision -->
+                    <div class="md:col-span-2">
+                        <label
+                            for="vision"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Visi Program Studi
+                        </label>
+                        <textarea
+                            id="vision"
+                            v-model="form.vision"
+                            rows="4"
+                            maxlength="2000"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            :class="{
+                                'border-red-300':
+                                    form.errors.vision || errors.vision,
+                            }"
+                            placeholder="Tuliskan visi program studi..."
+                        ></textarea>
+                        <div
+                            v-if="form.errors.vision || errors.vision"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ form.errors.vision || errors.vision }}
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            {{ form.vision.length }}/2000 karakter
+                        </p>
+                    </div>
+
+                    <!-- Mission -->
+                    <div class="md:col-span-2">
+                        <label
+                            for="mission"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Misi Program Studi
+                        </label>
+                        <textarea
+                            id="mission"
+                            v-model="form.mission"
+                            rows="8"
+                            maxlength="5000"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            :class="{
+                                'border-red-300':
+                                    form.errors.mission || errors.mission,
+                            }"
+                            placeholder="Tuliskan misi program studi (pisahkan dengan enter untuk multiple points)..."
+                        ></textarea>
+                        <div
+                            v-if="form.errors.mission || errors.mission"
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{ form.errors.mission || errors.mission }}
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            {{ form.mission.length }}/5000 karakter. Gunakan
+                            enter untuk memisahkan setiap poin misi.
+                        </p>
+                    </div>
+
+                    <!-- Questionnaire Link -->
+                    <div class="md:col-span-2">
+                        <label
+                            for="questionnaire_link"
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                        >
+                            Link Kuesioner Pemahaman VMTS
+                        </label>
+                        <input
+                            id="questionnaire_link"
+                            v-model="form.questionnaire_link"
+                            type="url"
+                            maxlength="500"
+                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                            :class="{
+                                'border-red-300':
+                                    form.errors.questionnaire_link ||
+                                    errors.questionnaire_link,
+                            }"
+                            placeholder="https://forms.google.com/..."
+                        />
+                        <div
+                            v-if="
+                                form.errors.questionnaire_link ||
+                                errors.questionnaire_link
+                            "
+                            class="mt-1 text-sm text-red-600"
+                        >
+                            {{
+                                form.errors.questionnaire_link ||
+                                errors.questionnaire_link
+                            }}
+                        </div>
+                        <p class="mt-1 text-sm text-gray-500">
+                            Link ke kuesioner pemahaman Visi, Misi, Tujuan &
+                            Strategi (VMTS). Mahasiswa/dosen dapat mengakses
+                            kuesioner melalui link ini.
+                        </p>
+                    </div>
+
+                    <!-- Info Box untuk VMTS -->
+                    <div class="md:col-span-2">
+                        <div
+                            class="bg-blue-50 border border-blue-200 rounded-lg p-4"
+                        >
+                            <div class="flex">
+                                <div class="flex-shrink-0">
+                                    <svg
+                                        class="h-5 w-5 text-blue-600"
+                                        fill="currentColor"
+                                        viewBox="0 0 20 20"
+                                    >
+                                        <path
+                                            fill-rule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                            clip-rule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <h3
+                                        class="text-sm font-medium text-blue-900"
+                                    >
+                                        Tentang Visi, Misi & Kuesioner VMTS
+                                    </h3>
+                                    <div class="mt-2 text-sm text-blue-700">
+                                        <ul
+                                            class="list-disc list-inside space-y-1"
+                                        >
+                                            <li>
+                                                Visi dan Misi akan ditampilkan
+                                                di halaman detail program studi
+                                            </li>
+                                            <li>
+                                                Link kuesioner VMTS akan muncul
+                                                sebagai tombol untuk
+                                                mahasiswa/dosen mengisi survey
+                                                pemahaman
+                                            </li>
+                                            <li>
+                                                Pastikan link kuesioner sudah
+                                                aktif dan dapat diakses publik
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
                     <!-- Active Status -->
                     <div class="md:col-span-2">
@@ -531,6 +683,9 @@ const form = useForm({
     degree_level: "",
     description: "",
     overview: "",
+    vision: "", // ✅ TAMBAHKAN
+    mission: "", // ✅ TAMBAHKAN
+    questionnaire_link: "", // ✅ TAMBAHKAN
     image_url: null,
     accreditation: "",
     accreditation_date: "",

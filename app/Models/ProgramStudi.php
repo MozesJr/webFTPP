@@ -15,8 +15,9 @@ class ProgramStudi extends Model
         'code',
         'degree_level',
         'description',
-        'vision',
-        'mission',
+        'vision',                    // ✅ Sudah ada
+        'mission',                   // ✅ Sudah ada
+        'questionnaire_link',        // ✅ TAMBAHKAN INI
         'graduate_competencies',
         'overview',
         'image_url',
