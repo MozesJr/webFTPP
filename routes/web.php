@@ -41,6 +41,9 @@ use App\Http\Controllers\Admin\GPM\EDOMPeriodController;
 
 use Illuminate\Support\Facades\Storage;
 
+use App\Http\Controllers\PublicKemahasiswaanController;
+use App\Http\Controllers\PublicAlumniController;
+
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -118,6 +121,10 @@ Route::prefix('gpm')->name('gpm.')->group(function () {
     Route::get('/dokumen-spmi/{slug}', [GPMController::class, 'viewDokumen'])->name('dokumen-spmi.view');
     Route::get('/dokumen-spmi/{slug}/download', [GPMController::class, 'downloadDokumen'])->name('dokumen-spmi.download');
 });
+
+Route::get('/kemahasiswaan', [PublicKemahasiswaanController::class, 'index'])->name('kemahasiswaan.index');
+Route::get('/alumni', [PublicAlumniController::class, 'index'])->name('alumni.index');
+Route::get('/alumni/{id}', [PublicAlumniController::class, 'show'])->name('alumni.show');
 
 
 // Unauthorized route

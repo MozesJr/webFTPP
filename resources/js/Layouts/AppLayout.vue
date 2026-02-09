@@ -153,7 +153,26 @@
                             </ul>
                         </li>
                         <li><Link href="#">Penelitian</Link></li>
-                        <li><Link href="#">Kemahasiswaan</Link></li>
+                        <li class="dropdown">
+                            <Link href="#"
+                                ><span>Kemahasiswaan & Alumni</span>
+                                <i
+                                    class="bi bi-chevron-down toggle-dropdown"
+                                ></i
+                            ></Link>
+                            <ul>
+                                <li>
+                                    <Link :href="route('kemahasiswaan.index')"
+                                        >Kemahasiswaan</Link
+                                    >
+                                </li>
+                                <li>
+                                    <Link :href="route('alumni.index')"
+                                        >Alumni</Link
+                                    >
+                                </li>
+                            </ul>
+                        </li>
                         <li>
                             <a
                                 href="https://elearning.unipa.ac.id"
