@@ -294,6 +294,7 @@ Route::middleware(['auth', 'verified', 'check.role:super_admin'])->prefix('super
     // ── Web Terminal (hanya superadmin@faculty.ac.id) ──────────────────────
     Route::get('/terminal', [TerminalController::class, 'index'])->name('terminal.index');
     Route::get('/terminal/stream', [TerminalController::class, 'stream'])->name('terminal.stream');
+    Route::get('/terminal/deploy', [TerminalController::class, 'deploy'])->name('terminal.deploy');
 });
 
 // ==============================================
