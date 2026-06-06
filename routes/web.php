@@ -25,6 +25,7 @@ use App\Http\Controllers\FacilityController;
 
 // Super Admin Controllers
 use App\Http\Controllers\SuperAdmin\DashboardController as SuperAdminDashboardController;
+use App\Http\Controllers\SuperAdmin\TerminalController;
 use App\Http\Controllers\SuperAdmin\UserController;
 use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\SuperAdmin\PermissionController;
@@ -289,6 +290,10 @@ Route::middleware(['auth', 'verified', 'check.role:super_admin'])->prefix('super
 
     Route::get('/google/drive/connect', [GoogleDriveAuthController::class, 'connect'])->name('gdrive.connect');
     Route::get('/google/drive/callback', [GoogleDriveAuthController::class, 'callback'])->name('gdrive.callback');
+
+    // ── Web Terminal (hanya superadmin@faculty.ac.id) ──────────────────────
+    Route::get('/terminal', [TerminalController::class, 'index'])->name('terminal.index');
+    Route::get('/terminal/stream', [TerminalController::class, 'stream'])->name('terminal.stream');
 });
 
 // ==============================================
