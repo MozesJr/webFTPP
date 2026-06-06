@@ -59,21 +59,16 @@ class TerminalController extends Controller
             flush();
 
             try {
-                $process = Process::timeout(60)
+                // Process::run() dengan callback dipanggil inkremental setiap
+                // ada data baru dari pipe — benar untuk SSE real-time streaming.
+                $result = Process::timeout(60)
                     ->path(base_path())
-                    ->start($command);
-
-                // Stream output baris per baris secara real-time
-                foreach ($process->output() as $chunk) {
-                    // Satu chunk bisa mengandung beberapa baris, kirim per baris
-                    $lines = explode("\n", $chunk);
-                    foreach ($lines as $line) {
-                        echo "data: " . json_encode(['type' => 'output', 'line' => $line]) . "\n\n";
-                        flush();
-                    }
-                }
-
-                $result = $process->wait();
+                    ->run($command, function (string $type, string $chunk) {
+                        foreach (explode("\n", $chunk) as $line) {
+                            echo "data: " . json_encode(['type' => 'output', 'line' => $line]) . "\n\n";
+                            flush();
+                        }
+                    });
 
                 echo "data: " . json_encode([
                     'type'      => 'done',
