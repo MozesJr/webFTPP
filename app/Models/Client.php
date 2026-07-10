@@ -36,8 +36,17 @@ class Client extends Model
     }
 
     // Accessors
-    public function getLogoUrlAttribute($value)
-    {
-        return $value ? asset('storage/' . $value) : asset('images/default-client.png');
+public function getLogoUrlAttribute($value)
+{
+    if (!$value) {
+        return asset('images/default-client.png');
     }
+
+    // Kalau sudah full URL (http/https), jangan tambah prefix storage/
+    if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+        return $value;
+    }
+
+    return asset('storage/' . $value);
+}
 }

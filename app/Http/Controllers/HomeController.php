@@ -52,7 +52,22 @@ class HomeController extends Controller
             // Clients dengan fallback
             $clients = Client::where('is_active', true)
                 ->orderBy('order_index')
-                ->get();
+                ->get()
+                ->map(function ($client) {
+                    // Asumsi nama kolom di table Client kamu adalah 'logo' atau 'logo_url'
+                    // Sesuaikan 'logo' di bawah dengan nama kolom aslinya di database kamu
+                    $logoField = $client->logo; 
+
+                    if ($logoField) {
+                        // Jika sudah berupa URL external (http:// atau https://), biarkan saja
+                        // Jika bukan, pastikan frontend tahu atau format di sini agar tidak double /storage/
+                        if (!str_starts_with($logoField, 'http://') && !str_starts_with($logoField, 'https://')) {
+                            // Opsional: kamu bisa memformatnya di sini jika di frontend nanti tidak dipaksa hardcode '/storage/'
+                            // $client->logo = asset('storage/' . $logoField);
+                        }
+                    }
+                    return $client;
+                });
 
             // Testimonials dengan fallback
             $testimonials = Testimonial::where('is_active', true)
