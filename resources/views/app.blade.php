@@ -35,7 +35,8 @@
 
     @if (url()->current() == url('login'))
         <link rel="stylesheet" type="text/css" href="{{ asset('theme-assets/assets/vendors/styles/core.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('theme-assets/assets/vendors/styles/icon-font.min.css') }}">
+        <link rel="stylesheet" type="text/css"
+            href="{{ asset('theme-assets/assets/vendors/styles/icon-font.min.css') }}">
         <link rel="stylesheet" type="text/css" href="{{ asset('theme-assets/assets/vendors/styles/style.css') }}">
     @endif
 
@@ -65,6 +66,8 @@
 
     @if (url()->current() == url('login'))
         <script src="{{ asset('/theme-assets/assets/vendors/scripts/core.js') }}"></script>
+        <script src="{{ asset('/theme-assets/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js') }}"></script>
+        <script src="{{ asset('/theme-assets/assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
         <script src="{{ asset('/theme-assets/assets/vendors/scripts/script.min.js') }}"></script>
         <script src="{{ asset('/theme-assets/assets/vendors/scripts/process.js') }}"></script>
         <script src="{{ asset('/theme-assets/assets/vendors/scripts/layout-settings.js') }}"></script>
