@@ -93,7 +93,7 @@ const submit = () => {
                 <div class="brand-logo">
                     <Link href="/" class="text-decoration-none">
                         <img
-                            src="/storage/assets/img/Logo_Universitas_Papua.png"
+                            src="/theme-assets/assets/img/Logo_Universitas_Papua.png"
                             alt="Logo"
                             style="height: 60px"
                         />
@@ -111,7 +111,7 @@ const submit = () => {
                         <div class="login-image">
                             <div class="illustration-placeholder">
                                 <img
-                                    src="/storage/assets/img/login-page-img.png"
+                                    src="/theme-assets/assets/img/login-page-img.png"
                                     alt="Logo"
                                     style="height: 100%"
                                 />
@@ -155,7 +155,7 @@ const submit = () => {
                                             <div class="text-center">
                                                 <div class="icon">
                                                     <img
-                                                        src="/storage/assets/vendors/images/briefcase.svg"
+                                                        src="/theme-assets/assets/vendors/images/briefcase.svg"
                                                         class="svg"
                                                         alt=""
                                                     />
@@ -184,7 +184,7 @@ const submit = () => {
                                             <div class="text-center">
                                                 <div class="icon">
                                                     <img
-                                                        src="/storage/assets/vendors/images/person.svg"
+                                                        src="/theme-assets/assets/vendors/images/person.svg"
                                                         class="svg"
                                                         alt=""
                                                     />

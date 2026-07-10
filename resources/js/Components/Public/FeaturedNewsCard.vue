@@ -7,7 +7,7 @@
             <img
                 :src="
                     news?.featured_image ||
-                    '/storage/assets/img/news-default.jpg'
+                    '/theme-assets/assets/img/news-default.jpg'
                 "
                 :alt="news?.title || 'News Image'"
                 class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -88,7 +88,7 @@ function formatDate(date) {
 }
 
 function handleImageError(event) {
-    event.target.src = "/storage/assets/img/news-default.jpg";
+    event.target.src = "/theme-assets/assets/img/news-default.jpg";
 }
 </script>
 

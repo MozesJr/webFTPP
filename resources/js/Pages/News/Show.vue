@@ -4,7 +4,7 @@
         <div
             class="page-title dark-background"
             data-aos="fade"
-            style="background-image: url(/storage/assets/img/imgBg3.png)"
+            style="background-image: url(/theme-assets/assets/img/imgBg3.png)"
         >
             <div class="container position-relative">
                 <h1>{{ news?.title || "Detail Berita" }}</h1>
@@ -35,7 +35,7 @@
                                 <img
                                     :src="
                                         news?.featured_image ||
-                                        '/storage/assets/img/news-default.jpg'
+                                        '/theme-assets/assets/img/news-default.jpg'
                                     "
                                     :alt="news?.title || 'News Image'"
                                     class="w-full h-full object-cover"
@@ -243,7 +243,7 @@
                                 <img
                                     :src="
                                         news.author.photo_url ||
-                                        '/storage/assets/img/team/default-avatar.jpg'
+                                        '/theme-assets/assets/img/team/default-avatar.jpg'
                                     "
                                     :alt="news.author.name"
                                     class="w-16 h-16 rounded-full object-cover"

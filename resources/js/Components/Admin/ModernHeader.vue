@@ -57,7 +57,7 @@
                         class="flex items-center space-x-3 text-sm rounded-lg p-1 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                     >
                         <img
-                            src="/storage/assets/img/avatar.jpg"
+                            src="/theme-assets/assets/img/avatar.jpg"
                             alt="User"
                             class="w-8 h-8 rounded-full"
                         />

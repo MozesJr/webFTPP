@@ -70,7 +70,7 @@
                             <img
                                 :src="
                                     about?.image_url ||
-                                    '/storage/assets/img/About1.jpeg'
+                                    '/theme-assets/assets/img/About1.jpeg'
                                 "
                                 class="img-fluid rounded-4 mb-4"
                                 alt=""
@@ -116,7 +116,7 @@
                                 <img
                                     :src="
                                         about?.secondary_image_url ||
-                                        '/storage/assets/img/About2.jpeg'
+                                        '/theme-assets/assets/img/About2.jpeg'
                                     "
                                     class="img-fluid rounded-4"
                                     alt=""
@@ -382,7 +382,7 @@
             <img
                 :src="
                     siteSettings.testimoni_back ||
-                    '/storage/assets/img/imgBg1.jpg'
+                    '/theme-assets/assets/img/imgBg1.jpg'
                 "
                 class="testimonials-bg"
                 alt=""
@@ -400,7 +400,7 @@
                                 <img
                                     :src="
                                         testimonial.photo_url ||
-                                        '/storage/assets/img/imgBg1.jpg'
+                                        '/theme-assets/assets/img/imgBg1.jpg'
                                     "
                                     class="testimonial-img"
                                     :alt="testimonial.name"
@@ -470,7 +470,7 @@
                                 <img
                                     :src="
                                         news.featured_image ||
-                                        '/storage/assets/img/blog1.jpg'
+                                        '/theme-assets/assets/img/blog1.jpg'
                                     "
                                     class="img-fluid"
                                     :alt="news.title"
@@ -481,7 +481,7 @@
                                     <a
                                         :href="
                                             news.featured_image ||
-                                            '/storage/assets/img/blog1.jpg'
+                                            '/theme-assets/assets/img/blog1.jpg'
                                         "
                                         :title="news.title"
                                         data-gallery="portfolio-gallery-news"
@@ -522,7 +522,7 @@
                             <a href="/teams-details" class="team-link">
                                 <div class="pic">
                                     <img
-                                        src="/storage/assets/img/team1.png"
+                                        src="/theme-assets/assets/img/team1.png"
                                         class="img-fluid"
                                         alt=""
                                     />
@@ -549,7 +549,7 @@
                         <div class="member">
                             <div class="pic">
                                 <img
-                                    src="/storage/assets/img/team2.png"
+                                    src="/theme-assets/assets/img/team2.png"
                                     class="img-fluid"
                                     alt=""
                                 />
@@ -583,7 +583,7 @@
                         <div class="member">
                             <div class="pic">
                                 <img
-                                    src="/storage/assets/img/team3.png"
+                                    src="/theme-assets/assets/img/team3.png"
                                     class="img-fluid"
                                     alt=""
                                 />
@@ -617,7 +617,7 @@
                         <div class="member">
                             <div class="pic">
                                 <img
-                                    src="/storage/assets/img/team4.png"
+                                    src="/theme-assets/assets/img/team4.png"
                                     class="img-fluid"
                                     alt=""
                                 />
@@ -836,8 +836,8 @@ onMounted(() => {
 
 <style>
 /* Import the original CSS styles */
-/* @import url("/storage/assets/css/main.css"); */
-@import "/public/storage/assets/css/main.css";
+/* @import url("/theme-assets/assets/css/main.css"); */
+@import "/public/theme-assets/assets/css/main.css";
 
 /* Custom styles for Vue components */
 #hero.dark-background {

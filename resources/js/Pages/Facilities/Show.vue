@@ -4,7 +4,7 @@
         <!-- Hero Section -->
         <section
             class="page-title dark-background py-12"
-            :style="`background-image: url(${'/storage/assets/img/imgBg2.png'})`"
+            :style="`background-image: url(${'/theme-assets/assets/img/imgBg2.png'})`"
         >
             <div class="container mx-auto px-4">
                 <nav class="mb-6" data-aos="fade-right">

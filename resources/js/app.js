@@ -73,14 +73,14 @@ createInertiaApp({
 // =====================================================================
 function loadFrontendScripts() {
     const scripts = [
-        "/storage/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
-        "/storage/assets/vendor/aos/aos.js",
-        "/storage/assets/vendor/glightbox/js/glightbox.min.js",
-        "/storage/assets/vendor/purecounter/purecounter_vanilla.js",
-        "/storage/assets/vendor/swiper/swiper-bundle.min.js",
-        "/storage/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js",
-        "/storage/assets/vendor/isotope-layout/isotope.pkgd.min.js",
-        "/storage/assets/js/main.js",
+        "/theme-assets/assets/vendor/bootstrap/js/bootstrap.bundle.min.js",
+        "/theme-assets/assets/vendor/aos/aos.js",
+        "/theme-assets/assets/vendor/glightbox/js/glightbox.min.js",
+        "/theme-assets/assets/vendor/purecounter/purecounter_vanilla.js",
+        "/theme-assets/assets/vendor/swiper/swiper-bundle.min.js",
+        "/theme-assets/assets/vendor/imagesloaded/imagesloaded.pkgd.min.js",
+        "/theme-assets/assets/vendor/isotope-layout/isotope.pkgd.min.js",
+        "/theme-assets/assets/js/main.js",
     ];
 
     let loadedScripts = 0;

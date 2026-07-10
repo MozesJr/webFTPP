@@ -60,7 +60,7 @@ const filteredAlumni = computed(() => {
         <div
             class="page-title dark-background"
             data-aos="fade"
-            style="background-image: url(/storage/assets/img/imgBg3.png)"
+            style="background-image: url(/theme-assets/assets/img/imgBg3.png)"
         >
             <div class="container position-relative">
                 <h1>Alumni FTPP UNIPA</h1>

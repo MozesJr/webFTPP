@@ -3,7 +3,7 @@
         <div
             class="page-title dark-background"
             data-aos="fade"
-            style="background-image: url(/storage/assets/img/imgBg3.png)"
+            style="background-image: url(/theme-assets/assets/img/imgBg3.png)"
         >
             <div class="container position-relative">
                 <h1>{{ about.title }}</h1>
@@ -50,7 +50,7 @@
                         <div class="content ps-0 ps-lg-5">
                             <div class="position-relative mt-4">
                                 <img
-                                    src="storage/assets/img/About1.jpeg"
+                                    src="theme-assets/assets/img/About1.jpeg"
                                     class="img-fluid rounded-4"
                                     alt=""
                                 />

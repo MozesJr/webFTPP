@@ -7,7 +7,7 @@
             >
                 <Link href="/" class="logo d-flex align-items-center me-auto">
                     <img
-                        src="/storage/assets/img/Logo_Universitas_Papua.png"
+                        src="/theme-assets/assets/img/Logo_Universitas_Papua.png"
                         alt=""
                     />
                     <h1 class="sitename">FTPP</h1>

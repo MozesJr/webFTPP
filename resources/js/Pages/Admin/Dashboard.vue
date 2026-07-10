@@ -20,7 +20,7 @@
                 </div>
                 <div class="hidden md:block">
                     <img
-                        src="/storage/assets/img/Logo_Universitas_Papua.png"
+                        src="/theme-assets/assets/img/Logo_Universitas_Papua.png"
                         alt="Welcome"
                         class="w-32 h-32 object-contain"
                     />
@@ -249,7 +249,7 @@
                             <img
                                 :src="
                                     news.featured_image ||
-                                    '/storage/assets/img/news-default.jpg'
+                                    '/theme-assets/assets/img/news-default.jpg'
                                 "
                                 :alt="news.title"
                                 class="w-12 h-12 rounded-lg object-cover"

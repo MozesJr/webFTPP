@@ -10,7 +10,7 @@
         >
             <div class="flex items-center">
                 <img
-                    src="/storage/assets/img/Logo_Universitas_Papua.png"
+                    src="/theme-assets/assets/img/Logo_Universitas_Papua.png"
                     alt="FTPP"
                     class="w-8 h-8"
                 />

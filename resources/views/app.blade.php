@@ -9,8 +9,8 @@
     <title inertia>{{ config('app.name', 'FTPP') }}</title>
 
     <!-- Favicons -->
-    <link href="{{ asset('/storage/assets/img/Logo_Universitas_Papua.png') }}" rel="icon">
-    <link href="{{ asset('/storage/assets/img/Logo_Universitas_Papua.png') }}" rel="apple-touch-icon">
+    <link href="{{ asset('/theme-assets/assets/img/Logo_Universitas_Papua.png') }}" rel="icon">
+    <link href="{{ asset('/theme-assets/assets/img/Logo_Universitas_Papua.png') }}" rel="apple-touch-icon">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,12 +31,12 @@
     <link href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" rel="stylesheet">
 
     <!-- Main CSS File from template -->
-    <link href="{{ asset('/storage/assets/css/main.css') }}" rel="stylesheet">
+    <link href="{{ asset('/theme-assets/assets/css/main.css') }}" rel="stylesheet">
 
     @if (url()->current() == url('login'))
-        <link rel="stylesheet" type="text/css" href="{{ asset('storage/assets/vendors/styles/core.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('storage/assets/vendors/styles/icon-font.min.css') }}">
-        <link rel="stylesheet" type="text/css" href="{{ asset('storage/assets/vendors/styles/style.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('theme-assets/assets/vendors/styles/core.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('theme-assets/assets/vendors/styles/icon-font.min.css') }}">
+        <link rel="stylesheet" type="text/css" href="{{ asset('theme-assets/assets/vendors/styles/style.css') }}">
     @endif
 
     <!-- Scripts -->
@@ -64,15 +64,15 @@
     <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
 
     @if (url()->current() == url('login'))
-        <script src="{{ asset('/storage/assets/vendors/scripts/core.js') }}"></script>
-        <script src="{{ asset('/storage/assets/vendors/scripts/script.min.js') }}"></script>
-        <script src="{{ asset('/storage/assets/vendors/scripts/process.js') }}"></script>
-        <script src="{{ asset('/storage/assets/vendors/scripts/layout-settings.js') }}"></script>
+        <script src="{{ asset('/theme-assets/assets/vendors/scripts/core.js') }}"></script>
+        <script src="{{ asset('/theme-assets/assets/vendors/scripts/script.min.js') }}"></script>
+        <script src="{{ asset('/theme-assets/assets/vendors/scripts/process.js') }}"></script>
+        <script src="{{ asset('/theme-assets/assets/vendors/scripts/layout-settings.js') }}"></script>
     @endif
 
 
     <!-- Main JS File from template (commented out for now to avoid errors) -->
-    <!-- <script src="{{ asset('/storage/assets/js/main.js') }}"></script> -->
+    <!-- <script src="{{ asset('/theme-assets/assets/js/main.js') }}"></script> -->
 
     <!-- Main JS -->
     <script>

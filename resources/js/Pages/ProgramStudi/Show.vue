@@ -5,7 +5,7 @@
             class="page-title dark-background"
             data-aos="fade"
             :style="`background-image: url(${
-                programStudi.image_url || '/storage/assets/img/imgBg2.png'
+                programStudi.image_url || '/theme-assets/assets/img/imgBg2.png'
             })`"
         >
             <div class="container position-relative">
@@ -120,7 +120,7 @@
                             <img
                                 :src="
                                     programStudi.image_url ||
-                                    '/storage/assets/img/service1.jpg'
+                                    '/theme-assets/assets/img/service1.jpg'
                                 "
                                 :alt="programStudi.name"
                                 class="img-fluid services-img"
@@ -1174,7 +1174,7 @@
                                                 <img
                                                     :src="
                                                         dosen.photo_url ||
-                                                        '/storage/assets/img/team/team-1.jpg'
+                                                        '/theme-assets/assets/img/team/team-1.jpg'
                                                     "
                                                     class="img-fluid rounded-circle"
                                                     :alt="dosen.name"

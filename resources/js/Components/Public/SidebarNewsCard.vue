@@ -8,7 +8,7 @@
                 <img
                     :src="
                         news.featured_image ||
-                        '/storage/assets/img/news-default.jpg'
+                        '/theme-assets/assets/img/news-default.jpg'
                     "
                     :alt="news.title"
                     class="w-16 h-16 object-cover rounded-lg"
