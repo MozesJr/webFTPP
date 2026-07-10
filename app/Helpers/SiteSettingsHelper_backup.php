@@ -5,7 +5,6 @@ namespace App\Helpers;
 use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Schema;
 
 class SiteSettingsHelper
 {
@@ -19,10 +18,6 @@ class SiteSettingsHelper
      */
     public static function get($key, $default = null)
     {
-        if (!Schema::hasTable('site_settings')) {
-            return $default;
-        }
-
         $cacheKey = "site_setting_{$key}";
 
         return Cache::remember($cacheKey, self::CACHE_DURATION, function () use ($key, $default) {
@@ -55,10 +50,6 @@ class SiteSettingsHelper
      */
     public static function getGroup($group)
     {
-        if (!Schema::hasTable('site_settings')) {
-            return [];
-        }
-
         $cacheKey = "site_settings_group_{$group}";
 
         return Cache::remember($cacheKey, self::CACHE_DURATION, function () use ($group) {
@@ -78,10 +69,6 @@ class SiteSettingsHelper
      */
     public static function getAllGrouped()
     {
-        if (!Schema::hasTable('site_settings')) {
-            return [];
-        }
-
         $cacheKey = "site_settings_all_grouped";
 
         return Cache::remember($cacheKey, self::CACHE_DURATION, function () {
@@ -139,10 +126,6 @@ class SiteSettingsHelper
      */
     public static function clearAllCache()
     {
-        if (!Schema::hasTable('site_settings')) {
-            return;
-        }
-
         $settings = SiteSetting::all();
 
         foreach ($settings as $setting) {
@@ -202,10 +185,6 @@ class SiteSettingsHelper
      */
     public static function exportSettings()
     {
-        if (!Schema::hasTable('site_settings')) {
-            return [];
-        }
-
         $settings = SiteSetting::all();
 
         $export = [];

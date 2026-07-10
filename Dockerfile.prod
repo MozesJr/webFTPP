@@ -1,0 +1,49 @@
+# ---- Stage 1: build frontend assets ----
+FROM node:20 AS assets
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+COPY . .
+RUN npm run build
+
+# ---- Stage 2: PHP + Apache runtime ----
+FROM php:8.3-apache AS app
+
+RUN apt-get update && apt-get install -y \
+    git curl libpng-dev libonig-dev libxml2-dev libzip-dev zip unzip \
+    && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip dom xml fileinfo \
+    && a2enmod rewrite \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+WORKDIR /var/www/html
+
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --no-scripts
+
+COPY . .
+COPY --from=assets /app/public/build ./public/build
+
+RUN mkdir -p storage/logs storage/framework/cache storage/framework/sessions storage/framework/views bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+RUN printf '%s\n' \
+  '<VirtualHost *:80>' \
+  '  DocumentRoot /var/www/html/public' \
+  '  <Directory "/var/www/html/public">' \
+  '    AllowOverride All' \
+  '    Require all granted' \
+  '  </Directory>' \
+  '  ErrorLog ${APACHE_LOG_DIR}/error.log' \
+  '  CustomLog ${APACHE_LOG_DIR}/access.log combined' \
+  '</VirtualHost>' \
+  > /etc/apache2/sites-available/000-default.conf
+
+COPY docker-entrypoint-prod.sh /usr/local/bin/docker-entrypoint-prod.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint-prod.sh
+
+EXPOSE 80
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint-prod.sh"]
+CMD ["apache2-foreground"]

@@ -1,0 +1,29 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    image: webftpp-prod
+    container_name: webftpp_prod
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "80:80"
+    volumes:
+      - webftpp_storage:/var/www/html/storage
+    networks:
+      - default
+      - master_db_net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  webftpp_storage:
+
+networks:
+  master_db_net:
+    external: true

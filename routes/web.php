@@ -324,6 +324,17 @@ Route::middleware(['auth', 'verified', 'check.role:admin,super_admin'])->prefix(
     Route::resource('news', AdminNewsController::class);
 
     // Dean Greeting Routes
+    // Route::controller(DeanGreetingController::class)->prefix('dean-greeting')->name('dean-greeting.')->group(function () {
+    //     Route::get('/', 'index')->name('index');
+    //     Route::get('/create', 'create')->name('create');
+    //     Route::post('/', 'store')->name('store');
+    //     Route::get('/{deanGreeting}/edit', 'edit')->name('edit');
+    //     Route::post('/{deanGreeting}', 'update')->name('update'); // atau bisa pakai PUT/PATCH
+    //     Route::delete('/{deanGreeting}', 'destroy')->name('destroy');
+    //     Route::post('/{deanGreeting}/toggle-status', 'toggleStatus')->name('toggle-status');
+    // Route::post('dean-greeting/{dean_greeting}/toggle-status', [DeanGreetingController::class, 'toggleStatus'])
+    //     ->name('dean-greeting.toggle-status');
+// Dean Greeting Routes
     Route::controller(DeanGreetingController::class)->prefix('dean-greeting')->name('dean-greeting.')->group(function () {
         Route::get('/', 'index')->name('index');
         Route::get('/create', 'create')->name('create');
@@ -334,8 +345,7 @@ Route::middleware(['auth', 'verified', 'check.role:admin,super_admin'])->prefix(
         Route::post('/{deanGreeting}/toggle-status', 'toggleStatus')->name('toggle-status');
     });
 
-    Route::post('dean-greeting/{dean_greeting}/toggle-status', [DeanGreetingController::class, 'toggleStatus'])
-        ->name('dean-greeting.toggle-status');
+    // Contact Messages
 
     // Contact Messages
     Route::resource('contact-messages', ContactMessageController::class)->parameters([
